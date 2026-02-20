@@ -76,7 +76,6 @@
                             @can('banner-view')
                                 <li><a href="{{ route('advertisement.index') }}"><i class="mdi mdi-bullhorn"></i>Advertisements</a></li>
                             @endcan
-                            <li><a href="{{ route('flash-deals.index') }}"><i class="mdi mdi-flash"></i>Flash Deals</a></li>
                                 <li><a href="{{ route('client.riviewes') }}"><i class="mdi mdi-message-text"></i>Client Feedback</a></li>
                         </ul>
                     </li>

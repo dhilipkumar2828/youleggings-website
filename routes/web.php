@@ -228,7 +228,6 @@ Route::post('/update_password', [App\Http\Controllers\HomeController::class, 'up
  Route::resource('/advertisement',\App\Http\Controllers\AdvertisementController::class);
  Route::post('advertisementStatus',[\App\Http\Controllers\AdvertisementController::class,'advertisementStatus']);
 
- Route::resource('flash-deals', \App\Http\Controllers\Admin\FlashDealController::class);
 
  //youtube
  Route::resource('/youtube',\App\Http\Controllers\YoutubeController::class);
