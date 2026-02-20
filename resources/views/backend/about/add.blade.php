@@ -1,7 +1,7 @@
 @extends('backend.layouts.master')
 
 @section('content')
-    <div class="page-content-wrapper ">
+    <div class="page-content-wrapper "> 
 
         <div class="container-fluid">
 
