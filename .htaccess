@@ -1,0 +1,36 @@
+Options -Indexes
+RewriteOptions inherit
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Handle Assets
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^assets/(.*)$ public/assets/$1 [L,NC]
+    
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^storage/(.*)$ public/storage/$1 [L,NC]
+    
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^images/(.*)$ public/images/$1 [L,NC]
+    
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^photos/(.*)$ public/photos/$1 [L,NC]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>

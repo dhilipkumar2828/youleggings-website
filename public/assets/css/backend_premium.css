@@ -1,0 +1,849 @@
+@import url("https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;500;600;700&display=swap");
+
+:root {
+    /* Primary "You Leggings" Brand Colors - Exact Logo Pink */
+    --primary-color: #e3007b;
+    --primary-dark: #d2006d;
+    --primary-light: #fff0f5;
+    --primary-gradient: linear-gradient(135deg, #e3007b 0%, #d2006d 100%);
+    
+    /* Secondary Teal Accent from Logo */
+    --accent-teal: #00bcd4;
+    --accent-teal-gradient: linear-gradient(135deg, #00bcd4 0%, #00acc1 100%);
+
+    /* Utility Colors */
+    --success-color: #4caf50;
+    --warning-color: #ffb300;
+    --danger-color: #f44336;
+    --info-color: #2196f3;
+
+    /* Backgrounds & Text */
+    --bg-light: #fefeff; /* Almost white, removing purple tint */
+    --card-bg: #ffffff;
+    --sidebar-bg: #ffffff;
+    --topbar-bg: #ffffff;
+
+    --text-main: #212529;
+    --text-muted: #6c757d;
+    --border-color: #eaeaea;
+
+    /* Shadows & Effects */
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    --hover-shadow: 0 8px 30px rgba(233, 30, 99, 0.15); /* Pinkish shadow */
+    --pink-shadow-glow: 0 4px 20px rgba(233, 30, 99, 0.15); /* Specific pink shadow element */
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+    font-family: "Mukta", sans-serif !important;
+    background-color: var(
+        --bg-light
+    ) !important; /* Force override of style.css #e4deff73 */
+    color: var(--text-main) !important;
+}
+
+html {
+    background-color: var(
+        --bg-light
+    ) !important; /* Force override of style.css */
+}
+
+#wrapper {
+    background: var(--bg-light);
+}
+
+/* Sidebar Styling */
+.left.side-menu {
+    background: var(--sidebar-bg) !important;
+    border-right: 1px solid var(--border-color);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.01);
+}
+
+#sidebar-menu ul li a {
+    color: var(--text-main) !important;
+    padding: 12px 20px !important;
+    margin: 4px 15px;
+    border-radius: 8px; /* Slightly softer corners */
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+#sidebar-menu ul li a i {
+    font-size: 1.3rem;
+    width: 35px;
+    color: var(--text-muted);
+    transition: var(--transition);
+    text-align: center;
+}
+
+/* Active & Hover States - PINK */
+#sidebar-menu ul li a:hover,
+#sidebar-menu ul li.nav-active > a,
+#sidebar-menu ul li > a.active {
+    background: #fff0f5 !important; /* Very light pink background */
+    color: var(--primary-color) !important;
+    font-weight: 600;
+}
+
+#sidebar-menu ul li a:hover i,
+#sidebar-menu ul li.nav-active > a i,
+#sidebar-menu ul li > a.active i {
+    color: var(--primary-color) !important;
+}
+
+#sidebar-menu ul li.has_sub .list-unstyled {
+    background: #fafafa;
+    margin: 5px 15px;
+    border-radius: 8px;
+    padding: 5px 0;
+}
+
+#sidebar-menu ul li.has_sub .list-unstyled li a {
+    padding: 10px 15px !important;
+    font-size: 14.5px;
+    margin: 2px 8px;
+}
+
+#sidebar-menu ul li.has_sub .list-unstyled li a i {
+    font-size: 1.1rem;
+    width: 28px;
+    color: var(--text-muted);
+    transition: var(--transition);
+    text-align: center;
+}
+
+#sidebar-menu ul li.has_sub .list-unstyled li a:hover i,
+#sidebar-menu ul li.has_sub .list-unstyled li a.active i {
+    color: var(--primary-color) !important;
+}
+
+/* Topbar Styling */
+.topbar {
+    background: var(--topbar-bg) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.topbar-left {
+    background: #ffffff !important;
+    border-right: 1px solid var(--border-color);
+    /* Ensure logo is centered and clean */
+}
+
+/* Navbar Items & Hamburger Menu */
+.navbar-custom {
+    background-color: var(--topbar-bg) !important;
+}
+.navbar-custom .nav-link i {
+    color: var(--text-muted) !important;
+    font-size: 20px;
+}
+
+/* REMOVING PURPLE FROM HAMBURGER MENU */
+.button-menu-mobile {
+    background-color: transparent !important; /* Remove purple background */
+    color: var(--primary-color) !important; /* Pink icon */
+    border: none !important;
+    font-size: 24px;
+    width: 60px;
+    height: 70px;
+    line-height: 70px;
+    text-align: center;
+    border-radius: 0;
+}
+
+.button-menu-mobile:hover {
+    color: var(--primary-dark) !important;
+    background-color: #fff0f5 !important;
+}
+
+/* Content Page */
+.content-page {
+    background: var(--bg-light) !important;
+    margin-top: 30px;
+    min-height: 100vh;
+}
+
+.page-content-wrapper {
+    background: var(--bg-light) !important;
+}
+
+/* DataTables Customization */
+.table thead th {
+    background-color: var(--primary-light) !important;
+    color: var(--primary-color) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    border: none !important;
+}
+
+/* Dashboard Cards */
+.card {
+    background: var(--card-bg) !important;
+    border: none !important;
+    border-radius: 16px !important;
+    box-shadow: var(--card-shadow) !important;
+    margin-bottom: 24px;
+    transition: var(--transition);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hover-shadow) !important;
+}
+
+.card-title {
+    font-weight: 700;
+    color: var(--text-main);
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+/* Mini Stat Cards (Dashboard Overview) */
+.mini-stat {
+    border: none !important;
+    padding: 20px;
+}
+
+.mini-stat-icon {
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    background: #fff0f5 !important; /* Light Pink */
+    color: var(--primary-color) !important;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 24px;
+    float: right;
+}
+
+/* Buttons - ALL PINK THEME */
+.btn-primary,
+.btn-indigo,
+.btn,
+button[type="submit"],
+.action-button,
+.ripple,
+#add-btn {
+    background: var(--primary-gradient) !important;
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3) !important;
+    border-radius: 50px !important; /* Pill shape for modern look */
+    padding: 10px 25px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    color: #ffffff !important;
+}
+
+.btn-success {
+    background: #48a16f !important; /* Green */
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3) !important;
+    border-radius: 50px !important;
+    padding: 10px 25px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    color: #ffffff !important;
+}
+
+/* =============== FIX FOR SWITCH BUTTONS (BADGES) =============== */
+/* Prevents the premium btn padding from making toggles huge */
+.switch.btn {
+    padding: 0 !important;
+    border-radius: 14px !important; /* Adjusted radius */
+    min-height: 26px !important; /* Increased height */
+    height: 26px !important; 
+    box-shadow: none !important;
+    background: transparent !important;
+    border: none !important;
+    min-width: 70px !important; /* Increased width */
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+.switch-group .btn {
+    padding: 0 8px !important; /* Increased padding */
+    border-radius: 0 !important;
+    font-size: 12px !important; /* Increased font */
+    line-height: normal !important;
+    box-shadow: none !important;
+    font-weight: 500 !important;
+    min-height: 26px !important; /* Match container */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    letter-spacing: 0.3px;
+}
+
+.switch-group .btn-success {
+    background: #66bb6a !important; /* Lighter, vibrant green */
+    border-color: #66bb6a !important;
+    box-shadow: none !important;
+    color: #ffffff !important;
+}
+
+.switch-group .btn-danger {
+    background: #ef5350 !important; /* Lighter, vibrant red */
+    border-color: #ef5350 !important;
+    box-shadow: none !important;
+    color: #ffffff !important;
+}
+.switch-group .btn-light {
+     background: #f1f1f1 !important;
+     color: #444 !important;
+}
+/* ============================================================= */
+
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus,
+.btn-indigo:hover,
+.btn-indigo:active,
+.btn-indigo:focus,
+button[type="submit"]:hover,
+.action-button:hover,
+.ripple:hover,
+#add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4) !important;
+    background: linear-gradient(135deg, #e91e63 0%, #ff4081 100%) !important;
+    color: #ffffff !important;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 200, 83, 0.4) !important;
+    background: #00e676 !important; /* Lighter Green */
+    color: #ffffff !important;
+}
+
+/* Specific button overrides for consistency */
+.btn.btn-primary,
+a.btn-primary,
+input[type="submit"].btn-primary {
+    background: var(--primary-gradient) !important;
+    color: #ffffff !important;
+}
+
+/* Generate Variants button and similar action buttons */
+.btn-lg {
+    padding: 12px 30px !important;
+    font-size: 16px !important;
+}
+
+/* btn-danger override for Red Inactive State */
+.btn-danger {
+    background: #ff1744 !important; /* Red */
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(255, 23, 68, 0.3) !important;
+    border-radius: 50px !important;
+    padding: 10px 25px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    color: #ffffff !important;
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 23, 68, 0.4) !important;
+    background: #ff5252 !important; /* Lighter Red */
+    color: #ffffff !important;
+}
+
+/* Inputs & Forms */
+.form-control {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px !important;
+    height: 45px !important; /* Taller inputs */
+    padding: 10px 15px;
+    background: #f9f9f9;
+    transition: all 0.3s;
+}
+
+.form-control:focus {
+    background: #fff;
+    border-color: var(--primary-light) !important;
+    box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.1) !important;
+}
+
+/* Table Styling - FORCE REMOVING COLORS & ADDING PINK SHADOW */
+.table-responsive {
+    /* Add Pink glow to table wrapper */
+    border-radius: 16px;
+    background: #fff;
+    padding: 5px;
+    /* This creates the requested "Table Pink Shadow" */
+    box-shadow: 0 10px 30px rgba(233, 30, 99, 0.12) !important;
+    border: 1px solid rgba(233, 30, 99, 0.1);
+}
+
+.table {
+    margin-bottom: 0 !important;
+    background-color: transparent !important;
+}
+
+/* Force striping off or make it very subtle/white */
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(233, 30, 99, 0.02) !important; /* Ultra light pink */
+}
+
+/* FORCE override any purple */
+.table td,
+.table th,
+.table tr {
+    background-color: transparent !important; /* Reset */
+}
+
+.table tbody tr {
+    background-color: #fff !important; /* Default white rows */
+    transition: all 0.2s;
+}
+
+.table tbody tr:hover {
+    background-color: #fff0f5 !important; /* Light Pink hover */
+    transform: scale(1.002);
+    box-shadow: 0 2px 10px rgba(233, 30, 99, 0.1);
+    z-index: 10;
+    position: relative;
+    color: var(--primary-color) !important; /* Highlight text on hover */
+}
+
+/* Header */
+.table thead th {
+    background: #fff0f5 !important; /* Light pink header */
+    color: var(--primary-dark) !important;
+    font-weight: 700;
+    border: none;
+    text-transform: uppercase;
+    font-size: 13px;
+    padding: 15px;
+}
+
+.table td {
+    vertical-align: middle !important;
+    padding: 15px !important;
+    border-bottom: 1px solid #f0f0f0;
+    color: #444; /* Darker text */
+}
+
+/* FOOTER - PINK COLORED AS REQUESTED */
+.footer {
+    background: linear-gradient(
+        135deg,
+        #f3c7d8 0%,
+        #f7a9c3 100%
+    ) !important; /* Pink Gradient Background */
+    color: #200b0b !important; /* White Text */
+    border-top: none !important;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow top */
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.footer a {
+    color: #fff !important;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+/* Pagination - PREMIUM REFACTOR */
+.pagination, 
+.dataTables_paginate .pagination {
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    margin: 25px 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+    flex-wrap: nowrap !important; /* Prevent wrapping which can cause "hiding" */
+}
+
+.page-item {
+    display: block !important;
+    margin: 0 3px !important;
+}
+
+.page-item .page-link {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color) !important;
+    background-color: #ffffff !important;
+    border: 1px solid #f0f0f0 !important;
+    border-radius: 12px !important;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 15px !important;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    white-space: nowrap !important;
+}
+
+.page-item.active .page-link {
+    background: var(--primary-gradient) !important;
+    border-color: var(--primary-color) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(227, 0, 123, 0.35) !important;
+}
+
+.page-item:not(.disabled):not(.active) .page-link:hover {
+    background-color: #fff0f5 !important;
+    border-color: var(--primary-color) !important;
+    transform: translateY(-2px);
+    color: var(--primary-dark) !important;
+}
+
+.page-item.disabled .page-link {
+    background-color: #f8fafc !important;
+    color: #cbd5e1 !important; /* Consistent blue-grey */
+    border-color: #f1f5f9 !important;
+    pointer-events: none;
+    opacity: 1 !important;
+    cursor: default;
+}
+
+/* Ensure dataTables specific pagination wrappers don't hide items */
+.dataTables_paginate {
+    display: block !important;
+    visibility: visible !important;
+    overflow: visible !important;
+    width: 100% !important;
+}
+
+/* Alerts / Badges */
+.badge-success {
+    background-color: var(--success-color);
+}
+.badge-warning {
+    background-color: var(--warning-color);
+}
+.badge-danger {
+    background-color: var(--danger-color);
+}
+
+/* SweetAlert overrides to match pink */
+.swal-button--confirm {
+    background-color: var(--primary-color) !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                         ADVANCE DROPDOWN STYLES                            */
+/* -------------------------------------------------------------------------- */
+
+.dropdown-menu.border-glass {
+    background: rgba(30, 41, 59, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    padding: 8px 0;
+    margin-top: 8px !important;
+    animation: fadeInDropdown 0.2s ease-out;
+}
+
+@keyframes fadeInDropdown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-menu.border-glass .dropdown-item {
+    color: #cbd5e1 !important;
+    transition: all 0.2s;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-left: 2px solid transparent;
+}
+
+.dropdown-menu.border-glass .dropdown-item:hover,
+.dropdown-menu.border-glass .dropdown-item:focus {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #fff !important;
+    border-left: 2px solid var(--primary-color);
+    padding-left: 25px; /* Slide effect */
+}
+
+.dropdown-menu.border-glass .dropdown-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 6px 0;
+}
+
+.dropdown-menu.border-glass i {
+    width: 20px;
+    text-align: center;
+    margin-right: 8px;
+    opacity: 0.8;
+}
+/* -------------------------------------------------------------------------- */
+/*                         CIRCULAR ACTION ICONS                              */
+/* -------------------------------------------------------------------------- */
+
+.action-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin: 0 4px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: none;
+    text-decoration: none !important;
+}
+
+.action-icon:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.action-icon i {
+    font-size: 16px;
+}
+
+/* Edit - Light Blue BG, Orange Icon */
+.btn-edit-icon {
+    background-color: #e3f2fd;
+    color: #f57c00 !important;
+}
+
+/* Delete - Light Red BG, Red Icon */
+.btn-delete-icon {
+    background-color: #ffebee;
+    color: #ef5350 !important;
+}
+
+/* View/Clone - Light Green BG, Orange Icon */
+.btn-view-icon {
+    background-color: #e8f5e9;
+    color: #ff9800 !important;
+}
+
+/* Stocks/Other - Light Blue BG, Blue Icon */
+.btn-info-icon {
+    background-color: #e1f5fe;
+    color: #039be5 !important;
+}
+
+/* Success/Whatsapp - Light Green BG, Green Icon */
+.btn-success-icon {
+    background-color: #e8f5e9;
+    color: #4caf50 !important;
+}
+
+/* Brand Preloader / Loader Override */
+#preloader {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.spinner:before {
+    border-color: var(--primary-color) rgba(227, 0, 123, 0.1) !important;
+}
+
+.spinner:after {
+    background-color: var(--primary-color) !important;
+}
+
+@keyframes pulse {
+    0%, 13%, 30%, 43%, 74% {
+        background-color: rgba(227, 0, 123, 0.2) !important;
+    }
+    15%, 28%, 45%, 70%, 100% {
+        background-color: rgba(227, 0, 123, 0.9) !important;
+    }
+}
+
+@keyframes borderPulse {
+    0% {
+        box-shadow: 0 0 0 0 white, 0 0 0 1px rgba(227, 0, 123, 0.8) !important;
+    }
+    40% {
+        box-shadow: 0 0 0 1px white, 0 0 0 2px rgba(227, 0, 123, 0.8) !important;
+    }
+    80% {
+        box-shadow: 0 0 0 3px #ffffff, 0 0 1px 3px rgba(227, 0, 123, 0.8) !important;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                         ADVANCED SIDEBAR ENHANCEMENTS                      */
+/* -------------------------------------------------------------------------- */
+
+/* Sidebar Active Indicator Pill */
+#sidebar-menu ul li a.active::before, 
+#sidebar-menu ul li.nav-active > a::before {
+    content: "";
+    position: absolute;
+    left: -15px;
+    height: 20px;
+    width: 4px;
+    background: var(--primary-color);
+    border-radius: 0 4px 4px 0;
+    transition: var(--transition);
+}
+
+/* Hover Slide Effect */
+#sidebar-menu ul li a {
+    position: relative;
+    transition: transform 0.2s ease, background 0.2s ease !important;
+}
+
+#sidebar-menu ul li a:hover {
+    transform: translateX(5px);
+}
+
+/* Accordion Arrow Rotation */
+#sidebar-menu li.has_sub.nav-active .menu-arrow i {
+    transform: rotate(90deg);
+    display: inline-block;
+    transition: var(--transition);
+}
+
+/* Submenu Floating Depth */
+#sidebar-menu ul li.has_sub .list-unstyled {
+    background: #fdfdfd !important;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
+    border-left: 2px solid #eee;
+    margin-left: 25px !important;
+}
+
+/* User Profile Section at Bottom */
+.sidebar-user-card {
+    padding: 12px;
+    margin: 20px 15px;
+    background: #fff0f5;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid rgba(227, 0, 123, 0.1);
+    transition: var(--transition);
+}
+
+.sidebar-user-card:hover {
+    background: #fce4ec;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(227, 0, 123, 0.1);
+}
+
+.sidebar-user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.sidebar-user-info {
+    flex: 1;
+    overflow: hidden;
+}
+
+.sidebar-user-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-main);
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+}
+
+
+.sidebar-user-role {
+    font-size: 11px;
+    color: var(--primary-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Icon Glow on Active */
+#sidebar-menu ul li.nav-active > a i, 
+#sidebar-menu ul li > a.active i {
+    text-shadow: 0 0 10px rgba(227, 0, 123, 0.3);
+    color: var(--primary-color) !important;
+}
+
+/* Submenu Transition Enhancement */
+#sidebar-menu ul li.has_sub .list-unstyled {
+    transition: max-height 0.3s ease-out, opacity 0.3s ease;
+}
+
+/* Custom Scrollbar for Sidebar */
+.slimscrollleft::-webkit-scrollbar {
+    width: 6px;
+}
+.slimscrollleft::-webkit-scrollbar-track {
+    background: transparent;
+}
+.slimscrollleft::-webkit-scrollbar-thumb {
+    background: rgba(227, 0, 123, 0.1);
+    border-radius: 10px;
+}
+.slimscrollleft::-webkit-scrollbar-thumb:hover {
+    background: rgba(227, 0, 123, 0.2);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                         SELECT2 PREMIUM STYLING                            */
+/* -------------------------------------------------------------------------- */
+
+.select2-container--default .select2-selection--multiple {
+    background-color: #f9f9f9 !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 10px !important;
+    min-height: 45px !important;
+    padding: 2px 8px !important;
+    transition: all 0.3s ease;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    background-color: #fff !important;
+    border-color: var(--primary-light) !important;
+    box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.1) !important;
+    outline: none !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: var(--primary-color) !important;
+    border: none !important;
+    color: #fff !important;
+    border-radius: 6px !important;
+    padding: 2px 10px !important;
+    margin-top: 6px !important;
+    font-weight: 500 !important;
+    font-size: 13px !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: rgba(255, 255, 255, 0.8) !important;
+    margin-right: 5px !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+    background: transparent !important;
+    color: #fff !important;
+}
+
+.select2-container--default .select2-search--inline .select2-search__field {
+    margin-top: 7px !important;
+    padding-left: 5px !important;
+    font-family: inherit !important;
+}
+
+.select2-dropdown {
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+}

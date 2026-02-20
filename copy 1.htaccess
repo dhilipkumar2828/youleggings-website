@@ -1,0 +1,38 @@
+
+RewriteOptions inherit
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
+RewriteCond %{HTTP_HOST} ^prrayashacollections\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.prrayashacollections\.com$
+RewriteRule ^collections\/kurti\-pant$ "https\:\/\/www\.prrayashacollections\.com\/" [R=301,L]
+RewriteCond %{HTTP_HOST} ^prrayashacollections\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.prrayashacollections\.com$
+RewriteRule ^collections\/day\-10\-pure\-cotton\-ajrakh\-budget\-friendly\-daily\-wear\-kurtis$ "https\:\/\/www\.prrayashacollections\.com\/" [R=301,L]
+RewriteCond %{HTTP_HOST} ^prrayashacollections\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.prrayashacollections\.com$
+RewriteRule ^collections\/festive\-collections\-1$ "https\:\/\/www\.prrayashacollections\.com\/" [R=301,L]
+RewriteCond %{HTTP_HOST} ^prrayashacollections\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.prrayashacollections\.com$
+RewriteRule ^collections$ "https\:\/\/www\.prrayashacollections\.com\/" [R=301,L]
+RewriteCond %{HTTP_HOST} ^prrayashacollections\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.prrayashacollections\.com$
+RewriteRule ^collections\/$ "https\:\/\/www\.prrayashacollections\.com\/" [R=301,L]

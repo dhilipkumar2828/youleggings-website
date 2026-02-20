@@ -1,0 +1,156 @@
+/* Custom Category CSS - Pink Theme Updated */
+
+.btn-action {
+    background: linear-gradient(135deg, #FF4081 0%, #E91E63 100%) !important;
+    border: none !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+    border-radius: 50px; /* Match Premium Theme Pill Shape */
+    padding: 8px 20px;
+    font-weight: 500;
+}
+
+.btn-action:hover {
+    background: linear-gradient(135deg, #E91E63 0%, #C2185B 100%) !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+}
+
+.btn-action:focus, .btn-action:active {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Add Button Hacks - Updated to Pink */
+#add-btn {
+    background: linear-gradient(135deg, #FF4081 0%, #E91E63 100%) !important;
+    border: none !important;
+    color: #fff !important;
+    width: auto; /* Auto width to fit icon/text better */
+    min-width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    float: right;
+    margin-top: -34px;
+    padding: 0 10px;
+    border-radius: 50px; /* Pill/Circle */
+    align-self: flex-end;
+    margin-right: 10px;
+    box-shadow: 0 4px 10px rgba(233, 30, 99, 0.3);
+    transition: all 0.3s ease;
+}
+
+#add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(233, 30, 99, 0.4);
+}
+
+#add-btn1 {
+    background: linear-gradient(135deg, #FF4081 0%, #E91E63 100%) !important;
+    border: none !important;
+    color: #fff !important;
+    width: auto;
+    min-width: 70px;
+    height: 40px; /* Consistent height */
+    float: right;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -31px;
+    padding: 0 15px;
+    border-radius: 50px;
+    align-self: flex-end;
+    margin-right: 70px;
+    box-shadow: 0 4px 10px rgba(233, 30, 99, 0.3);
+}
+
+#print-btn {
+    background: #6c757d !important; /* Secondary color for print? or Pink? Let's use Pink for consistency or Dark */
+    background: linear-gradient(135deg, #3f3d56 0%, #2b2b2b 100%) !important;
+    border: none !important;
+    color: #fff !important;
+    width: 55px;
+    height: 40px;
+    float: right;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -34px;
+    padding: 3px;
+    border-radius: 50px;
+    align-self: flex-end;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.dropdown-item {
+    padding: 8px 20px;
+    color: #212529;
+    font-size: 14px;
+}
+
+.dropdown-item:hover {
+    background-color: #FFF0F5; /* Light Pink */
+    color: #E91E63;
+}
+
+/* Keep structural styles */
+.button-items { float: right; }
+.modal-button { margin-bottom: 20px; }
+.nav-tabs { margin-bottom: 20px; }
+
+/* Image styles */
+img.admin-image {
+    border: 2px dashed #E91E63; /* Pink dashed border */
+    border-radius: 12px;
+    padding: 5px;
+    max-width: 180px;
+    height: 150px;
+    object-fit: cover;
+    margin: 0px;
+    margin-bottom: 15px;
+    background: #fff;
+}
+
+#form-image { display: grid; padding: 15px; }
+
+.input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 100%;
+}
+
+#example-text-input1 { padding: 0.2rem 0.75rem; }
+#camp { margin-bottom: 10px; }
+#card1 { display: block; width: 100%; margin-bottom: 22px; }
+#form-select { margin-bottom: 20px; }
+.waves-light { left: 0px; }
+#drp { border: 1px solid #ced4da; border-radius: 8px; }
+
+/* Switch Toggle - Pink */
+.switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; -webkit-transition: .4s; transition: .4s; border-radius: 34px; }
+.slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; -webkit-transition: .4s; transition: .4s; border-radius: 50%; }
+
+input:checked+.slider { background-color: #E91E63; } /* Pink when checked */
+input:focus+.slider { box-shadow: 0 0 1px #E91E63; }
+input:checked+.slider:before { -webkit-transform: translateX(26px); -ms-transform: translateX(26px); transform: translateX(26px); }
+
+.slider.round { border-radius: 34px; }
+.slider.round:before { border-radius: 50%; }
+
+.order-button { display: flex; float: right; justify-content: flex-end; }
+
+/* Media Queries */
+@media (max-width: 600px) {
+    #add-btn { margin-top: 0px; }
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+    #add-btn { margin-top: 0px; }
+}
