@@ -1,6 +1,6 @@
 @extends('frontend.layouts.arrivals_products_master_new')
 
-@section('content')
+@section('content') 
     <main class="main-content">
 
         <!-- HEADER -->
