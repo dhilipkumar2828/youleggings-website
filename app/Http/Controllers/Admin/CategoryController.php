@@ -14,12 +14,12 @@ class CategoryController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:category-view|category-add|category-edit|category-delete', ['only' => ['index', 'store']]);
-        $this->middleware('permission:category-add', ['only' => ['create', 'store']]);
-        $this->middleware('permission:category-edit', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:category-delete', ['only' => ['destroy']]);
-        $this->middleware('permission:homepage-sorting', ['only' => ['homepage_sorting']]);
-        $this->middleware('permission:headerpage-sorting', ['only' => ['header_sorting']]);
+        // $this->middleware('permission:category-view|category-add|category-edit|category-delete', ['only' => ['index', 'store']]);
+        // $this->middleware('permission:category-add', ['only' => ['create', 'store']]);
+        // $this->middleware('permission:category-edit', ['only' => ['edit', 'update']]);
+        // $this->middleware('permission:category-delete', ['only' => ['destroy']]);
+        // $this->middleware('permission:homepage-sorting', ['only' => ['homepage_sorting']]);
+        // $this->middleware('permission:headerpage-sorting', ['only' => ['header_sorting']]);
         // $this->userid=@Auth::user()->id;
         // $this->username=@Auth::user()->name;
     }

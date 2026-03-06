@@ -1,0 +1,10 @@
+<?php
+include 'vendor/autoload.php';
+$app = include_once 'bootstrap/app.php';
+$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+$kernel->bootstrap();
+
+$tables = Illuminate\Support\Facades\DB::select('SHOW TABLES');
+foreach ($tables as $table) {
+    echo array_values((array)$table)[0] . PHP_EOL;
+}

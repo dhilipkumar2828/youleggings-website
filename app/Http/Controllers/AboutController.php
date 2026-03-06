@@ -18,13 +18,10 @@ class AboutController extends Controller
 
     {
 
-         $this->middleware('permission:About Us List|About Us Create|About Us Edit|About Us Delete', ['only' => ['index','store']]);
-
-         $this->middleware('permission:About Us Create', ['only' => ['create','store']]);
-
-         $this->middleware('permission:About Us Edit', ['only' => ['edit','update']]);
-
-         $this->middleware('permission:About Us Delete', ['only' => ['destroy']]);
+        //  $this->middleware('permission:About Us List|About Us Create|About Us Edit|About Us Delete', ['only' => ['index','store']]);
+        //  $this->middleware('permission:About Us Create', ['only' => ['create','store']]);
+        //  $this->middleware('permission:About Us Edit', ['only' => ['edit','update']]);
+        //  $this->middleware('permission:About Us Delete', ['only' => ['destroy']]);
 
     }
 
@@ -79,51 +76,38 @@ class AboutController extends Controller
      */
 
     public function store(Request $request)
-
     {
-
-        // return $request->all();
-
         $this->validate($request,[
-
             'title'=>'string|required',
-
+            'sub_title'=>'string|nullable',
             'description'=>'string|nullable',
-
             'photo'=>'string',
-
+            'promise_title'=>'string|nullable',
+            'promise_desc'=>'string|nullable',
+            'why_choose_1_title'=>'string|nullable', 'why_choose_1_desc'=>'string|nullable',
+            'why_choose_2_title'=>'string|nullable', 'why_choose_2_desc'=>'string|nullable',
+            'why_choose_3_title'=>'string|nullable', 'why_choose_3_desc'=>'string|nullable',
+            'why_choose_4_title'=>'string|nullable', 'why_choose_4_desc'=>'string|nullable',
+            'why_choose_5_title'=>'string|nullable', 'why_choose_5_desc'=>'string|nullable',
         ]);
 
         $data=$request->all();
-
         $slug=Str::slug($request->input('title'));
-
         $slug_count=About::where('slug',$slug)->count();
 
         if($slug_count>0){
-
             $slug .=time().'-'.$slug;
-
         }
 
         $data['slug']=$slug;
-
-        // return $data;
-
         $status=About::create($data);
 
         if($status){
-
              Session::put('success','Successfully created About');
-
            return redirect()->route('about.index');
-
         }else{
-
             return back()->with('error','something went worng!');
-
         }
-
     }
 
     /**
@@ -193,45 +177,34 @@ class AboutController extends Controller
      */
 
     public function update(Request $request, $id)
-
     {
-
         $aboutus=About::find($id);
 
         if($aboutus){
+            $this->validate($request,[
+                'title'=>'string|required',
+                'sub_title'=>'string|nullable',
+                'description'=>'string|nullable',
+                'photo'=>'string',
+                'promise_title'=>'string|nullable',
+                'promise_desc'=>'string|nullable',
+                'why_choose_1_title'=>'string|nullable', 'why_choose_1_desc'=>'string|nullable',
+                'why_choose_2_title'=>'string|nullable', 'why_choose_2_desc'=>'string|nullable',
+                'why_choose_3_title'=>'string|nullable', 'why_choose_3_desc'=>'string|nullable',
+                'why_choose_4_title'=>'string|nullable', 'why_choose_4_desc'=>'string|nullable',
+                'why_choose_5_title'=>'string|nullable', 'why_choose_5_desc'=>'string|nullable',
+            ]);
 
-            // return view('backend.banner.edit',compact('banner'));
+            $data=$request->all();
+            $status=$aboutus->fill($data)->save();
 
-           // return $request->all();
-
-        $this->validate($request,[
-
-            'title'=>'string|required',
-
-            'description'=>'string|nullable',
-
-            'photo'=>'string',
-
-        ]);
-
-        $data=$request->all();
-
-        $status=$aboutus->fill($data)->save();
-
-        if($status){
-
-           Session::put('success','Successfully update About');
-
-            return redirect()->route('about.index');
-
-        }else{
-
-            return back()->with('error','something went worng!');
-
+            if($status){
+               Session::put('success','Successfully update About');
+                return redirect()->route('about.index');
+            }else{
+                return back()->with('error','something went worng!');
+            }
         }
-
-        }
-
     }
 
     /**

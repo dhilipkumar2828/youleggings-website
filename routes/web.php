@@ -124,7 +124,9 @@ Route::get('/catalogue_pdf/{id}',[App\Http\Controllers\Frontend\IndexController:
 Route::get('/forget_password', [App\Http\Controllers\Frontend\IndexController::class, 'forget_password']);
 Route::get('/get_modalvalues', [App\Http\Controllers\Frontend\IndexController::class, 'get_modalDetails'])->name('get_modalDetails');
 Route::get('/sitemap', [App\Http\Controllers\Frontend\IndexController::class, 'sitemap'])->name('sitemap');
-Route::get('/whatisnew', [App\Http\Controllers\Frontend\WhatisnewController::class, 'whatisnew'])->name('whatisnew');
+Route::get('/whatisnew', function () {
+    return redirect('/?page=new-arrivals');
+})->name('whatisnew');
 Route::post('/search_products', [App\Http\Controllers\Frontend\WhatisnewController::class,'search_products']);
 Route::post('/search', [App\Http\Controllers\Frontend\WhatisnewController::class,'search']);
 Route::get('/order_pdf/{id}', [App\Http\Controllers\Frontend\WhatisnewController::class, 'order_pdf']);
@@ -133,12 +135,16 @@ Route::post('/update_userdetails', [App\Http\Controllers\Frontend\WhatisnewContr
 Route::get('/slider_filter', [App\Http\Controllers\Frontend\WhatisnewController::class,'slider_filter']);
 //Route::get('/test', [App\Http\Controllers\Frontend\IndexController::class, 'test'])->name('test');
 Route::get('/searchsug', [App\Http\Controllers\Frontend\WhatisnewController::class, 'searchsug'])->name('searchsug');
-Route::get('/product_list', [App\Http\Controllers\Frontend\WhatisnewController::class, 'product']);
-Route::get('/product_list/{id}', [App\Http\Controllers\Frontend\WhatisnewController::class, 'product']);
-Route::get('/product_list_test/{id}', [App\Http\Controllers\Frontend\WhatisnewController::class, 'product_list_test']);
-Route::get('/newarrival_list', [App\Http\Controllers\Frontend\WhatisnewController::class, 'newarrival']);
+Route::get('/product_list', function () {
+    return redirect('/?page=shop');
+});
+Route::get('/newarrival_list', function () {
+    return redirect('/?page=new-arrivals');
+});
 
-Route::get('/product_list_new/{id}', [App\Http\Controllers\Frontend\WhatisnewController::class, 'productnew']);
+Route::get('/product_list/{id}', function () {
+    return redirect('/?page=shop');
+});
 Route::get('/all_products',[App\Http\Controllers\Frontend\WhatisnewController::class, 'all_products']);
 
 Route::post('/product_filter', [App\Http\Controllers\Frontend\WhatisnewController::class, 'product_filter']);
@@ -147,7 +153,9 @@ Route::post('/newarrival_product_filter', [App\Http\Controllers\Frontend\Whatisn
 Route::resource('/product-review',\App\Http\Controllers\Admin\ProductReviewsController::class);
 Route::post('/product-review',[\App\Http\Controllers\Admin\ProductReviewsController::class,'productReview'])->name('product.review');
 Route::get('/product_viewmore',[\App\Http\Controllers\Admin\ProductReviewsController::class,'viewmore']);
-Route::get('/aboutus', [App\Http\Controllers\Frontend\IndexController::class, 'about'])->name('about');
+Route::get('/aboutus', function () {
+    return redirect('/?page=about');
+})->name('about');
 
 Route::get('/help', [App\Http\Controllers\Frontend\IndexController::class, 'help'])->name('help');
 
@@ -156,15 +164,28 @@ Route::post('/updatereviews', [App\Http\Controllers\Frontend\IndexController::cl
 
 Route::get('/offers', [App\Http\Controllers\Frontend\IndexController::class, 'offers'])->name('offers');
 Route::get('/compare_products/{id}', [App\Http\Controllers\Frontend\IndexController::class, 'compare_products'])->name('compare_products');
-Route::get('/blogs', [App\Http\Controllers\Frontend\IndexController::class, 'blogs'])->name('blogs');
-Route::get('/contactus', [App\Http\Controllers\Frontend\IndexController::class, 'contactus'])->name('contactus');
+Route::get('/blogs', function () {
+    return redirect('/?page=blog');
+})->name('blogs');
+Route::get('/blog/{slug}', [App\Http\Controllers\Frontend\IndexController::class, 'blog_detail'])->name('blog_detail');
+Route::get('/contactus', function () {
+    return redirect('/?page=contact');
+})->name('contactus');
 Route::get('/sendEmail', [App\Http\Controllers\ContactController::class, 'sendEmail'])->name('sendEmail');
 
 Route::post('/contactform', [App\Http\Controllers\Frontend\IndexController::class, 'contactform'])->name('contactform');
-Route::get('/faq', [App\Http\Controllers\Frontend\IndexController::class, 'faq'])->name('faq');
-Route::get('/deliveryreturn', [App\Http\Controllers\Frontend\IndexController::class, 'deliveryr'])->name('deliveryreturn');
-Route::get('/privacypolicy', [App\Http\Controllers\Frontend\IndexController::class, 'privacyp'])->name('privacypolicy');
-Route::get('/termscondition', [App\Http\Controllers\Frontend\IndexController::class, 'termsc'])->name('termscondition');
+Route::get('/faq', function () {
+    return redirect('/?page=contact'); 
+})->name('faq');
+Route::get('/deliveryreturn', function () {
+    return redirect('/?page=shop'); 
+})->name('deliveryreturn');
+Route::get('/privacypolicy', function () {
+    return redirect('/?page=about'); 
+})->name('privacypolicy');
+Route::get('/termscondition', function () {
+    return redirect('/?page=about');
+})->name('termscondition');
 Route::post('/contact_form', [App\Http\Controllers\Frontend\IndexController::class, 'contact_form'])->name('contact_form');
 Route::post('/client_feedback', [App\Http\Controllers\Frontend\IndexController::class, 'client_feedback'])->name('client_feedback');
 // Route::post('/order_tracking', [App\Http\Controllers\Frontend\IndexController::class, 'order_tracking'])->name('order_tracking');
@@ -187,6 +208,8 @@ Route::get('/send_email', [App\Http\Controllers\Frontend\SubscriberController::c
 Route::get('/subscribers', [App\Http\Controllers\Frontend\SubscriberController::class, 'subscribers']);
 //Route::group(['prefix'=>'admin','middleware'=>'auth',['admin']],function(){
  Route::group(['middleware'=>'auth','web','role:admin'],function(){
+    Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
+    Route::patch('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
     Route::resource('/user',\App\Http\Controllers\Admin\UserController::class);
     Route::resource('/permission',\App\Http\Controllers\PermissionController::class);
     Route::resource('/permission_group',\App\Http\Controllers\PermissionGroupController::class);
@@ -434,8 +457,18 @@ Route::get('inventory-history',[\App\Http\Controllers\Admin\InventoryController:
 //warehouse
 Route::resource('/warehouse',\App\Http\Controllers\Admin\WarehouseController::class);
 Route::get('/warehouse-status',[\App\Http\Controllers\Admin\WarehouseController::class,'warehouse_status'])->name('warehouse.status');
-Route::get('/customer-list', [App\Http\Controllers\Frontend\IndexController::class, 'customerlist'])->name('customer.list');
-Route::get('/customer-view/{id}', [App\Http\Controllers\Frontend\IndexController::class, 'customerview'])->name('customer.view');
+    Route::get('/customer-list', [App\Http\Controllers\Frontend\IndexController::class, 'customerlist'])->name('customer.list');
+    Route::get('/customer-view/{id}', [App\Http\Controllers\Frontend\IndexController::class, 'customerview'])->name('customer.view');
+
+    Route::resource('/contact',\App\Http\Controllers\ContactController::class);
+    Route::resource('/about',\App\Http\Controllers\AboutController::class);
+    Route::resource('/faqs',\App\Http\Controllers\FaqsController::class);
+    Route::resource('/contactlist',\App\Http\Controllers\ContactformController::class);
+    Route::resource('/blog',\App\Http\Controllers\BlogController::class);
+    Route::resource('/terms',\App\Http\Controllers\TermsController::class);
+    Route::resource('/delivery',\App\Http\Controllers\DeliveryController::class);
+    Route::resource('/deals',\App\Http\Controllers\DealsController::class);
+    Route::resource('/privacy',\App\Http\Controllers\PrivacyController::class);
 });
 //product detailes
 Route::resource('/product_detail',\App\Http\Controllers\Frontend\WhatisnewController::class);
@@ -529,15 +562,7 @@ Route::group(['prefix'=>'customer'],function(){
 
 Route::post('/checkCouponcode', [\App\Http\Controllers\Admin\CouponController::class, 'checkCouponcode'])->name('checkCouponcode');
 
-Route::resource('/contact',\App\Http\Controllers\ContactController::class);
-Route::resource('/about',\App\Http\Controllers\AboutController::class);
-Route::resource('/faqs',\App\Http\Controllers\FaqsController::class);
-Route::resource('/contactlist',\App\Http\Controllers\ContactformController::class);
-Route::resource('/blog',\App\Http\Controllers\BlogController::class);
-Route::resource('/terms',\App\Http\Controllers\TermsController::class);
-Route::resource('/delivery',\App\Http\Controllers\DeliveryController::class);
-Route::resource('/deals',\App\Http\Controllers\DealsController::class);
-Route::resource('/privacy',\App\Http\Controllers\PrivacyController::class);
+
 
 Route::resource('/categorytag', \App\Http\Controllers\CategoryTagController::class);
 

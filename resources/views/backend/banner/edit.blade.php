@@ -65,6 +65,18 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
+                                    <label for="title" class="col-sm-2 col-form-label">Title</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" name="title" value="{{ $banner->title }}" placeholder="Enter Banner Title">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="subtitle" class="col-sm-2 col-form-label">Subtitle</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" name="subtitle" value="{{ $banner->subtitle }}" placeholder="Enter Banner Subtitle">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Image <span
                                             style="color:red">*</span></label>
                                     <!-- <img src="assets/images/image.png" class="admin-image"> -->

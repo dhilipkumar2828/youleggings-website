@@ -110,6 +110,49 @@
                 @endif
 
                 <li>
+                    <a href="{{ route('settings.index') }}" class="waves-effect">
+                        <i class="dripicons-gear"></i>
+                        <span> General Settings </span>
+                    </a>
+                </li>
+
+                @if (auth()->user()->can('Blog-view'))
+                    <li>
+                        <a href="{{ route('blog.index') }}" class="waves-effect">
+                            <i class="dripicons-blog"></i>
+                            <span> Blogs </span>
+                        </a>
+                    </li>
+                @endif
+
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="dripicons-document"></i><span>
+                            CMS Pages </span> <span class="menu-arrow float-right"><i
+                                class="mdi mdi-chevron-right"></i></span></a>
+                    <ul class="list-unstyled">
+                        @can('About Us List')
+                            <li><a href="{{ route('about.index') }}"><i class="mdi mdi-information-outline"></i>About Us</a></li>
+                        @endcan
+                        @can('Contact List')
+                            <li><a href="{{ route('contact.index') }}"><i class="mdi mdi-contacts"></i>Contact Info</a></li>
+                        @endcan
+                        @can('FAQs List')
+                            <li><a href="{{ route('faqs.index') }}"><i class="mdi mdi-help-circle-outline"></i>FAQs</a></li>
+                        @endcan
+                        <li><a href="{{ route('terms.index') }}"><i class="mdi mdi-file-document-outline"></i>Terms & Conditions</a></li>
+                        <li><a href="{{ route('privacy.index') }}"><i class="mdi mdi-lock-outline"></i>Privacy Policy</a></li>
+                        <li><a href="{{ route('delivery.index') }}"><i class="mdi mdi-truck-delivery"></i>Delivery & Returns</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="{{ route('contactlist.index') }}" class="waves-effect">
+                        <i class="dripicons-mail"></i>
+                        <span> Contact Submissions </span>
+                    </a>
+                </li>
+
+                <li>
                     <a href="{{ route('shippingchargesedit') }}" class="waves-effect">
                         <i class="dripicons-to-do"></i>
                         <span> Shipping Settings </span>

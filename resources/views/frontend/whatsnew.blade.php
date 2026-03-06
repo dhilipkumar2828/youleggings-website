@@ -79,7 +79,7 @@
 
                         <div class="page-header-st3-content">
 
-                            <h2 class="page-header-title">{{ isset($categories) ? $categories->title : 'New Arrivals' }}
+                            <h2 class="page-header-title">{{ (isset($categories) && !($categories instanceof \Illuminate\Support\Collection)) ? $categories->title : 'New Arrivals' }}
                             </h2>
 
                         </div>
@@ -97,7 +97,7 @@
                                 <li class="breadcrumb-item active text-dark" aria-current="page">Products</li>
 
                                 <li class="breadcrumb-item active text-dark" aria-current="page">
-                                    {{ isset($categories) ? $categories->title : 'All Products' }}</li>
+                                    {{ (isset($categories) && !($categories instanceof \Illuminate\Support\Collection)) ? $categories->title : 'All Products' }}</li>
 
                             </ol>
 

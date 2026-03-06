@@ -81,17 +81,12 @@ class WhatisnewController extends Controller
 
             $date=date('d-m-Y');
 
-            // $ip=$this->locationData->ip;
-
-            //  $country=$this->locationData->countryCode;
-
-            @$visitors =Visitors::where('ip_address',$ip)->orderBy('id','DESC')->get()[0];
-
-            if(empty($visitors) or $visitors == null){
-
-                $data['ip_address']=$ip;
-
-                $data['country']=$country;
+            $ip = request()->ip();
+            $country = 'IN'; // Default fallback
+            @$visitors = Visitors::where('ip_address', $ip)->orderBy('id', 'DESC')->first();
+            if (empty($visitors)) {
+                $data['ip_address'] = $ip;
+                $data['country'] = $country;
 
                 $data['last_visits']=$date;
 
@@ -141,6 +136,8 @@ class WhatisnewController extends Controller
 
             $aProductSaleprice=array();
 
+            $aDiscountpercent=array();
+
             $products=Product::where('status','active')->orderBy('id',"desc")->get();
 
             $categories=Category::where('is_parent',0)->where('status','active')->get();
@@ -168,6 +165,17 @@ class WhatisnewController extends Controller
                 array_push($aProductvariant_photo,$A_prodimg[0]);
 
                 array_push($aProductSaleprice,$saleprice['sale_price']);
+
+                // Calculate discount percent
+                if ($product->discount_type == "fixed") {
+                    if ($variant && $variant->regular_price != 0) {
+                        array_push($aDiscountpercent, ($product->discount / $variant->regular_price) * 100);
+                    } else {
+                        array_push($aDiscountpercent, 0);
+                    }
+                } else {
+                    array_push($aDiscountpercent, $product->discount);
+                }
 
              }
 
@@ -239,7 +247,11 @@ class WhatisnewController extends Controller
 
              }
 
-            return view('frontend.whatsnew',compact('products','ahover_image_photo','iswishlist','categories','n_Products','aProductSaleprice','aProductvariant_photo','n_ProductSaleprice','n_Productvariant_photo'));
+            $highest_rate = Product::where('status', 'active')->max('regular_price') ?? 0;
+
+            $slug = null;
+
+            return view('frontend.whatsnew',compact('products','ahover_image_photo','iswishlist','categories','n_Products','aProductSaleprice','aProductvariant_photo','n_ProductSaleprice','n_Productvariant_photo','aDiscountpercent','highest_rate','slug'));
 
     }
 

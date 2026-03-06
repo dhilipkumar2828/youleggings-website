@@ -31,9 +31,9 @@
 
                 <h4 class="card-title font-20 mt-0">Delivery & Returns</h4>
 
-                @can('Delivery Create')
+                {{-- @can('Delivery Create') --}}
                     <a href="{{ route('delivery.create') }}" id="add-btn" style="color: #ffffff;"> + ADD</a>
-                @endcan
+                {{-- @endcan --}}
 
             </div>
 
@@ -91,25 +91,25 @@
 
                                             <td>
                                                 <div class="d-flex align-items-center">
-                                                    @can('Delivery Edit')
+                                                    {{-- @can('Delivery Edit') --}}
                                                         <a href="{{ route('delivery.edit', $item->id) }}"
                                                             class="action-icon btn-edit-icon" data-toggle="tooltip"
                                                             title="Edit">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
-                                                    @endcan
+                                                    {{-- @endcan --}}
 
                                                     <form action="{{ route('delivery.destroy', $item->id) }}" method="post"
                                                         style="display:inline;">
                                                         @csrf
                                                         @method('delete')
-                                                        @can('Delivery Delete')
+                                                        {{-- @can('Delivery Delete') --}}
                                                             <button type="submit" class="action-icon btn-delete-icon dltBtn"
                                                                 data-id="{{ $item->id }}" data-toggle="tooltip"
                                                                 title="Delete">
                                                                 <i class="fa fa-trash"></i>
                                                             </button>
-                                                        @endcan
+                                                        {{-- @endcan --}}
                                                     </form>
                                                 </div>
                                             </td>

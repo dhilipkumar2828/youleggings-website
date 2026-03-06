@@ -18,13 +18,10 @@ class TermsController extends Controller
 
     {
 
-         $this->middleware('permission:Terms List|Terms Create|Terms Edit|Terms Delete', ['only' => ['index','store']]);
-
-         $this->middleware('permission:Terms Create', ['only' => ['create','store']]);
-
-         $this->middleware('permission:Terms Edit', ['only' => ['edit','update']]);
-
-         $this->middleware('permission:Terms Delete', ['only' => ['destroy']]);
+        //  $this->middleware('permission:Terms List|Terms Create|Terms Edit|Terms Delete', ['only' => ['index','store']]);
+        //  $this->middleware('permission:Terms Create', ['only' => ['create','store']]);
+        //  $this->middleware('permission:Terms Edit', ['only' => ['edit','update']]);
+        //  $this->middleware('permission:Terms Delete', ['only' => ['destroy']]);
 
     }
 

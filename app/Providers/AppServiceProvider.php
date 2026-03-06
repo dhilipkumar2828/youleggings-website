@@ -150,8 +150,12 @@ class AppServiceProvider extends ServiceProvider
 
             }
 
-            $view->with('menu_cate', @$data);
-
+            $settings = \App\Models\Setting::first();
+            $view->with(['menu_cate' => @$data, 'settings' => $settings]);
+        }
+        else {
+            $settings = \App\Models\Setting::first();
+            $view->with('settings', $settings);
         }
 
         });

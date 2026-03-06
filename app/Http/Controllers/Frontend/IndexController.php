@@ -111,7 +111,8 @@ $subcategories=Product::where('status','active')->where('category',$categoryId)-
     $advertisement2 = Advertisement::where('status', 'active')->where('position','=','2')->first();
 
     $allreviews=Clientfeedback::where('status','accept')->orderBy('id','desc')->get();
-
+    $abouts=About::first();
+    $abouts_banner=Banner::orderBy('id','DESC')->first();
     $aProductvariant_photo = array();
     $aProductSaleprice = array();
     $aDiscountpercent = array();
@@ -161,10 +162,14 @@ $subcategories=Product::where('status','active')->where('category',$categoryId)-
         }
     }
 
-    return view('frontend.index', compact('allreviews','banners', 'ahover_image_photo', 'aDiscountpercent', 'advertisement', 'iswishlist', 'categories', 'products', 'aProductvariant_photo', 'aProductSaleprice','advertisement2'));
-}
+        $settings = \App\Models\Setting::first();
+        $blogs = \App\Models\Blog::where('status', 'active')->orderBy('id', 'desc')->get();
+        $default_contact = \App\Models\Contact::first();
+        
+        return view('frontend.index', compact('abouts','abouts_banner','allreviews','banners', 'ahover_image_photo', 'aDiscountpercent', 'advertisement', 'iswishlist', 'categories', 'products', 'aProductvariant_photo', 'aProductSaleprice','advertisement2', 'settings', 'blogs', 'default_contact'));
+    }
 
-     public function guestlogin()
+    public function guestlogin()
     {
              $this->sessionremove();
         $abouts_banner=Banner::orderBy('id','DESC')->limit('1')->get();
@@ -187,8 +192,9 @@ $subcategories=Product::where('status','active')->where('category',$categoryId)-
              $this->sessionremove();
         $abouts_banner=Banner::orderBy('id','DESC')->limit('1')->get();
         $abouts=About::first();
+        $settings = \App\Models\Setting::first();
        // $abouts=About::all();
-        return view('frontend.about',compact('abouts','abouts_banner'));
+        return view('frontend.about',compact('abouts','abouts_banner', 'settings'));
     }
 
       public function reviews()
@@ -208,39 +214,75 @@ $subcategories=Product::where('status','active')->where('category',$categoryId)-
        // $abouts=About::all();
         return view('frontend.help',compact('abouts','abouts_banner'));
     }
-   public function blogs()
+    public function blogs()
     {
-        $blogs_banner=Banner::orderBy('id','DESC')->limit('1')->get();
-        $blogss=Blog::first();
-        // $abouts=About::all();
-         return view('frontend.blog',compact('blogss','blogs_banner'));
+        $blogs_banner=Banner::where('status', 'active')->orderBy('id','DESC')->limit('1')->get();
+        $blogs = Blog::where('status', 'active')->orderBy('publish_at', 'DESC')->paginate(9);
+        return view('frontend.blog',compact('blogs','blogs_banner'));
+    }
+
+    public function blog_detail($slug)
+    {
+        $blog = Blog::where('slug', $slug)->firstOrFail();
+        $blogs_banner = Banner::where('status', 'active')->orderBy('id','DESC')->limit('1')->get();
+        $recent_blogs = Blog::where('status', 'active')->where('id', '!=', $blog->id)->orderBy('publish_at', 'DESC')->limit(3)->get();
+        return view('frontend.blog_detail', compact('blog', 'blogs_banner', 'recent_blogs'));
     }
     public function contactus()
     {
-        // $contact_banners= Banner::where(['status'=>'active','condition'=>'banner'])->orderBy('id','DESC')->limit('1')->get();
-        // $contact_data=Contact::first();
-      //  session()->flash('success', 'This is a static test message.');
-        return view('frontend.contact');
+        $settings = \App\Models\Setting::first();
+        return view('frontend.contact', compact('settings'));
     }
     public function contactform(Request $request)
     {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'message' => 'required',
+        ]);
 
         $details['name'] = $request->name;
-        $details['mobile'] = $request->mobile;
+        $details['mobile'] = $request->mobile ?? $request->phone;
         $details['email'] = $request->email;
         $details['message'] = $request->message;
+
+        // Save to database
+        Contactform::create([
+            'name' => $details['name'],
+            'email' => $details['email'],
+            'phone' => $details['mobile'],
+            'message' => $details['message'],
+        ]);
+
         dispatch(new \App\Jobs\ContactEmailJob($details));
-      //  Session::put('success','Contact form submitted');
-      //session()->flash('success', 'Successfully created Contact');
 
-    // Check if session data is set
-    // This will dump all session data
+        return response()->json([
+            'success' => true,
+            'message' => 'Successfully created Contact'
+        ]);
+    }
 
- return response()->json([
-        'success' => true,
-        'message' => 'Successfully created Contact'
-    ]);
+    public function contact_form(Request $request)
+    {
+        $details['name'] = $request->name;
+        $details['mobile'] = $request->phone;
+        $details['email'] = $request->email;
+        $details['message'] = $request->message;
 
+        // Save to database
+        Contactform::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'message' => $request->message,
+        ]);
+
+        dispatch(new \App\Jobs\ContactEmailJob($details));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Thank you for contacting us! We will get back to you soon.'
+        ]);
     }
     public function faq()
     {

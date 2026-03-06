@@ -53,19 +53,13 @@ class ProductController extends Controller
       function __construct()
 
     {
-         $this->middleware('permission:products-view|products-add|products-edit|products-delete', ['only' => ['index','store']]);
-
-         $this->middleware('permission:products-add', ['only' => ['create','store']]);
-
-         $this->middleware('permission:products-edit', ['only' => ['edit','update']]);
-
-         $this->middleware('permission:products-delete', ['only' => ['destroy']]);
-
-         $this->middleware('permission:product_review-view', ['only' => ['productriviewes']]);
-
-         $this->middleware('permission:products-add', ['only' => ['add_product_attribute']]);
-
-         $this->middleware('permission:inventory-view', ['only' => ['listproduct']]);
+        //  $this->middleware('permission:products-view|products-add|products-edit|products-delete', ['only' => ['index','store']]);
+        //  $this->middleware('permission:products-add', ['only' => ['create','store']]);
+        //  $this->middleware('permission:products-edit', ['only' => ['edit','update']]);
+        //  $this->middleware('permission:products-delete', ['only' => ['destroy']]);
+        //  $this->middleware('permission:product_review-view', ['only' => ['productriviewes']]);
+        //  $this->middleware('permission:products-add', ['only' => ['add_product_attribute']]);
+        //  $this->middleware('permission:inventory-view', ['only' => ['listproduct']]);
 
         //  $this->userid=@Auth::user()->id;
 
@@ -1005,14 +999,10 @@ $attribute_delete->delete();
 
   $sku = random_int(100000, 9999999);
 
-  $slug=Str::slug($request->input('name'));
-
-  $slug_count=Product::where('slug',$slug)->count();
-
-  if($slug_count>0){
-
-      $slug .=time().'-'.$slug;
-
+  $slug = Str::slug($request->input('name'));
+  $slug_count = Product::where('slug', $slug)->where('id', '!=', $id)->count();
+  if ($slug_count > 0) {
+      $slug .= '-' . time();
   }
 
   if(isset($data['attribute_name'])){
@@ -1238,7 +1228,7 @@ $tempVarientSku[]=$data['sku'][$i];
 
  // $product->ingrediants=$data['ingrediants'];
 
-  $product->update();
+  $product->save();
 
 /*
  if (isset($data['product_photo']) && !empty($data['product_photo']) && $data['product_photo']!='') {

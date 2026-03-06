@@ -32,8 +32,9 @@ trait PriceTrait {
 
                 //Tax Amount
                 $tax_value=Tax::where('id',$tax)->where('status','active')->first();
+                $percentage = $tax_value->percentage ?? 0;
 
-                $tax_price = $regular_price * $tax_value->percentage/100;
+                $tax_price = $regular_price * $percentage/100;
 
                 //After discount
                     if($discount_type == 'percentage') {

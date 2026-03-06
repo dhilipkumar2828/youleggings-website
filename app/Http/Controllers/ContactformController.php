@@ -16,7 +16,7 @@ class ContactformController extends Controller
 
     {
 
-         $this->middleware('permission:Enquiry List', ['only' => ['index']]);
+        //  $this->middleware('permission:Enquiry List', ['only' => ['index']]);
 
         //  $this->middleware('permission:Contact Create', ['only' => ['create','store']]);
 

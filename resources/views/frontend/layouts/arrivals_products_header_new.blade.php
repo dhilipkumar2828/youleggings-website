@@ -18,7 +18,7 @@
                 <div class="col col-md-4">
                     <div class="header-logo text-center">
                         <a href="{{ url('index') }}" class="d-inline-block">
-                            <img class="logo-main" src="{{ asset('frontend/img/you-leggings.png') }}" alt="Logo" />
+                            <img class="logo-main" src="{{ $settings && $settings->logo ? (Str::contains($settings->logo, '/') ? asset($settings->logo) : asset('uploads/settings/'.$settings->logo)) : asset('frontend/img/you-leggings.png') }}" alt="Logo" />
 
                         </a>
                     </div>

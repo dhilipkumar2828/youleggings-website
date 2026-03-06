@@ -27,11 +27,11 @@
                         </div>
                     </div>
                     <div>
-                        @can('category-add')
+                        {{-- @can('category-add') --}}
                             <a href="{{ route('category.create') }}" class="btn btn-primary px-4">
                                 <i class="dripicons-plus mr-2"></i> Add New Category
                             </a>
-                        @endcan
+                        {{-- @endcan --}}
                     </div>
                 </div>
             </div>
@@ -64,14 +64,14 @@
                                                 </th>
                                                 <th>S.No</th>
                                                 <th>Category Name</th>
-                                                @if (auth()->user()->can('category-edit'))
+                                                {{-- @if (auth()->user()->can('category-edit')) --}}
                                                     <th>Status</th>
-                                                @endif
-                                                @if (auth()->user()->can('category-edit') ||
+                                                {{-- @endif --}}
+                                                {{-- @if (auth()->user()->can('category-edit') ||
                                                         auth()->user()->can('category-delete') ||
-                                                        auth()->user()->can('category-view'))
+                                                        auth()->user()->can('category-view')) --}}
                                                     <th class="text-right">Actions</th>
-                                                @endif
+                                                {{-- @endif --}}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -93,7 +93,7 @@
                                                     </td>
                                                     <td>{{ $key + 1 }}</td>
                                                     <td class="font-weight-600">{{ $item->title }}</td>
-                                                    @if (auth()->user()->can('category-edit'))
+                                                    {{-- @if (auth()->user()->can('category-edit')) --}}
                                                         <td>
                                                             <input type="checkbox" name="toogle"
                                                                 value="{{ $item->id }}" data-toggle="switchbutton"
@@ -102,21 +102,21 @@
                                                                 data-size="sm" data-onstyle="success"
                                                                 data-offstyle="danger">
                                                         </td>
-                                                    @endif
-                                                    @if (auth()->user()->can('category-edit') ||
+                                                    {{-- @endif --}}
+                                                    {{-- @if (auth()->user()->can('category-edit') ||
                                                             auth()->user()->can('category-delete') ||
-                                                            auth()->user()->can('category-view'))
+                                                            auth()->user()->can('category-view')) --}}
                                                         <td class="text-right">
                                                             <div class="d-flex align-items-center justify-content-end">
 
-                                                                @can('category-edit')
+                                                                {{-- @can('category-edit') --}}
                                                                     <!-- Edit -->
                                                                     <a href="{{ route('category.edit', $item->id) }}"
                                                                         class="action-icon btn-edit-icon" data-toggle="tooltip"
                                                                         title="Edit">
                                                                         <i class="fa fa-edit"></i>
                                                                     </a>
-                                                                @endcan
+                                                                {{-- @endcan --}}
 
                                                                 @if ($subcat)
                                                                     <!-- View Subcategories -->
@@ -134,7 +134,7 @@
                                                                     <i class="fa fa-plus-square"></i>
                                                                 </a>
 
-                                                                @can('category-delete')
+                                                                {{-- @can('category-delete') --}}
                                                                     <!-- Delete -->
                                                                     <button type="button"
                                                                         class="action-icon btn-delete-icon dltBtn"
@@ -142,11 +142,11 @@
                                                                         title="Delete">
                                                                         <i class="fa fa-trash"></i>
                                                                     </button>
-                                                                @endcan
+                                                                {{-- @endcan --}}
 
                                                             </div>
                                                         </td>
-                                                    @endif
+                                                    {{-- @endif --}}
                                                 </tr>
                                             @endforeach
                                         </tbody>

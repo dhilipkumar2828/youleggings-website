@@ -18,13 +18,10 @@ class PrivacyController extends Controller
 
     {
 
-         $this->middleware('permission:Privacy List|Privacy Create|Privacy Edit|Privacy Delete', ['only' => ['index','store']]);
-
-         $this->middleware('permission:Privacy Create', ['only' => ['create','store']]);
-
-         $this->middleware('permission:Privacy Edit', ['only' => ['edit','update']]);
-
-         $this->middleware('permission:Privacy Delete', ['only' => ['destroy']]);
+        //  $this->middleware('permission:Privacy List|Privacy Create|Privacy Edit|Privacy Delete', ['only' => ['index','store']]);
+        //  $this->middleware('permission:Privacy Create', ['only' => ['create','store']]);
+        //  $this->middleware('permission:Privacy Edit', ['only' => ['edit','update']]);
+        //  $this->middleware('permission:Privacy Delete', ['only' => ['destroy']]);
 
     }
 

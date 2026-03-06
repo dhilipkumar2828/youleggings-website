@@ -89,10 +89,10 @@
 
             <div class="card m-b-30 card-body">
                 <h4 class="card-title font-20 mt-0">Products</h4>
-                @can('products-add')
+                {{-- @can('products-add') --}}
                     <!--<button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-primary" style="margin-top: -63px;border: 1px solid #508aeb;width: 50px;align-items: right;background-color: #508aeb;padding: 3px;border-radius: 0.2rem;align-self: flex-end; margin-right: 10px;">+ Title </button>-->
                     <a href="{{ route('product.create') }}" id="add-btn" style="color: #ffffff;"> + ADD</a>
-                @endcan
+                {{-- @endcan --}}
             </div>
 
             <div class="row">
@@ -228,12 +228,12 @@
                                     <th>Regular Price</th>
                                     <th>Stock</th>
                                     <th>Stocks Sold</th>
-                                    @if (auth()->user()->can('products-edit'))
+                                    {{-- @if (auth()->user()->can('products-edit')) --}}
                                         <th> Status</th>
-                                    @endif
-                                    @if (auth()->user()->can('products-edit') or auth()->user()->can('products-delete'))
+                                    {{-- @endif --}}
+                                    {{-- @if (auth()->user()->can('products-edit') or auth()->user()->can('products-delete')) --}}
                                         <th>Actions</th>
-                                    @endif
+                                    {{-- @endif --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -314,7 +314,7 @@
                                         <td>{{ $pro->stock }} </td>
                                         <td>{{ $soldStock }}</td>
                                         <!-- <td>{{ $pro->size }} </td> -->
-                                        @if (auth()->user()->can('products-edit'))
+                                        {{-- @if (auth()->user()->can('products-edit')) --}}
                                             <td>
                                                 <input type="checkbox" name="toogle" value="{{ $pro->id }}"
                                                     data-toggle="switchbutton"
@@ -322,11 +322,11 @@
                                                     data-offlabel="Inactive" data-size="sm" data-onstyle="success"
                                                     data-offstyle="danger">
                                             </td>
-                                        @endif
-                                        @if (auth()->user()->can('products-edit') or auth()->user()->can('products-delete'))
+                                        {{-- @endif --}}
+                                        {{-- @if (auth()->user()->can('products-edit') or auth()->user()->can('products-delete')) --}}
                                             <td>
                                                 <div class="d-flex align-items-center">
-                                                    @can('products-edit')
+                                                    {{-- @can('products-edit') --}}
                                                         <!-- Clone -->
                                                         <a href="{{ route('product.edit', $pro->id) }}?clone=true"
                                                             class="action-icon btn-view-icon" data-toggle="tooltip"
@@ -347,7 +347,7 @@
                                                             title="Update Stocks">
                                                             <i class="fa fa-tasks"></i>
                                                         </a>
-                                                    @endcan
+                                                    {{-- @endcan --}}
                                                     <!-- Delete (if separate, add here or if it was in dropdown) -->
                                                 </div>
 
@@ -362,7 +362,7 @@
                                                 <!--      </form>-->
 
                                             </td>
-                                        @endif
+                                        {{-- @endif --}}
 
                                     </tr>
                                 @endforeach

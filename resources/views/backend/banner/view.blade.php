@@ -21,9 +21,9 @@
             <!-- end row -->
             <div class="card m-b-30 card-body">
                 <h4 class="card-title font-20 mt-0">Banner</h4>
-                @can('banner-add')
+                {{-- @can('banner-add') --}}
                     <a href="{{ route('banner.create') }}" id="add-btn"> + Add</a>
-                @endcan
+                {{-- @endcan --}}
             </div>
 
             <div class="row">
@@ -47,14 +47,14 @@
                                         <!--<th>Mobile Image</th>-->
 
                                         <!--<th>Details</th>-->
-                                        @if (auth()->user()->can('banner-edit'))
+                                        {{-- @if (auth()->user()->can('banner-edit')) --}}
                                             <th>Status</th>
-                                        @endif
+                                        {{-- @endif --}}
                                         <!-- <th>Condition</th>
                                             <th>Type</th> -->
-                                        @if (auth()->user()->can('banner-edit') or auth()->user()->can('banner-delete'))
+                                        {{-- @if (auth()->user()->can('banner-edit') or auth()->user()->can('banner-delete')) --}}
                                             <th>Actions</th>
-                                        @endif
+                                        {{-- @endif --}}
                                     </tr>
                                 </thead>
 
@@ -71,13 +71,13 @@
 
                                             <!--<td> {!! $item->description !!}</td>-->
                                             {{-- @if (auth()->user()->can('Banner Edit')) --}}
-                                            @if (auth()->user()->can('banner-edit'))
+                                            {{-- @if (auth()->user()->can('banner-edit')) --}}
                                                 <td><input type="checkbox" name="toogle" value="{{ $item->id }}"
                                                         data-toggle="switchbutton"
                                                         {{ $item->status == 'active' ? 'checked' : '' }}
                                                         data-onlabel="Active" data-offlabel="Inactive" data-size="sm"
                                                         data-onstyle="success" data-offstyle="danger"></td>
-                                            @endif
+                                            {{-- @endif --}}
                                             {{-- @endif --}}
                                             <!-- <td>
                                                 @if ($item->condition == 'banner')
@@ -94,18 +94,18 @@
     @endif
                                             </td> -->
                                             {{-- @if (auth()->user()->can('Banner Edit') or auth()->user()->can('Banner Delete')) --}}
-                                            @if (auth()->user()->can('banner-edit') or auth()->user()->can('banner-delete'))
+                                            {{-- @if (auth()->user()->can('banner-edit') or auth()->user()->can('banner-delete')) --}}
                                                 <td>
                                                     <div class="d-flex align-items-center">
-                                                        @can('banner-edit')
+                                                        {{-- @can('banner-edit') --}}
                                                             <a href="{{ route('banner.edit', $item->id) }}"
                                                                 class="action-icon btn-edit-icon" data-toggle="tooltip"
                                                                 title="Edit">
                                                                 <i class="fa fa-edit"></i>
                                                             </a>
-                                                        @endcan
+                                                        {{-- @endcan --}}
 
-                                                        @can('banner-delete')
+                                                        {{-- @can('banner-delete') --}}
                                                             <form action="{{ route('banner.destroy', $item->id) }}"
                                                                 method="post" style="display:inline;">
                                                                 @csrf
@@ -117,10 +117,10 @@
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
                                                             </form>
-                                                        @endcan
+                                                        {{-- @endcan --}}
                                                     </div>
                                                 </td>
-                                            @endif
+                                            {{-- @endif --}}
                                             {{-- @endif --}}
                                         </tr>
                                     @endforeach

@@ -15,10 +15,10 @@ class BannerController extends Controller
 {
   function __construct()
     {
-         $this->middleware('permission:banner-view|banner-add|banner-edit|banner-delete', ['only' => ['index','store']]);
-         $this->middleware('permission:banner-add', ['only' => ['create','store']]);
-         $this->middleware('permission:banner-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:banner-delete', ['only' => ['destroy']]);
+        //  $this->middleware('permission:banner-view|banner-add|banner-edit|banner-delete', ['only' => ['index','store']]);
+        //  $this->middleware('permission:banner-add', ['only' => ['create','store']]);
+        //  $this->middleware('permission:banner-edit', ['only' => ['edit','update']]);
+        //  $this->middleware('permission:banner-delete', ['only' => ['destroy']]);
         //  $this->userid=@Auth::user()->roles[0]->id;
         //  $this->username=@Auth::user()->roles[0]->name;
     }
@@ -75,7 +75,8 @@ class BannerController extends Controller
     {
         $validate = Validator::make($request->all(), [
             'photo'=>'required',
-            // 'condition'=>'nullable|in:banner,promo',
+            'title'=>'nullable|string',
+            'subtitle'=>'nullable|string',
             'status'=>'required|nullable|in:active,inactive',
         ],
 
@@ -87,22 +88,12 @@ class BannerController extends Controller
         if($validate->fails()){
 
             Session::put('errors',$validate->errors());
-            // var_dump($validate->messages()->messages->photo[0]);
-            // exit;
             return redirect()->back();
         }
-        // return $request->all();
-        // $request->validate([
-        //     // 'title'=>'required',
-        //     'photo'=>'string',
-        //     // 'condition'=>'nullable|in:banner,promo',
-        //     'status'=>'nullable|in:active,inactive',
-        // ]);
+        
         $data=$request->all();
-        $slug=Str::slug($request->input('title'));
-
-         $data['link']=$request->category;
-        // return $data;
+        $data['link']=$request->category;
+        
         $status=Banner::create($data);
         if($status){
             Session::put('success','Successfully created banner');
@@ -157,11 +148,10 @@ class BannerController extends Controller
         $banner=Banner::find($id);
 
         if($banner){
-            // return view('backend.banner.edit',compact('banner'));
-           // return $request->all();
            $validate = Validator::make($request->all(), [
             'photo'=>'required',
-            // 'condition'=>'nullable|in:banner,promo',
+            'title'=>'nullable|string',
+            'subtitle'=>'nullable|string',
             'status'=>'required|nullable|in:active,inactive',
          ],
 
@@ -172,12 +162,10 @@ class BannerController extends Controller
         if($validate->fails()){
 
             Session::put('errors',$validate->errors());
-            // var_dump($validate->messages()->messages->photo[0]);
-            // exit;
             return redirect()->back();
         }
         $data=$request->all();
-         $data['link']=$request->category;
+        $data['link']=$request->category;
         $status=$banner->fill($data)->save();
         if($status){
             Session::put('success','Successfully update banner');

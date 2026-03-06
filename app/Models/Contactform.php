@@ -14,6 +14,6 @@ class Contactform extends Model
 
     protected $table="contactform";
 
-    protected $fillable=['name','email','message'];
+    protected $fillable=['name','email','phone','message'];
 
 }

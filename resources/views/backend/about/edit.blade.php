@@ -74,32 +74,6 @@
                                     <div class="col-sm-10">
 
                                         <input class="form-control" required type="text" placeholder="Enter Title"
-                                            id="example-text-input" name="title" value="{{ $aboutus->title }}">
-
-                                    </div>
-
-                                </div>
-
-                                <div class="form-group row">
-
-                                    <label for="example-text-input" class="col-sm-2 col-form-label"><span
-                                            class="text-danger"></span>Descripition</label>
-
-                                    <!-- <img src="assets/images/image.png" class="admin-image"> -->
-
-                                    <div class="col-sm-10">
-
-                                        <textarea id="elm1" required name="description" value="">{{ $aboutus->description }}</textarea>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="form-group row">
-
-                                    <label for="example-text-input" class="col-sm-2 col-form-label">Image <span
-                                            style="color:red">*</span></label>
-
                                     <!-- <img src="assets/images/image.png" class="admin-image"> -->
 
                                     <div class="col-sm-10">

@@ -87,7 +87,7 @@
 
                                 <li class="breadcrumb-item active text-dark" aria-current="page">Contact Us</li>
 
-                            </ol>
+                             </ol>
 
                         </div>
 
@@ -131,7 +131,7 @@
                                 <div class="tab-pane fade show active" id="userlogin" role="tabpanel"
                                     aria-labelledby="user-tab">
 
-                                    <form id="contactForm" class="ltn__form-box contact-form-box" method="POST">
+                                    <form id="contactForm" class="ltn__form-box contact-form-box" action="{{ route('contact_form') }}" method="POST">
                                         @csrf
                                         <div class="mb-4">
 
@@ -140,7 +140,7 @@
                                             <input type="text" id="" placeholder="" class="form-control"
                                                 name="name" required>
 
-                                            <span class="text-danger email_err"></span>
+                                            <span class="text-danger name_err"></span>
 
                                         </div>
 
@@ -148,10 +148,10 @@
 
                                             <label class="form-label">Mobile Number </label>
 
-                                            <input type="" id="inputemail" placeholder="" class="form-control"
-                                                name="mobile" required>
+                                            <input type="tel" id="inputphone" placeholder="" class="form-control"
+                                                name="phone" required>
 
-                                            <span class="text-danger email_err"></span>
+                                            <span class="text-danger phone_err"></span>
 
                                         </div>
 
@@ -207,45 +207,28 @@
 
                 <div class="row">
 
-                    <div class="col-lg-4 m-mb-1 t-mb-1 t-mb-1">
-
+                    <div class="col-lg-4 m-mb-1 t-mb-1">
                         <div class="inquiries-card">
-
                             <img src="{{ asset('frontend/img/icons/mail.jpg') }}" width="70" class="m-3">
-
-                            <div class="inquiries-card-inner"><a class="" href="mailto:youleggings@gmail.com"
-                                    rel="nofollow">youleggings@gmail.com</a> </div>
-
+                            <div class="inquiries-card-inner"><a class="" href="mailto:{{ $settings->email ?? 'youleggings@gmail.com' }}"
+                                    rel="nofollow">{{ $settings->email ?? 'youleggings@gmail.com' }}</a> </div>
                         </div>
-
                     </div>
 
                     <div class="col-lg-4 m-mb-1 t-mb-1">
-
                         <div class="inquiries-card">
-
                             <img src="{{ asset('frontend/img/icons/location.jpg') }}" width="70" class="m-3">
-
                             <div class="inquiries-card-inner">
-
-                                5/4, Surya Nagar, 2nd Street, Bridgeway Colony Extn, Tirupur - 641607
+                                {!! $settings->address ?? '5/4, Surya Nagar, 2nd Street, Bridgeway Colony Extn, Tirupur - 641607' !!}
                             </div>
-
                         </div>
-
                     </div>
 
                     <div class="col-lg-4 m-mb-1 t-mb-1">
-
                         <div class="inquiries-card">
-
                             <img src="{{ asset('frontend/img/icons/phone.jpg') }}" width="70" class="m-3">
-
-                            <div class="inquiries-card-inner"><a class="phone" href="tel://+91 740143 24967">+91 740143
-                                    24967</a> </div>
-
+                            <div class="inquiries-card-inner"><a class="phone" href="tel:{{ $settings->phone ?? '+91 740143 24967' }}">{{ $settings->phone ?? '+91 740143 24967' }}</a> </div>
                         </div>
-
                     </div>
 
                 </div>
@@ -255,37 +238,4 @@
         </div>
 
     </main>
-
-    <script>
-        $(document).ready(function() {
-            $("#contactForm").submit(function(e) {
-                e.preventDefault(); // Prevent the form from submitting normally
-
-                var formData = $(this).serialize(); // Get form data
-                $.ajax({
-                    url: "{{ route('contactform') }}", // Route to handle form submission
-                    type: "POST",
-                    data: formData,
-                    // success: function (response) {
-                    //     // If success, show the success message as a toaster notification
-                    //     if(response.success) {
-                    //       toastr.options = {
-                    //         "closeButton": true,
-                    //         "progressBar": true,
-                    //         "positionClass": "toast-top-right",
-                    //         "timeOut": 5000,
-                    //         "extendedTimeOut": 1000
-                    //     };
-                    //         toastr.success(response.message); // Use Toastr notification
-                    //         $("#contactForm")[0].reset();
-                    //     }
-                    // },
-                    // error: function (xhr, status, error) {
-                    //     // Handle error if any
-                    //     toastr.error("Something went wrong. Please try again.");
-                    // }
-                });
-            });
-        });
-    </script>
 @endsection

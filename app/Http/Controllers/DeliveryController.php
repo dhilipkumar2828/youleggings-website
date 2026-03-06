@@ -18,13 +18,10 @@ class DeliveryController extends Controller
 
     {
 
-         $this->middleware('permission:Delivery List|Delivery Create|Delivery Edit|Delivery Delete', ['only' => ['index','store']]);
-
-         $this->middleware('permission:Delivery Create', ['only' => ['create','store']]);
-
-         $this->middleware('permission:Delivery Edit', ['only' => ['edit','update']]);
-
-         $this->middleware('permission:Delivery Delete', ['only' => ['destroy']]);
+        //  $this->middleware('permission:Delivery List|Delivery Create|Delivery Edit|Delivery Delete', ['only' => ['index','store']]);
+        //  $this->middleware('permission:Delivery Create', ['only' => ['create','store']]);
+        //  $this->middleware('permission:Delivery Edit', ['only' => ['edit','update']]);
+        //  $this->middleware('permission:Delivery Delete', ['only' => ['destroy']]);
 
     }
 

@@ -31,9 +31,9 @@
 
                 <h4 class="card-title font-20 mt-0">Privacy & Policy</h4>
 
-                @can('Privacy Create')
+                {{-- @can('Privacy Create') --}}
                     <a href="{{ route('privacy.create') }}" id="add-btn" style="color: #ffffff;"> + ADD</a>
-                @endcan
+                {{-- @endcan --}}
 
             </div>
 
@@ -99,10 +99,10 @@
 
                                                     <div class="dropdown-menu">
 
-                                                        @can('Privacy Edit')
+                                                        {{-- @can('Privacy Edit') --}}
                                                             <a class="dropdown-item"
                                                                 href="{{ route('privacy.edit', $item->id) }}">Edit</a>
-                                                        @endcan
+                                                        {{-- @endcan --}}
 
                                                         <form action="{{ route('privacy.destroy', $item->id) }}"
                                                             method="post">
@@ -111,12 +111,12 @@
 
                                                             @method('delete')
 
-                                                            @can('Privacy Delete')
+                                                            {{-- @can('Privacy Delete') --}}
                                                                 <a class="dltBtn btn waves-effect waves-light"title="delete"
                                                                     data-id="{{ $item->id }}" data-toggle="modal"
                                                                     data-dismiss="modal"
                                                                     data-target=".bs-example-modal-center">Delete</a><br>
-                                                            @endcan
+                                                            {{-- @endcan --}}
 
                                                         </form>
 

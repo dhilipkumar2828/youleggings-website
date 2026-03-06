@@ -10,7 +10,7 @@
 
             <div class="row">
                 <div class="col-lg-12 col-md-12 mb-5 pb-3 text-center">
-                    <img class="" src="{{ asset('frontend/img/white-logo.jpg') }}" alt="Logo" />
+                    <img class="" src="{{ $settings && $settings->logo ? (Str::contains($settings->logo, '/') ? asset($settings->logo) : asset('uploads/settings/'.$settings->logo)) : asset('frontend/img/white-logo.jpg') }}" alt="Logo" />
                 </div>
             </div>
 
@@ -40,11 +40,10 @@
 
                     <div class="widget-social foo-social mt-3">
 
-                        <a href="#" target="_blank" rel="noopener"><i class="fa fa-facebook"></i></a>
-
-                        <a href="#" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a>
-
-                        <a href="#" target="_blank" rel="noopener"><i class="fa fa-youtube"></i></a>
+                        @if($settings && $settings->facebook_link) <a href="{{ $settings->facebook_link }}" target="_blank" rel="noopener"><i class="fa fa-facebook"></i></a> @endif
+                        @if($settings && $settings->instagram_link) <a href="{{ $settings->instagram_link }}" target="_blank" rel="noopener"><i class="fa fa-instagram"></i></a> @endif
+                        @if($settings && $settings->twitter_link) <a href="{{ $settings->twitter_link }}" target="_blank" rel="noopener"><i class="fa fa-twitter"></i></a> @endif
+                        @if($settings && $settings->youtube_link) <a href="{{ $settings->youtube_link }}" target="_blank" rel="noopener"><i class="fa fa-youtube"></i></a> @endif
 
                     </div>
                 </div>
@@ -109,22 +108,15 @@
                         <div class="widget-social no-fl">
 
                             <div class="foot-pad13 d-flex">
-
-                                <a class="foot-link">5/4, Surya Nagar, 2nd Street, Bridgeway Colony Extn, Tirupur -
-                                    641607</a>
-
+                                <a class="foot-link">{!! $settings->address ?? '5/4, Surya Nagar, 2nd Street, Bridgeway Colony Extn, Tirupur - 641607' !!}</a>
                             </div>
 
                             <div class="foot-pad13">
-
-                                <a class="foot-link" href="tel://+91 91590 24967">+91 740143 24967</a>
-
+                                <a class="foot-link" href="tel:{{ $settings->phone ?? '+91 740143 24967' }}">{{ $settings->phone ?? '+91 740143 24967' }}</a>
                             </div>
 
                             <div class="foot-pad13">
-
-                                <a class="foot-link" href="mailto://youleggings@gmail.com">youleggings@gmail.com </a>
-
+                                <a class="foot-link" href="mailto:{{ $settings->email ?? 'youleggings@gmail.com' }}">{{ $settings->email ?? 'youleggings@gmail.com' }}</a>
                             </div>
 
                         </div>

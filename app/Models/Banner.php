@@ -12,6 +12,6 @@ class Banner extends Model
 
     use HasFactory;
 
-  protected $fillable=['title','description','url','link','photo','mobile_photo','status','created_by'];
+  protected $fillable=['title','subtitle','photo','mobile_photo','link','status','created_by'];
 
 }

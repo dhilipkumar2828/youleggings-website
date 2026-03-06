@@ -73,29 +73,24 @@
 
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 content-blog">
 
+                    @foreach($blogs as $blogss)
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 product-blog">
-
-                        <a href="blog-post.html"><img src="{{ asset($blogss->photo) }}" class="img-responsive"
-                                alt="img-holiwood"></a>
-
+                        <a href="{{ route('blog_detail', $blogss->slug) }}"><img src="{{ asset('uploads/blog/'.$blogss->photo) }}" class="img-responsive"
+                                alt="{{ $blogss->title }}"></a>
                     </div>
 
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 title-blog">
-
-                        <h2><a href="blog-post.html">{{ $blogss->title }}</a></h2>
-
+                        <h2><a href="{{ route('blog_detail', $blogss->slug) }}">{{ $blogss->title }}</a></h2>
                         <div class="time-blog">
-
-                            <span class="time"><i class="far fa-calendar-alt"></i><span>May, 12 2018</span></span>
-
-                            <span class="time"><i class="far fa-edit"></i><span>Pixel-Creative</span></span>
-
+                            <span class="time"><i class="far fa-calendar-alt"></i><span>{{ \Carbon\Carbon::parse($blogss->publish_at)->format('M d, Y') }}</span></span>
+                            <span class="time"><i class="far fa-edit"></i><span>You Leggings</span></span>
                         </div>
+                        <p>{!! Str::limit(strip_tags($blogss->description), 200) !!}</p>
+                    </div>
+                    @endforeach
 
-                        <p>{!! html_entity_decode($blogss->description) !!}</p>
-
-                        <!-- <a href="#">Read more</a> -->
-
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pagi" style="margin-top: 30px;">
+                        {{ $blogs->links() }}
                     </div>
 
                     <!--  -->
