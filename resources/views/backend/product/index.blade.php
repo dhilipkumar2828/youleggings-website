@@ -47,7 +47,7 @@
                                     <label for="example-text-input" class="col-sm-4 col-form-label">Description <span
                                             class="text-danger">*</span></label>
                                     <div class="col-sm-8">
-                                        <textarea class="summernote" required name="description" id="description" value="{{ old('description') }}">{{ strip_tags($heading->value) }}</textarea>
+                                        <textarea class="summernote" required name="description" id="description">{{ strip_tags($heading?->value ?? '') }}</textarea>
                                     </div>
                                 </div>
                             </div>

@@ -234,7 +234,7 @@ class InventoryController extends Controller
 
         ];
 
-       if(in_array('disapproved',$data['productcheck'])){
+       if(in_array('disapproved', (array) ($data['productcheck'] ?? []))){
 
         InventoryLoss::create($lossdata);
 
@@ -444,7 +444,7 @@ class InventoryController extends Controller
 
         $status=InventoryLoss::where('id',$uid)->update($sdata);
 
-        for($i=0;$i<count($data['productcheck']);$i++){
+        for($i=0;$i<count((array) ($data['productcheck'] ?? []));$i++){
 
         $productdata=json_decode($data['productdata'][$i],true);
 
@@ -502,7 +502,7 @@ class InventoryController extends Controller
 
     }
 
-    if(!in_array('disapproved',$data['productcheck'])){
+    if(!in_array('disapproved', (array) ($data['productcheck'] ?? []))){
 
         InventoryLoss::where('id',$uid)->update(['status'=>'Closed']);
 

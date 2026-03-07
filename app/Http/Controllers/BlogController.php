@@ -18,22 +18,20 @@ class BlogController extends Controller
 
 {
 
-      function __construct()
-
+    function __construct()
     {
-
          $this->middleware('permission:Blog List|Blog Create|Blog Edit|Blog Delete', ['only' => ['index','store']]);
-
          $this->middleware('permission:Blog Create', ['only' => ['create','store']]);
-
          $this->middleware('permission:Blog Edit', ['only' => ['edit','update']]);
-
          $this->middleware('permission:Blog Delete', ['only' => ['destroy']]);
 
-         $this->userid=Auth::user()->roles[0]->id;
-
-         $this->username=Auth::user()->roles[0]->name;
-
+         $this->middleware(function ($request, $next) {
+             if (Auth::check()) {
+                 $this->userid = Auth::user()->roles[0]->id;
+                 $this->username = Auth::user()->roles[0]->name;
+             }
+             return $next($request);
+         });
     }
 
     /**

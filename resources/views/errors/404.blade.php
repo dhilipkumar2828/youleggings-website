@@ -1,4 +1,4 @@
-@extends('frontend.layouts.arrivals_products_master')
+@extends('frontend.layouts.app')
 
 @section('content')
     <main class="main-content">

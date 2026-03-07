@@ -18,9 +18,15 @@ class Product extends Model
     protected $fillable=['name','brand_name','category','youtube_link','header','slug','tax_id','delivery_days','hsn_code','size','subcategory_id','status','description','discount','discount_type','stock','tag','created_by','updated_by'];
 
     public function productvariant(){
-
         return $this->hasMany('App\Models\ProductVariant');
+    }
 
+    public function productattributes(){
+        return $this->hasMany('App\Models\ProductAttribute');
+    }
+
+    public function reviews(){
+        return $this->hasMany('App\Models\ProductReviews', 'product_id')->where('status', 'active');
     }
 
       public function cartItems()

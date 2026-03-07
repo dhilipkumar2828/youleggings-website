@@ -21,21 +21,19 @@ class CategoryGroupController extends Controller
 {
 
    function __construct()
-
     {
-
          $this->middleware('permission:Category Group List|Category Group Create|Category Group Edit|Category Group Delete', ['only' => ['index','store']]);
-
          $this->middleware('permission:Category Group Create', ['only' => ['create','store']]);
-
          $this->middleware('permission:Category Group Edit', ['only' => ['edit','update']]);
-
          $this->middleware('permission:Category Group Delete', ['only' => ['destroy']]);
 
-        $this->userid=Auth::user()->id;
-
-        $this->username=Auth::user()->name;
-
+         $this->middleware(function ($request, $next) {
+             if (Auth::check()) {
+                 $this->userid = Auth::user()->id;
+                 $this->username = Auth::user()->name;
+             }
+             return $next($request);
+         });
     }
 
     /**

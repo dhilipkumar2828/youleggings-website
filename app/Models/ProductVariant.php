@@ -32,7 +32,7 @@ class ProductVariant extends Model
 
     public function productspecifications(){
 
-        return $this->hasMany('App\Models\ProductSpecifications');
+        return $this->hasMany('App\Models\ProductSpecifications', 'prod_variant_id', 'id');
 
     }
 

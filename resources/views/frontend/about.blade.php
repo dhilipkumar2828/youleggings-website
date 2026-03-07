@@ -1,62 +1,59 @@
-@extends('frontend.layouts.arrivals_products_master_new')
+@extends('frontend.layouts.app')
 
-@section('content') 
-    <main class="main-content">
+@section('content')
+  @if($about)
+  <!-- About Page -->
+  <section class="section about-page-active" style="display: block; padding: 0 0 var(--spacing-xl); background: var(--bg-color);">
+    <div class="about-main" style="height: 600px; position: relative; overflow: hidden; margin-top: -100px; background-image: url('{{ asset('storage/' . $about->photo) }}'); background-size: cover; background-position: center;">
+      <div class="about-main-overlay" style="position: absolute; inset: 0; background: rgba(0,0,0,0.3);"></div>
+      <div class="container about-main-content" style="position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: center; color: #fff; padding-top: 80px;">
+        <span class="hero-subtitle" style="color:#fff;">{{ $about->sub_title }}</span>
+        <h1 class="hero-title" style="color:#fff;">{!! nl2br(e($about->title)) !!}</h1>
+      </div>
+    </div>
 
-        <!-- HEADER -->
-        <section class="py-5 about-bgjpg">
-            <div class="container">
-                <div class="row d-flex align-items-center">
+    <div class="container page-body">
+      <div class="about-hero" style="text-align: center; margin-bottom: 50px;">
+        <span class="section-subtitle">Our Story</span>
+        <h2 class="section-title">{{ $about->description }}</h2>
+      </div>
 
-                    <div class="col-md-6 text-white">
-                        <h2 class="text-white mb-5">{{ $abouts->promise_desc ?? 'At You Legging, we believe every woman deserves comfort without compromise. Born from the legacy of TANTEX.' }}</h2>
+      <div class="about-story-split">
+        <div class="about-story-card" style="display: flex; gap: 40px; align-items: center;">
+          <div class="about-story-content" style="flex: 1;">
+            <span class="about-story-tag" style="color: var(--primary-color); font-weight: 700;">Our Promise</span>
+            <h3>{{ $about->promise_title }}</h3>
+            {!! nl2br(e($about->promise_desc)) !!}
+          </div>
+          <div class="about-story-image" style="flex: 1;">
+            <img src="{{ asset('storage/' . $about->photo) }}" alt="{{ $about->title }}" style="width: 100%; border-radius: 14px;">
+          </div>
+        </div>
+      </div>
 
-                        <p>Our leggings are crafted with premium fabrics, designed to offer:</p>
-                        <ul class="about-list">
-                            <li><i class="fa fa-check"></i> {{ $abouts->why_choose_1_title ?? 'A perfect fit that flatters every body type' }}</li>
-                            <li><i class="fa fa-check"></i> {{ $abouts->why_choose_2_title ?? 'Stretch that adapts to your lifestyle' }}</li>
-                            <li><i class="fa fa-check"></i> {{ $abouts->why_choose_3_title ?? 'Durability that lasts wash after wash' }}</li>
-                        </ul>
-
-                        <p class="mt-5">{!! $abouts->description ?? 'Whether you are at work, running errands, or relaxing at home, You Legging moves with you.' !!}</p>
-                    </div>
-
-                    <div class="col-md-6 mb-4">
-                        <img class="rounded" src="{{ isset($abouts->photo) ? asset('uploads/about/'.$abouts->photo) : 'https://you.oceansoftwares.in/demo/frontend/img/about-banner.png' }}" />
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- WHY CHOOSE US -->
-        <section class="py-5 bg-light">
-            <div class="container">
-
-                <div class="row d-flex align-items-center aboutall mt-5">
-
-                    <div class="col-md-12 text-center">
-                        <h2 class="fw-bold mb-4">Why Choose You Leggings?</h2>
-                    </div>
-                </div>
-
-                <div class="row d-flex align-items-center justify-content-center aboutall mb-0 mt-5 pb-5">
-                    @for($i=1; $i<=5; $i++)
-                      @php 
-                          $tField = "why_choose_{$i}_title"; 
-                          $dField = "why_choose_{$i}_desc";
-                          $defaultTitles = [1=>'From TANTEX Legacy', 2=>'Zero Compromise Quality', 3=>'Affordable Luxury', 4=>'Everyday Versatility', 5=>'Wide Range of Choices'];
-                          $defaultDescs = [1=>'A brand you already trust', 2=>'Premium fabrics, tested for durability', 3=>'High-end feel at market-friendly prices', 4=>'Designed for work, play, and everything in between', 5=>'Colors, styles, and fits for every woman'];
-                      @endphp
-                      <div class="col-md-4 mb-5 pb-5">
-                          <h3>{{ $abouts->$tField ?? $defaultTitles[$i] }}</h3>
-                          <p>{{ $abouts->$dField ?? $defaultDescs[$i] }}</p>
-                      </div>
-                    @endfor
-                </div>
-
-            </div>
-        </section>
-
-    </main>
+      <div class="about-why" style="margin-top: 80px;">
+        <h2 class="section-title" style="text-align: center; margin-bottom: 40px;">Why Choose You Leggings?</h2>
+        <div class="about-why-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px;">
+          @for($i=1; $i<=5; $i++)
+            @php 
+              $t = "why_choose_{$i}_title"; 
+              $d = "why_choose_{$i}_desc";
+            @endphp
+            @if($about->$t)
+            <article class="about-why-card" style="background: #fff; padding: 24px; border-radius: 14px; box-shadow: 0 4px 12px rgba(125, 84, 101, 0.05); border: 1px solid #f0dbe4;">
+              <h3 style="font-family: var(--font-serif); font-size: 20px; margin-bottom: 12px; color: var(--primary-color);">{{ $about->$t }}</h3>
+              <p style="font-size: 14px; color: #666; font-family: var(--font-sans);">{{ $about->$d }}</p>
+            </article>
+            @endif
+          @endfor
+        </div>
+      </div>
+    </div>
+  </section>
+  @else
+  <div class="container py-5 text-center">
+    <h2>About content Coming Soon</h2>
+    <p>Please update the about section in the admin panel.</p>
+  </div>
+  @endif
 @endsection

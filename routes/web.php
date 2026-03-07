@@ -4,10 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CategoryTagController;
-
 use App\Models\Category;
 use Maatwebsite\Excel\Row;
-use App\Http\Controllers\Frontend\WhatisnewController;
 use App\Http\Controllers\LogViewerController;
 use App\Models\About;
 use App\Models\Blog;
@@ -33,9 +31,15 @@ use Illuminate\Support\Facades\Artisan;
 | contains the "web" middleware group. Now create something great!
 |
 */
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', [IndexController::class, 'index'])->name('index');
+Route::get('/shop', [IndexController::class, 'shop'])->name('shop');
+Route::get('/about-us', [IndexController::class, 'about'])->name('about');
+Route::get('/contact-us', [IndexController::class, 'contact'])->name('contact');
+Route::get('/our-blog', [IndexController::class, 'blog'])->name('blog');
+Route::get('/debug-route', function() { return 'hi'; })->name('debug_route');
+
+
+
 Route::get('/clear-cache', function () {
     Artisan::call('optimize:clear');
     return '✅ All caches cleared!';
@@ -65,149 +69,16 @@ Route::get('/publish_public', function () {
 
     return 'success';
 });
-//Route::get('/test', [App\Http\Controllers\Frontend\IndexController::class, 'guestlogin'])->name('user.guest');
-
-Route::get('test-ses', [App\Http\Controllers\Frontend\CheckoutController::class, 'testSes'])->name('TestSes');
-// Route::get('/test', function () {
-//     $o=Order::find('19');
-//     dd($o->items->groupBy('vendor_id'));
-// });
-// php artisan vendor:publish --tag=lfm_config
-// php artisan vendor:publish --tag=lfm_public
-Route::group(['middleware'=>'auth::user'],function(){
-    return view('frontend.Auth.auth');
-});
-Route::get('razorpay-payment', [App\Http\Controllers\RaserpayController::class, 'create'])->name('pay.with.razorpay');
-Route::post('payment', [App\Http\Controllers\RaserpayController::class, 'payment'])->name('payment');
-Route::post('add_payment', [App\Http\Controllers\RaserpayController::class, 'add_payment'])->name('add_payment');
-// Route::get('handle-payment', [App\Http\Controllers\PayPalPaymentController::class, 'handlePayment'])->name('make.payment');
-//Route::get('payment', 'PayPalController@payment')->name('payment');
-// Route::get('cancel', 'PayPalController@cancel')->name('payment.cancel');
-// Route::get('payment/success', 'PayPalController@success')->name('payment.success');
-//Route::get('handle-payment', 'PayPalPaymentController@handlePayment')->name('make.payment');
-// Route::get('cancel-payment', 'PayPalPaymentController@paymentCancel')->name('cancel.payment');
-// Route::get('payment-success', 'PayPalPaymentController@paymentSuccess')->name('success.payment');
-//subscriber controller
-Route::get('user/auth', function() { return redirect('/?page=login'); })->name('user.auth');
-Route::get('guest/auth', [App\Http\Controllers\Frontend\IndexController::class, 'guestAuth'])->name('guest.auth');
-
-Route::get('user1/auth', [App\Http\Controllers\Frontend\IndexController::class, 'user1Auth'])->name('user1.auth');
-
-Route::get('/register', [App\Http\Controllers\Frontend\IndexController::class, 'authregister'])->name('authregister');
-Route::post('user/login',[App\Http\Controllers\Frontend\IndexController::class, 'loginsumbit'])->name('login.sumbit');
-
-Route::get('user/guest', [App\Http\Controllers\Frontend\IndexController::class, 'guestlogin'])->name('user.guest');
-
-Route::post('generateotp',[App\Http\Controllers\Frontend\IndexController::class, 'generateotp'])->name('generateotp');
-Route::post('verifyotp',[App\Http\Controllers\Frontend\IndexController::class, 'verifyotp'])->name('verifyotp');
-
-Route::post('guestgenerateotp',[App\Http\Controllers\Frontend\IndexController::class, 'guestgenerateotp'])->name('guestgenerateotp');
-Route::post('guestverifyOtp',[App\Http\Controllers\Frontend\IndexController::class, 'guestverifyOtp'])->name('guestverifyOtp');
-Route::get('/logs', [LogViewerController::class, 'view']);
-
-Route::middleware(['guest.auth'])->group(function () {
-
-    // Routes that require guest authentication
-});
-
-Route::post('user/register',[App\Http\Controllers\Frontend\IndexController::class, 'Registersumbit'])->name('register.sumbit');
-Route::get('user/logout',[App\Http\Controllers\Frontend\IndexController::class, 'userlogout'])->name('user.logout');
-Route::get('/sea', [App\Http\Controllers\Frontend\WhatisnewController::class, 'sea'])->name('sea');
-Route::post('/reset_password', [App\Http\Controllers\Frontend\IndexController::class, 'reset_password'])->name('reset_password');
-Route::get('/', [App\Http\Controllers\Frontend\IndexController::class, 'index'])->name('index');
-Route::get('/indexnew', [App\Http\Controllers\Frontend\IndexController::class, 'indexnew'])->name('indexnew');
-Route::get('/get-subcategories/{categoryId}', [App\Http\Controllers\Frontend\IndexController::class, 'getSubcategories'])->name('getSubcategories');
-
-Route::post('remove_coupon',[App\Http\Controllers\Frontend\IndexController::class, 'remove_coupon']);
-Route::get('/index', [App\Http\Controllers\Frontend\IndexController::class, 'index'])->name('index');
-Route::get('/catalogue_pdf/{id}',[App\Http\Controllers\Frontend\IndexController::class, 'catalogue_pdf']);
-Route::get('/forget_password', [App\Http\Controllers\Frontend\IndexController::class, 'forget_password']);
-Route::get('/get_modalvalues', [App\Http\Controllers\Frontend\IndexController::class, 'get_modalDetails'])->name('get_modalDetails');
-Route::get('/sitemap', [App\Http\Controllers\Frontend\IndexController::class, 'sitemap'])->name('sitemap');
-Route::get('/whatisnew', function () {
-    return redirect('/?page=new-arrivals');
-})->name('whatisnew');
-Route::post('/search_products', [App\Http\Controllers\Frontend\WhatisnewController::class,'search_products']);
-Route::post('/search', [App\Http\Controllers\Frontend\WhatisnewController::class,'search']);
-Route::get('/order_pdf/{id}', [App\Http\Controllers\Frontend\WhatisnewController::class, 'order_pdf']);
-Route::post('/update_address', [App\Http\Controllers\Frontend\WhatisnewController::class,'update_address']);
-Route::post('/update_userdetails', [App\Http\Controllers\Frontend\WhatisnewController::class,'update_userdetails']);
-Route::get('/slider_filter', [App\Http\Controllers\Frontend\WhatisnewController::class,'slider_filter']);
-//Route::get('/test', [App\Http\Controllers\Frontend\IndexController::class, 'test'])->name('test');
-Route::get('/searchsug', [App\Http\Controllers\Frontend\WhatisnewController::class, 'searchsug'])->name('searchsug');
-Route::get('/product_list', function () {
-    return redirect('/?page=shop');
-});
-Route::get('/newarrival_list', function () {
-    return redirect('/?page=new-arrivals');
-});
-
-Route::get('/product_list/{id}', function () {
-    return redirect('/?page=shop');
-});
-Route::get('/all_products', function() {
-    return redirect('/?page=shop');
-});
-
-Route::post('/product_filter', [App\Http\Controllers\Frontend\WhatisnewController::class, 'product_filter']);
-Route::post('/newarrival_product_filter', [App\Http\Controllers\Frontend\WhatisnewController::class, 'newarrival_product_filter']);
-
-Route::resource('/product-review',\App\Http\Controllers\Admin\ProductReviewsController::class);
-Route::post('/product-review',[\App\Http\Controllers\Admin\ProductReviewsController::class,'productReview'])->name('product.review');
-Route::get('/product_viewmore',[\App\Http\Controllers\Admin\ProductReviewsController::class,'viewmore']);
-Route::get('/aboutus', function () {
-    return redirect('/?page=about');
-})->name('about');
-
-Route::get('/help', [App\Http\Controllers\Frontend\IndexController::class, 'help'])->name('help');
-
-Route::get('/reviews', [App\Http\Controllers\Frontend\IndexController::class, 'reviews'])->name('reviews');
-Route::post('/updatereviews', [App\Http\Controllers\Frontend\IndexController::class, 'updatereviews'])->name('updatereviews');
-
-Route::get('/offers', [App\Http\Controllers\Frontend\IndexController::class, 'offers'])->name('offers');
-Route::get('/compare_products/{id}', [App\Http\Controllers\Frontend\IndexController::class, 'compare_products'])->name('compare_products');
-Route::get('/blogs', function () {
-    return redirect('/?page=blog');
-})->name('blogs');
-Route::get('/blog/{slug}', [App\Http\Controllers\Frontend\IndexController::class, 'blog_detail'])->name('blog_detail');
-Route::get('/contactus', function () {
-    return redirect('/?page=contact');
-})->name('contactus');
-Route::get('/sendEmail', [App\Http\Controllers\ContactController::class, 'sendEmail'])->name('sendEmail');
-
-Route::post('/contactform', [App\Http\Controllers\Frontend\IndexController::class, 'contactform'])->name('contactform');
-Route::get('/faq', function () {
-    return redirect('/?page=contact'); 
-})->name('faq');
-Route::get('/deliveryreturn', function () {
-    return redirect('/?page=shipping'); 
-})->name('deliveryreturn');
-Route::get('/privacypolicy', function () {
-    return redirect('/?page=privacy'); 
-})->name('privacypolicy');
-Route::get('/termscondition', function () {
-    return redirect('/?page=terms');
-})->name('termscondition');
-Route::post('/contact_form', [App\Http\Controllers\Frontend\IndexController::class, 'contact_form'])->name('contact_form');
-Route::post('/client_feedback', [App\Http\Controllers\Frontend\IndexController::class, 'client_feedback'])->name('client_feedback');
-// Route::post('/order_tracking', [App\Http\Controllers\Frontend\IndexController::class, 'order_tracking'])->name('order_tracking');
-Route::get('/order_tracking/{id}', [App\Http\Controllers\Frontend\IndexController::class, 'order_tracking'])->name('order_tracking');
-Route::get('/product_track/{id}', [App\Http\Controllers\Frontend\IndexController::class, 'product_track'])->name('product_track');
-Route::get('/forget_password', [App\Http\Controllers\Frontend\IndexController::class, 'forget_password']);
-Route::post('/reset_password', [App\Http\Controllers\Frontend\IndexController::class, 'reset_password'])->name('reset_password');
-Route::post('/update_userdetails', [App\Http\Controllers\Frontend\WhatisnewController::class,'update_userdetails']);
-Route::get('/category', [App\Http\Controllers\Frontend\WhatisnewController::class, 'category'])->name('category');
-
-Route::get('/category', [App\Http\Controllers\Frontend\WhatisnewController::class, 'category'])->name('category');
-
-Route::post('apply_coupon',[App\Http\Controllers\Frontend\IndexController::class, 'apply_coupon']);
 Auth::routes(['register'=>false]);
-Route::get('/admin', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.login_redirect');
+Route::get('/admin', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.redirect');
 
+
+/*
 //subscribe_send
 Route::post('/subscribe_send', [App\Http\Controllers\Frontend\SubscriberController::class, 'subscribe_send']);
 Route::get('/send_email', [App\Http\Controllers\Frontend\SubscriberController::class, 'send_email']);
 Route::get('/subscribers', [App\Http\Controllers\Frontend\SubscriberController::class, 'subscribers']);
+*/
 //Route::group(['prefix'=>'admin','middleware'=>'auth',['admin']],function(){
  Route::group(['middleware'=>'auth','web','role:admin'],function(){
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
@@ -472,6 +343,7 @@ Route::get('/warehouse-status',[\App\Http\Controllers\Admin\WarehouseController:
     Route::resource('/deals',\App\Http\Controllers\DealsController::class);
     Route::resource('/privacy',\App\Http\Controllers\PrivacyController::class);
 });
+/*
 //product detailes
 Route::resource('/product_detail',\App\Http\Controllers\Frontend\WhatisnewController::class);
 Route::get('/product_detail/{$id}', [App\Http\Controllers\Frontend\WhatisnewController::class, 'single_products'])->name('product_detail');
@@ -484,6 +356,7 @@ Route::get('/getproductgst', [App\Http\Controllers\Frontend\WhatisnewController:
 
 Route::get('/getcancelrequest', [App\Http\Controllers\Frontend\WhatisnewController::class, 'getcancelrequest'])->name('getcancelrequest');
 Route::get('/getreturnrequest', [App\Http\Controllers\Frontend\WhatisnewController::class, 'getreturnrequest'])->name('getreturnrequest');
+*/
 
 //Tax
 Route::resource('/tax',\App\Http\Controllers\Admin\TaxController::class);
@@ -501,6 +374,7 @@ Route::get('product-stock-report',[\App\Http\Controllers\Admin\ReportController:
 Route::get('tax-report',[\App\Http\Controllers\Admin\ReportController::class,'taxreport'])->name('report.taxreport');
 Route::get('expense-report',[\App\Http\Controllers\Admin\ReportController::class,'expensereport'])->name('report.expensereport');
 Route::post('expense-report-pdf',[\App\Http\Controllers\Admin\ReportController::class,'expensepdf'])->name('report.pdf');
+/*
 ///cart userDetails
 Route::get('/cart', function() {
     return redirect('/?page=cart');
@@ -524,6 +398,7 @@ Route::post('/Wishlist/move-to-cart',[App\Http\Controllers\Frontend\WishlistCont
 Route::post('/wishlistdelete',[App\Http\Controllers\Frontend\WishlistController::class, 'wishlistDelete'])->name('wishlist.delete');
 
 Route::post('/wishlist_to_cart',[App\Http\Controllers\Frontend\WishlistController::class, 'wishlist_to_cart']);
+*/
  //Subcategory
  Route::resource('/subcategory',\App\Http\Controllers\Admin\SubcategoryController::class);
   Route::get('subcategory_add/{id}',[\App\Http\Controllers\Admin\SubcategoryController::class,'subadd'])->name('subcategory.subadd');
@@ -532,6 +407,7 @@ Route::post('/wishlist_to_cart',[App\Http\Controllers\Frontend\WishlistControlle
  Route::post('subcategory_update/{id}',[\App\Http\Controllers\Admin\SubcategoryController::class,'update'])->name('subcategory.update');
   Route::post('subcategory_create',[\App\Http\Controllers\Admin\SubcategoryController::class,'subcategory_create'])->name('subcategory_create');
 
+/*
 //checkout section
 Route::get('/view/checkout', function() { return redirect('/?page=cart'); })->name('checkout1');
 Route::post('/checkout_store',[\App\Http\Controllers\Frontend\CheckoutController::class,'checkout_store'])->name('checkout_store');
@@ -547,24 +423,25 @@ Route::get('/payment_success/{id}',[\App\Http\Controllers\Frontend\CheckoutContr
  //Route::get('checkout',[\App\Http\Controllers\Frontend\CheckoutController::class,'checkoutStore'])->name('checkout.store');
  Route::get('checkout', function() {
      return redirect('/?page=cart');
- })->name('checkout.store');
- Route::get('change_shippingprice',[\App\Http\Controllers\Frontend\CheckoutController::class,'change_shippingprice']);
- Route::get('complete/{order}',[\App\Http\Controllers\Frontend\CheckoutController::class,'complete'])->name('complete');
- Route::get('/edit_address',[\App\Http\Controllers\Frontend\CheckoutController::class,'edit_address'])->name('edit_address');
- Route::post('/ccavenue/response',[\App\Http\Controllers\Frontend\CheckoutController::class,'ccavenueResponse'])->name('ccavenue_response');
-  Route::get('payment_failure',[\App\Http\Controllers\Frontend\CheckoutController::class,'payment_failure']);
-Route::group(['prefix'=>'customer'],function(){
-    Route::get('/userAccount',[App\Http\Controllers\Frontend\IndexController::class, 'userAccount'])->name('user.Account');
-    Route::get('/order_detail/{id}',[App\Http\Controllers\Frontend\IndexController::class, 'order_details'])->name('order_detail');
-    Route::get('/view_details/{id}',[App\Http\Controllers\Frontend\IndexController::class, 'view_details'])->name('view_details');
-    Route::get('/tracking/{id}', [App\Http\Controllers\Frontend\IndexController::class, 'tracking'])->name('tracking');
-    Route::get('/cancle/{id}', [App\Http\Controllers\Frontend\IndexController::class, 'cancel'])->name('cancle');
-    Route::get('/my_account',[App\Http\Controllers\Frontend\WhatisnewController::class, 'my_account'])->name('my_account');
-    Route::post('/billing/address/{id}',[App\Http\Controllers\Frontend\IndexController::class, 'billingAddress'])->name('billing.address');
-    Route::post('/shipping/address/{id}',[App\Http\Controllers\Frontend\IndexController::class, 'shippingAddress'])->name('shipping.address');
-    Route::post('/account/update/{id}',[App\Http\Controllers\Frontend\IndexController::class, 'accountUpdate'])->name('account.update');
-    Route::get('/downloadPdf/{id}',[App\Http\Controllers\Frontend\IndexController::class, 'downloadPdf'])->name('downloadPdf');
-});
+  })->name('checkout.store');
+  Route::get('change_shippingprice',[\App\Http\Controllers\Frontend\CheckoutController::class,'change_shippingprice']);
+  Route::get('complete/{order}',[\App\Http\Controllers\Frontend\CheckoutController::class,'complete'])->name('complete');
+  Route::get('/edit_address',[\App\Http\Controllers\Frontend\CheckoutController::class,'edit_address'])->name('edit_address');
+  Route::post('/ccavenue/response',[\App\Http\Controllers\Frontend\CheckoutController::class,'ccavenueResponse'])->name('ccavenue_response');
+   Route::get('payment_failure',[\App\Http\Controllers\Frontend\CheckoutController::class,'payment_failure']);
+ Route::group(['prefix'=>'customer'],function(){
+     Route::get('/userAccount',[App\Http\Controllers\Frontend\IndexController::class, 'userAccount'])->name('user.Account');
+     Route::get('/order_detail/{id}',[App\Http\Controllers\Frontend\IndexController::class, 'order_details'])->name('order_detail');
+     Route::get('/view_details/{id}',[App\Http\Controllers\Frontend\IndexController::class, 'view_details'])->name('view_details');
+     Route::get('/tracking/{id}', [App\Http\Controllers\Frontend\IndexController::class, 'tracking'])->name('tracking');
+     Route::get('/cancle/{id}', [App\Http\Controllers\Frontend\IndexController::class, 'cancel'])->name('cancle');
+     Route::get('/my_account',[App\Http\Controllers\Frontend\WhatisnewController::class, 'my_account'])->name('my_account');
+     Route::post('/billing/address/{id}',[App\Http\Controllers\Frontend\IndexController::class, 'billingAddress'])->name('billing.address');
+     Route::post('/shipping/address/{id}',[App\Http\Controllers\Frontend\IndexController::class, 'shippingAddress'])->name('shipping.address');
+     Route::post('/account/update/{id}',[App\Http\Controllers\Frontend\IndexController::class, 'accountUpdate'])->name('account.update');
+     Route::get('/downloadPdf/{id}',[App\Http\Controllers\Frontend\IndexController::class, 'downloadPdf'])->name('downloadPdf');
+ });
+*/
 ///cart
 
 Route::post('/checkCouponcode', [\App\Http\Controllers\Admin\CouponController::class, 'checkCouponcode'])->name('checkCouponcode');
@@ -573,6 +450,7 @@ Route::post('/checkCouponcode', [\App\Http\Controllers\Admin\CouponController::c
 
 Route::resource('/categorytag', \App\Http\Controllers\CategoryTagController::class);
 
+/*
 ///order delete
 Route::post('/reason_status',[\App\Http\Controllers\Frontend\IndexController::class,'reason_status'])->name('reason_status');
 
@@ -580,6 +458,7 @@ Route::get('/my_orders', [\App\Http\Controllers\Frontend\WhatisnewController::cl
 
 Route::get('/{id}', [\App\Http\Controllers\Frontend\WhatisnewController::class, 'order_pdf'])->where('id', '[0-9]+');
 Route::get('/fetch-subcategories/{id}', [App\Http\Controllers\Frontend\IndexController::class, 'fetchSubcategories']);
+*/
 
 //categorytag
 
@@ -587,3 +466,6 @@ Route::post('categorytag/store', [CategoryTagController::class, 'store'])->name(
 Route::get('categorytag/create', [CategoryTagController::class, 'create'])->name('categorytag.create');
 Route::get('/get-categories/{isParent}', [CategoryTagController::class, 'getCategories']);
 Route::post('categorytag_status',[\App\Http\Controllers\CategoryTagController::class,'CategorytagStatus'])->name('categorytag_status');
+
+// Frontend fallback product route
+Route::get('/product/{slug}', [IndexController::class, 'product_detail'])->name('product_detail');
