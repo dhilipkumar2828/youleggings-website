@@ -1,5 +1,8 @@
 <?php
 namespace App\Http\Controllers\Frontend;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Banner;
@@ -38,9 +41,6 @@ use App\Models\ProductVariant;
 use App\Models\Otp;
 use App\Models\Guest;
 use App\Models\Clientfeedback;
-use DB;
-use URL;
-use Auth;
 use Validator;
 use Illuminate\Support\Facades\Session;
 use Redirect;
@@ -165,8 +165,12 @@ $subcategories=Product::where('status','active')->where('category',$categoryId)-
         $settings = \App\Models\Setting::first();
         $blogs = \App\Models\Blog::where('status', 'active')->orderBy('id', 'desc')->get();
         $default_contact = \App\Models\Contact::first();
+        $states = \DB::table('state_list')->get();
+
+        $privacy = \App\Models\Privacy::first();
+        $terms = \App\Models\Terms::first();
         
-        return view('frontend.index', compact('abouts','abouts_banner','allreviews','banners', 'ahover_image_photo', 'aDiscountpercent', 'advertisement', 'iswishlist', 'categories', 'products', 'aProductvariant_photo', 'aProductSaleprice','advertisement2', 'settings', 'blogs', 'default_contact'));
+        return view('frontend.index', compact('abouts','abouts_banner','allreviews','banners', 'ahover_image_photo', 'aDiscountpercent', 'advertisement', 'iswishlist', 'categories', 'products', 'aProductvariant_photo', 'aProductSaleprice','advertisement2', 'settings', 'blogs', 'default_contact', 'states', 'privacy', 'terms'));
     }
 
     public function guestlogin()
@@ -331,32 +335,9 @@ $subcategories=Product::where('status','active')->where('category',$categoryId)-
     {
         return view('frontend.cancellation_policy',array());
     }
-////user auth
     public function userAuth()
     {
-        $this->sessionremove();
-
-        $customer = Auth::guard('users')->user() ?? Auth::guard('guest')->user();
-        $customer_id = $customer ? $customer->id : null;
-
-          if ($customer_id) {
-                $this->syncCart($customer);
-            }
-         if (Auth::guard('users')->check()) {
-           $user=Auth::guard('users')->user();
-        } elseif (Auth::guard('guest')->check()) {
-           $user=Auth::guard('guest')->user();
-        } else {
-            $user ='';
-        }
-
-        if($user){
-             return redirect()->route('checkout1');
-        }else{
-            Session::put('coustomer.intended',URL::previous());
-            return view('frontend.Auth.auth');
-        }
-
+        return redirect('/?page=login');
     }
      public function user1Auth()
     {
@@ -894,12 +875,12 @@ array_push($check_cancel,$d->status);
        return view('frontend.costomer.view_details',compact('order','data','id','status'));
      //return view('frontend.costomer.view_details');
    }
-   public function tracking($id)
-   {
-        $user=Auth::guard('customer')->user();
-        $orders=Order::find($id);
-        return view('frontend.track',compact('orders'));
-   }
+    public function tracking($id)
+    {
+         $user=Auth::guard('users')->user() ?? Auth::guard('guest')->user();
+         $order=Order::find($id);
+         return view('frontend.order_tracking',compact('order'));
+    }
    public function cancel($id)
    {
         $user=Auth::guard('customer')->user();
@@ -944,19 +925,50 @@ array_push($check_cancel,$d->status);
             return redirect("/customer/cancle/$request->order_id")->with('status', 'Failled Please try again');
         }
    }
-   public function downloadPdf($id)
-   {
-    $user=Auth::guard('customer')->user();
-    $order=Order::find($id);
-    $data=OrderProduct::where('order_id',$id)->get();
-     //$pdf = PDF::loadView('frontend.costomer.view_details','order','data');
-    //echo $pdf = PDF::loadView('frontend.costomer.view_details',compact('order','data'));
-    //$pdf = PDF::loadView('frontend.costomer.view_details',compact('order','data'));
-    //return view('frontend.costomer.test',compact('order','data'));
-    $pdf = PDF::loadView('frontend.costomer.invoice',compact('order','data'));
-    $order_id=$order->order_id;
-    return $pdf->download('invoice-'.$order_id.'.pdf');
-   }
+    public function downloadPdf($id)
+    {
+        $user=Auth::guard('users')->user() ?? Auth::guard('guest')->user();
+        $order=Order::find($id);
+        if (!$order) {
+            abort(404, 'Order not found');
+        }
+        $data=OrderProduct::where('order_id',$id)->get();
+        
+        $discount_amt = array();
+        foreach($data as $key=>$d){
+            $product=DB::table('products')->where('id',$d->product_id)->first();
+            // Fixed table name product_variants and column name variants
+            $product_variant=DB::table('product_variants')->where('product_id',$d->product_id)->where('variants',$d->option)->first();
+            if($product && $product->discount_type == "fixed"){
+                $data[$key]['discount_value']=$product->discount;
+            } elseif($product && $product_variant) {
+                $discount= $this->fetchSalePrice($product_variant->regular_price,$product->tax_id,$product->discount,$product->discount_type);
+                $data[$key]['discount_value']=$discount['discount_price'];
+            } else {
+                $data[$key]['discount_value'] = 0;
+            }
+            array_push($discount_amt,$data[$key]['discount_value']);
+        }
+
+        $reason=Reason::orderBy('order_id','desc')->get();
+        $billing_address=BillingAddress::where('order_id',$id)->first();
+        $shipping_address=ShippingAddress::where('order_id',$id)->first();
+        
+        // Initialize $state to avoid undefined variable error
+        $state = (object)['state' => ''];
+        if(isset($billing_address)){
+            $state_row = DB::table('state_list')->where('id',$billing_address->state)->first();
+            if ($state_row) {
+                $state = $state_row;
+            }
+        }
+
+        $delivery_charge = ($order->deliver_charge == '' || $order->deliver_charge == 'NULL') ? 0.00 : $order->deliver_charge;
+        
+        $pdf = PDF::loadView('frontend.order_pdf', compact('discount_amt','delivery_charge','state','order','data','reason','billing_address','shipping_address'));
+        $order_id=$order->order_id;
+        return $pdf->download('invoice-'.$order_id.'.pdf');
+    }
    public function billingAddress(Request $request,$id)
    {
     //return $request->all();
@@ -1061,37 +1073,40 @@ public function  create_lostpassword(Request $request){
 
         foreach($data as $key=>$d){
             $product=DB::table('products')->where('id',$d->product_id)->first();
-            $product_variant=DB::table('product_variant')->where('product_id',$d->product_id)->where('arrtibute_name',$d->option)->first();
-            if($product->discount_type == "fixed"){
+            // Fixed table name product_variants and column name variants
+            $product_variant=DB::table('product_variants')->where('product_id',$d->product_id)->where('variants',$d->option)->first();
+            if($product && $product->discount_type == "fixed"){
                 $data[$key]['discount_value']=$product->discount;
-            }else{
+            }elseif($product && $product_variant){
                 $discount= $this->fetchSalePrice($product_variant->regular_price,$product->tax_id,$product->discount,$product->discount_type);
                 $data[$key]['discount_value']=$discount['discount_price'];
+            } else {
+                $data[$key]['discount_value'] = 0;
             }
             array_push($discount_amt,$data[$key]['discount_value']);
         }
 
         $order=Order::find($id);
+        if (!$order) {
+            abort(404, 'Order not found');
+        }
 
         $reason=Reason::orderBy('order_id','desc')->get();
         $billing_address=BillingAddress::where('order_id',$id)->first();
         $shipping_address=ShippingAddress::where('order_id',$id)->first();
+        
+        $state = (object)['state' => ''];
         if(isset($billing_address)){
-        $state=DB::table('state_list')->where('id',$billing_address->state)->first();
-        }else{
-            $state='';
+            $state_row = DB::table('state_list')->where('id',$billing_address->state)->first();
+            if ($state_row) {
+                $state = $state_row;
+            }
         }
 
-        // if($order->sub_total > 500){
-        //     $delivery_charge=0.00;
-        // }else{
-        //     $delivery_charge=40.00;
-        // }
         $delivery_charge = ($order->deliver_charge == '' || $order->deliver_charge == 'NULL') ? 0.00 : $order->deliver_charge;
 
         if($order){
-
-       return view('frontend.order_pdf',compact('discount_amt','delivery_charge','state','order','data','reason','billing_address','shipping_address'));
+            return view('frontend.order_pdf',compact('discount_amt','delivery_charge','state','order','data','reason','billing_address','shipping_address'));
         }
     }
 

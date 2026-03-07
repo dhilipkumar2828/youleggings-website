@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use DB;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 
 use App\Models\Product;
@@ -48,13 +48,10 @@ use Customer;
 
 use App\Models\CartTable;
 
-use Session;
 
 use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Arabic;
 
-session_start();
 
-use Auth;
 class WhatisnewController extends Controller
 
 {
@@ -1778,38 +1775,29 @@ public function my_account(){
 
  //   $orders=DB::table('orders')->where(['customer_id'=>auth()->guard('users')->user()->id])->get();
 
-       if (Auth::guard('users')->check()) {
-
-            $customer_name=User::where('id',auth()->guard('users')->user()->id)->first();
-
+        if (Auth::guard('users')->check()) {
+            $user_obj = User::find(auth()->guard('users')->user()->id);
+            $customer_name = $user_obj->name ?: $user_obj->phone;
         } elseif (Auth::guard('guest')->check()) {
-           $customer_name = auth()->guard('guest')->user()->mobile;
-
+            $customer_name = auth()->guard('guest')->user()->mobile;
         } else {
-
-            $customer_name ='';
-
+            $customer_name = '';
         }
 
-    $billing_address=BillingAddress::where('customer_id', $customer_id)->orderBy('id','desc')->first();
+        $billing_address = BillingAddress::where('customer_id', $customer_id)->orderBy('id', 'desc')->first();
+        $shipping_address = ShippingAddress::where('customer_id', $customer_id)->orderBy('id', 'desc')->first();
 
-    $shipping_address=ShippingAddress::where('customer_id',$customer_id)->orderBy('id','desc')->first();
+        if (isset($billing_address) && $billing_address->state) {
+            $state = DB::table('state_list')->where('id', $billing_address->state)->first();
+        } else {
+            $state = '';
+        }
 
-    if(isset($billing_address)){
+        $account = DB::table('users')->where('id', $customer_id)->first();
+        $settings = \App\Models\Setting::first();
 
-    $state=DB::table('state_list')->where('id',$billing_address->state)->first();
-
-    }else{
-
-        $state='';
-
+        return view('frontend.my_account', compact('orders', 'customer_name', 'billing_address', 'state', 'shipping_address', 'account', 'ordersrecently', 'settings'));
     }
-
-    $account=DB::table('users')->where('id',$customer_id)->first();
-
-    return view('frontend.my_account',compact('orders','customer_name','billing_address','state','shipping_address','account','ordersrecently'));
-
-}
 
 public function order_pdf($id) {
     // Initialize necessary arrays

@@ -88,7 +88,7 @@ Route::post('add_payment', [App\Http\Controllers\RaserpayController::class, 'add
 // Route::get('cancel-payment', 'PayPalPaymentController@paymentCancel')->name('cancel.payment');
 // Route::get('payment-success', 'PayPalPaymentController@paymentSuccess')->name('success.payment');
 //subscriber controller
-Route::get('user/auth', [App\Http\Controllers\Frontend\IndexController::class, 'userAuth'])->name('user.auth');
+Route::get('user/auth', function() { return redirect('/?page=login'); })->name('user.auth');
 Route::get('guest/auth', [App\Http\Controllers\Frontend\IndexController::class, 'guestAuth'])->name('guest.auth');
 
 Route::get('user1/auth', [App\Http\Controllers\Frontend\IndexController::class, 'user1Auth'])->name('user1.auth');
@@ -145,7 +145,9 @@ Route::get('/newarrival_list', function () {
 Route::get('/product_list/{id}', function () {
     return redirect('/?page=shop');
 });
-Route::get('/all_products',[App\Http\Controllers\Frontend\WhatisnewController::class, 'all_products']);
+Route::get('/all_products', function() {
+    return redirect('/?page=shop');
+});
 
 Route::post('/product_filter', [App\Http\Controllers\Frontend\WhatisnewController::class, 'product_filter']);
 Route::post('/newarrival_product_filter', [App\Http\Controllers\Frontend\WhatisnewController::class, 'newarrival_product_filter']);
@@ -178,13 +180,13 @@ Route::get('/faq', function () {
     return redirect('/?page=contact'); 
 })->name('faq');
 Route::get('/deliveryreturn', function () {
-    return redirect('/?page=shop'); 
+    return redirect('/?page=shipping'); 
 })->name('deliveryreturn');
 Route::get('/privacypolicy', function () {
-    return redirect('/?page=about'); 
+    return redirect('/?page=privacy'); 
 })->name('privacypolicy');
 Route::get('/termscondition', function () {
-    return redirect('/?page=about');
+    return redirect('/?page=terms');
 })->name('termscondition');
 Route::post('/contact_form', [App\Http\Controllers\Frontend\IndexController::class, 'contact_form'])->name('contact_form');
 Route::post('/client_feedback', [App\Http\Controllers\Frontend\IndexController::class, 'client_feedback'])->name('client_feedback');
@@ -500,10 +502,13 @@ Route::get('tax-report',[\App\Http\Controllers\Admin\ReportController::class,'ta
 Route::get('expense-report',[\App\Http\Controllers\Admin\ReportController::class,'expensereport'])->name('report.expensereport');
 Route::post('expense-report-pdf',[\App\Http\Controllers\Admin\ReportController::class,'expensepdf'])->name('report.pdf');
 ///cart userDetails
-Route::get('/cart',[App\Http\Controllers\Frontend\CartController::class, 'cart'])->name('cart');
-Route::post('/cart_save', [App\Http\Controllers\Frontend\CartController::class, 'cartstore']);
+Route::get('/cart', function() {
+    return redirect('/?page=cart');
+})->name('cart');
+Route::post('/cart_save', [App\Http\Controllers\Frontend\CartController::class, 'cartstore'])->name('cart_save');
+Route::post('/singlecartstore', [App\Http\Controllers\Frontend\CartController::class, 'singlecartstore'])->name('singlecartstore');
 Route::post('/cartdelete', [App\Http\Controllers\Frontend\CartController::class, 'cartDelete'])->name('cart.delete');
-Route::post('/render_carttable', [App\Http\Controllers\Frontend\CartController::class, 'render_carttable']);
+Route::post('/render_carttable', [App\Http\Controllers\Frontend\CartController::class, 'render_carttable'])->name('render_carttable');
 Route::post('/cart/bynow', [App\Http\Controllers\Frontend\CartController::class, 'bynow'])->name('cart.bynow');
 Route::post('/sessionDelete',[App\Http\Controllers\Frontend\CartController::class, 'sessionDelete']);
 Route::post('/updatecart', [App\Http\Controllers\Frontend\CartController::class, 'cartUpdate'])->name('cart.update');
@@ -528,8 +533,8 @@ Route::post('/wishlist_to_cart',[App\Http\Controllers\Frontend\WishlistControlle
   Route::post('subcategory_create',[\App\Http\Controllers\Admin\SubcategoryController::class,'subcategory_create'])->name('subcategory_create');
 
 //checkout section
-Route::get('/view/checkout',[App\Http\Controllers\Frontend\CheckoutController::class, 'checkout1'])->name('checkout1');
-Route::post('/checkout_store',[\App\Http\Controllers\Frontend\CheckoutController::class,'checkout_store']);
+Route::get('/view/checkout', function() { return redirect('/?page=cart'); })->name('checkout1');
+Route::post('/checkout_store',[\App\Http\Controllers\Frontend\CheckoutController::class,'checkout_store'])->name('checkout_store');
 Route::post('/checkout_store_payment',[\App\Http\Controllers\Frontend\CheckoutController::class,'checkout_store_payment']);
 
 Route::get('/processphonepe/{id}',[\App\Http\Controllers\Frontend\CheckoutController::class,'processphonepe']);
@@ -540,7 +545,9 @@ Route::get('/payment_success/{id}',[\App\Http\Controllers\Frontend\CheckoutContr
 // Route::post('checkout-two',[\App\Http\Controllers\Frontend\CheckoutController::class,'checkout2Store'])->name('checkout2.store');
 // Route::post('checkout-three',[\App\Http\Controllers\Frontend\CheckoutController::class,'checkout3Store'])->name('checkout3.store');
  //Route::get('checkout',[\App\Http\Controllers\Frontend\CheckoutController::class,'checkoutStore'])->name('checkout.store');
- Route::get('checkout',[\App\Http\Controllers\Frontend\CheckoutController::class,'checkoutStore'])->name('checkout.store');
+ Route::get('checkout', function() {
+     return redirect('/?page=cart');
+ })->name('checkout.store');
  Route::get('change_shippingprice',[\App\Http\Controllers\Frontend\CheckoutController::class,'change_shippingprice']);
  Route::get('complete/{order}',[\App\Http\Controllers\Frontend\CheckoutController::class,'complete'])->name('complete');
  Route::get('/edit_address',[\App\Http\Controllers\Frontend\CheckoutController::class,'edit_address'])->name('edit_address');

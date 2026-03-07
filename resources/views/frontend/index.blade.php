@@ -75,9 +75,9 @@
   <section class="hero home-page-section" id="home">
     <div class="page-main" style="background-image: none; background-color: #9f9f9f;">
       <div class="hero-overlay"></div>
-      <div style="position: absolute; inset: 0; background-image: url('{{ asset('premium_assets/images/bg-less/_DSC8175-Photoroom.png') }}'); background-size: auto 110%; background-position: right 10% top 50%; background-repeat: no-repeat; z-index: 2;">
+      <div style="position: absolute; inset: 0; background-image: url('{{ asset('premium_assets/images/bg-less/_DSC8175-Photoroom.png') }}'); background-size: auto 110%; background-position: right -5% top 50%; background-repeat: no-repeat; z-index: 2;">
       </div>
-      <div class="container page-main-content">
+      <div class="container page-main-content" style="margin-left: 110px">
         <span class="hero-subtitle">Premium Collection 2026</span>
         <h1 class="hero-title">Experience Comfort <br>In Every Move</h1>
         <a href="{{ url('/?page=shop') }}" class="btn hero-btn" style="margin-top: 25px;">Shop The Collection</a>
@@ -115,9 +115,9 @@
   <section class="section about-page" id="about-page">
     <div class="page-main" style="background-image: none; background-color: #9f9f9f;">
       <div class="hero-overlay"></div>
-      <div style="position: absolute; inset: 0; background-image: url('{{ asset('premium_assets/images/bg-less/_DSC8937-Photoroom.png') }}'); background-size: auto 110%; background-position: right 10% top 50%; background-repeat: no-repeat; z-index: 2;">
+      <div style="position: absolute; inset: 0; background-image: url('{{ asset('premium_assets/images/bg-less/_DSC8937-Photoroom.png') }}'); background-size: auto 110%; background-position: right -5% top 50%; background-repeat: no-repeat; z-index: 2;">
       </div>
-      <div class="container page-main-content">
+      <div class="container page-main-content" style="margin-left: 110px">
         <span class="hero-subtitle">About You Leggings</span>
         <h1 class="hero-title">{{ $abouts->title ?? 'Comfort Without Compromise' }}</h1>
       </div>
@@ -179,9 +179,9 @@
     <div class="page-main shop-main" style="background-image: none; background-color: #9f9f9f;">
       <div class="hero-overlay"></div>
       <div
-        style="position: absolute; inset: 0; background-image: url('{{ asset('premium_assets/images/bg-less/_DSC8984-Photoroom.png') }}'); background-size: auto 110%; background-position: right 10% top 50%; background-repeat: no-repeat; z-index: 2;">
+        style="position: absolute; inset: 0; background-image: url('{{ asset('premium_assets/images/bg-less/_DSC8984-Photoroom.png') }}'); background-size: auto 110%; background-position: right -5% top 50%; background-repeat: no-repeat; z-index: 2;">
       </div>
-      <div class="container page-main-content">
+      <div class="container page-main-content" style="margin-left: 110px">
         <span class="hero-subtitle">Shop Collection</span>
         <h1 class="hero-title">Premium Leggings <br>For Every Move</h1>
       </div>
@@ -259,7 +259,7 @@
                     <h3 class="product-name">{{ $product->name }}</h3>
                     <div class="shop-product-meta" style="display:none;">{{ $vMeta }}</div>
                     <div class="shop-product-bottom">
-                      <div class="product-price">INR {{ $vPrice }}</div>
+                      <div class="product-price">INR {{ number_format($vPrice, 0) }}</div>
                       <a href="{{ url('/?page=product&product=' . $product->slug) }}" class="shop-product-link">Buy Now</a>
                     </div>
                   </div>
@@ -277,9 +277,9 @@
     <div class="page-main product-main" style="background-image: none; background-color: #9f9f9f;">
       <div class="hero-overlay"></div>
       <div
-        style="position: absolute; inset: 0; background-image: url('{{ asset('premium_assets/images/bg-less/_DSC8175-Photoroom.png') }}'); background-size: auto 110%; background-position: right 10% top 50%; background-repeat: no-repeat; z-index: 2;">
+        style="position: absolute; inset: 0; background-image: url('{{ asset('premium_assets/images/bg-less/_DSC8175-Photoroom.png') }}'); background-size: auto 110%; background-position: right -5% top 50%; background-repeat: no-repeat; z-index: 2;">
       </div>
-      <div class="container page-main-content">
+      <div class="container page-main-content" style="margin-left: 110px">
         <span class="hero-subtitle" id="productDetailCategory">Leggings</span>
         <h1 class="hero-title" id="productDetailName">Product Detail</h1>
       </div>
@@ -475,9 +475,9 @@
     <div class="page-main arrivals-main" style="background-image: none; background-color: #9f9f9f;">
       <div class="hero-overlay"></div>
       <div
-        style="position: absolute; inset: 0; background-image: url('{{ asset('premium_assets/images/bg-less/_DSC8175-Photoroom.png') }}'); background-size: auto 110%; background-position: right 10% top 50%; background-repeat: no-repeat; z-index: 2;">
+        style="position: absolute; inset: 0; background-image: url('{{ asset('premium_assets/images/bg-less/_DSC8175-Photoroom.png') }}'); background-size: auto 110%; background-position: right -5% top 50%; background-repeat: no-repeat; z-index: 2;">
       </div>
-      <div class="container page-main-content">
+      <div class="container page-main-content" style="margin-left: 110px">
         <span class="hero-subtitle">Latest Drops</span>
         <h1 class="hero-title">New Arrivals <br>Autumn 2026</h1>
       </div>
@@ -500,7 +500,7 @@
                   <p class="shop-product-category">{{ $product->categories->title ?? 'Premium' }}</p>
                   <h3 class="product-name">{{ $product->name }}</h3>
                   <div class="shop-product-bottom">
-                    <div class="product-price">INR {{ $vPrice }}</div>
+                    <div class="product-price">INR {{ number_format($vPrice, 0) }}</div>
                     <a href="{{ url('/?page=product&product=' . $product->slug) }}" class="shop-product-link">View</a>
                   </div>
                 </div>
@@ -517,9 +517,9 @@
     <div class="page-main blog-main" style="background-image: none; background-color: #9f9f9f;">
       <div class="hero-overlay"></div>
       <div
-        style="position: absolute; inset: 0; background-image: url('{{ asset('premium_assets/images/bg-less/_DSC8285-Photoroom.png') }}'); background-size: auto 110%; background-position: right 10% top 50%; background-repeat: no-repeat; z-index: 2;">
+        style="position: absolute; inset: 0; background-image: url('{{ asset('premium_assets/images/bg-less/_DSC8285-Photoroom.png') }}'); background-size: auto 110%; background-position: right -5% top 50%; background-repeat: no-repeat; z-index: 2;">
       </div>
-      <div class="container page-main-content">
+      <div class="container page-main-content" style="margin-left: 110px">
         <span class="hero-subtitle">Style Journal</span>
         <h1 class="hero-title">Elegance In <br>Motion</h1>
       </div>
@@ -622,11 +622,11 @@
     <div class="page-main contact-main" style="background-image: none; background-color: #9f9f9f;">
       <div class="hero-overlay"></div>
       <div
-        style="position: absolute; inset: 0; background-image: url('{{ asset('premium_assets/images/bg-less/_DSC8937-Photoroom.png') }}'); background-size: auto 110%; background-position: right 10% top 50%; background-repeat: no-repeat; z-index: 2;">
+        style="position: absolute; inset: 0; background-image: url('{{ asset('premium_assets/images/bg-less/_DSC8937-Photoroom.png') }}'); background-size: auto 110%; background-position: right -5% top 50%; background-repeat: no-repeat; z-index: 2;">
       </div>
-      <div class="container page-main-content">
+      <div class="container page-main-content" style="margin-left: 110px">
         <span class="hero-subtitle">Get In Touch</span>
-        <h1 class="hero-title">We Are Here <br>To Help</h1>
+        <h1 class="hero-title" style="color: #000;">We Are Here <br>To Help</h1>
       </div>
     </div>
 
@@ -646,7 +646,7 @@
             <li><strong>Bulk Enquiries:</strong> Retail and wholesale requests are welcome</li>
           </ul>
         </div>
-        <form class="contact-form" action="{{ route('contact_form') }}" method="POST">
+        <form class="contact-form" id="contactForm">
           @csrf
           <label for="contact-name">Name</label>
           <input id="contact-name" name="name" type="text" placeholder="Your full name" required>
@@ -693,7 +693,7 @@
       <div
         style="position: absolute; inset: 0; background-image: url('{{ asset('premium_assets/images/bg-less/_DSC8175-Photoroom.png') }}'); background-size: auto 110%; background-position: right 10% top 50%; background-repeat: no-repeat; z-index: 2;">
       </div>
-      <div class="container page-main-content">
+      <div class="container page-main-content" style="margin-left: 110px">
         <span class="hero-subtitle">Review Your Selection</span>
         <h1 class="hero-title">Shopping <br>Cart</h1>
       </div>
@@ -703,54 +703,88 @@
       <div class="cart-layout">
         <!-- Cart Items List (Step 1) -->
         <div class="cart-items" id="cartItemsContainer">
-          <!-- Cart items will be rendered here -->
+          <!-- Cart items will be rendered here by JS -->
         </div>
 
         <!-- Checkout Form (Step 2 - Hidden by default) -->
-        <div class="checkout-step" id="checkoutStage"
-          style="display: none; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); flex: 1;">
-          <h3 style="margin-bottom: 25px; border-bottom: 1px dotted #ccc; padding-bottom: 15px;">Shipping Address</h3>
-          <form id="checkoutAddressForm" style="display: flex; flex-direction: column; gap: 20px;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-              <div>
-                <label style="display: block; font-size: 13px; margin-bottom: 8px; font-weight: 600;">Full Name</label>
-                <input type="text" id="ship-name" placeholder="Enter Full Name" required
-                  style="width: 100%; padding: 12px; border: 1px solid #ddd; outline: none;">
+        <div class="checkout-step cart-checkout-form-wrap" id="checkoutStage" style="display: none; flex: 1;">
+          <div class="cart-checkout-form-header">
+            <i data-lucide="map-pin" style="width:18px;height:18px;"></i>
+            <h3>Shipping Address</h3>
+          </div>
+          <form id="checkoutAddressForm" class="cart-checkout-addr-form">
+            @csrf
+            <div class="cart-form-row-2">
+              <div class="cart-form-field">
+                <label>First Name</label>
+                <input type="text" id="ship-first-name" name="first_name" placeholder="First Name" required>
               </div>
-              <div>
-                <label style="display: block; font-size: 13px; margin-bottom: 8px; font-weight: 600;">Mobile
-                  Number</label>
-                <input type="tel" id="ship-mobile" placeholder="10 Digit Mobile" required maxlength="10"
-                  style="width: 100%; padding: 12px; border: 1px solid #ddd; outline: none;">
-              </div>
-            </div>
-            <div>
-              <label style="display: block; font-size: 13px; margin-bottom: 8px; font-weight: 600;">Complete
-                Address</label>
-              <textarea id="ship-address" rows="3" placeholder="House No, Street, Area..." required
-                style="width: 100%; padding: 12px; border: 1px solid #ddd; outline: none; resize: none;"></textarea>
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-              <div>
-                <label style="display: block; font-size: 13px; margin-bottom: 8px; font-weight: 600;">City</label>
-                <input type="text" id="ship-city" placeholder="City" required
-                  style="width: 100%; padding: 12px; border: 1px solid #ddd; outline: none;">
-              </div>
-              <div>
-                <label style="display: block; font-size: 13px; margin-bottom: 8px; font-weight: 600;">Pincode</label>
-                <input type="text" id="ship-pincode" placeholder="6 Digit Pincode" required maxlength="6"
-                  style="width: 100%; padding: 12px; border: 1px solid #ddd; outline: none;">
+              <div class="cart-form-field">
+                <label>Last Name</label>
+                <input type="text" id="ship-last-name" name="last_name" placeholder="Last Name">
               </div>
             </div>
-            <button class="btn" type="submit" style="margin-top: 10px; align-self: flex-start;">Place Order</button>
-            <button type="button" id="backToCartBtn"
-              style="background: none; border: none; color: #777; cursor: pointer; font-size: 13px; text-decoration: underline; align-self: flex-start;">Back
-              to Cart</button>
+            <div class="cart-form-row-2">
+              <div class="cart-form-field">
+                <label>Mobile Number <span style="color:#ec407a">*</span></label>
+                <input type="tel" id="ship-mobile" name="phone_number" placeholder="10-digit mobile" required maxlength="10">
+              </div>
+              <div class="cart-form-field">
+                <label>Email <span style="color:#aaa; font-weight:400;">(Optional)</span></label>
+                <input type="email" id="ship-email" name="email" placeholder="you@example.com">
+              </div>
+            </div>
+            <div class="cart-form-field">
+              <label>Street Address <span style="color:#ec407a">*</span></label>
+              <input type="text" id="ship-address-1" name="street_1" placeholder="House No, Building Name..." required style="margin-bottom: 10px;">
+              <input type="text" id="ship-address-2" name="street_2" placeholder="Street Name, Landmark, Area...">
+            </div>
+            <div class="cart-form-row-3">
+              <div class="cart-form-field">
+                <label>Town / City <span style="color:#ec407a">*</span></label>
+                <input type="text" id="ship-city" name="town" placeholder="City" required>
+              </div>
+              <div class="cart-form-field">
+                <label>State <span style="color:#ec407a">*</span></label>
+                <select id="ship-state" name="state" required>
+                    <option value="">Select State</option>
+                    @foreach($states as $state)
+                        <option value="{{ $state->id }}">{{ $state->state }}</option>
+                    @endforeach
+                </select>
+              </div>
+              <div class="cart-form-field">
+                <label>Pincode <span style="color:#ec407a">*</span></label>
+                <input type="text" id="ship-pincode" name="pincode" placeholder="6-digit code" required maxlength="6">
+              </div>
+            </div>
+            <div class="cart-form-field">
+              <label>Payment Method</label>
+              <div class="cart-payment-options">
+                <label class="cart-payment-option">
+                  <input type="radio" name="payment_method" value="cod" checked>
+                  <span class="cart-payment-label"><i data-lucide="banknote" style="width:16px;height:16px;"></i> Cash on Delivery</span>
+                </label>
+                <label class="cart-payment-option">
+                  <input type="radio" name="payment_method" value="razorpay">
+                  <span class="cart-payment-label"><i data-lucide="credit-card" style="width:16px;height:16px;"></i> Online Payment</span>
+                </label>
+              </div>
+            </div>
+            <div class="cart-form-actions">
+              <button class="btn" type="submit">Place Order</button>
+              <button type="button" id="backToCartBtn" class="cart-back-btn">
+                <i data-lucide="arrow-left" style="width:14px;height:14px;"></i> Back to Cart
+              </button>
+            </div>
           </form>
         </div>
 
         <aside class="cart-summary">
-          <h3>Order Summary</h3>
+          <div class="cart-summary-header">
+            <i data-lucide="shopping-bag" style="width:20px;height:20px;"></i>
+            <h3>Order Summary</h3>
+          </div>
           <div class="cart-summary-row">
             <span>Subtotal</span>
             <strong id="cartSubtotalValue">INR 0</strong>
@@ -759,13 +793,66 @@
             <span>Shipping</span>
             <strong id="cartShippingValue">INR 0</strong>
           </div>
+          <div class="cart-summary-note" id="cartShippingNote">Free shipping on orders above INR 999</div>
           <div class="cart-summary-row total">
             <span>Total</span>
             <strong id="cartTotalValue">INR 0</strong>
           </div>
           <button class="btn cart-checkout-btn" type="button" id="initiateCheckoutBtn">Proceed to Checkout</button>
+          <a href="{{ url('/?page=shop') }}" class="cart-continue-shopping">Continue Shopping</a>
         </aside>
       </div>
+    </div>
+  </section>
+  
+  <!-- Privacy Policy Page -->
+  <section class="section page-view privacy-page" id="privacy-page">
+    <div class="page-main" style="background-image: none; background-color: #9f9f9f;">
+      <div class="hero-overlay"></div>
+      <div style="position: absolute; inset: 0; background-image: url('{{ asset('premium_assets/images/bg-less/_DSC8175-Photoroom.png') }}'); background-size: auto 110%; background-position: right 10% top 50%; background-repeat: no-repeat; z-index: 2;"></div>
+      <div class="container page-main-content" style="margin-left: 110px">
+        <span class="hero-subtitle">Legal</span>
+        <h1 class="hero-title">{{ $privacy->title ?? 'Privacy Policy' }}</h1>
+      </div>
+    </div>
+    <div class="container page-body" style="padding: 60px 0; max-width: 900px;">
+        <div style="background: #fff; padding: 40px; border-radius: 16px; border: 1px solid #f0dbe4; line-height: 1.8; color: #4a3a42; font-size: 16px;">
+            {!! $privacy->description ?? 'Privacy policy content coming soon...' !!}
+        </div>
+    </div>
+  </section>
+
+  <!-- Terms & Conditions Page -->
+  <section class="section page-view terms-page" id="terms-page">
+    <div class="page-main" style="background-image: none; background-color: #9f9f9f;">
+      <div class="hero-overlay"></div>
+      <div style="position: absolute; inset: 0; background-image: url('{{ asset('premium_assets/images/bg-less/_DSC8175-Photoroom.png') }}'); background-size: auto 110%; background-position: right 10% top 50%; background-repeat: no-repeat; z-index: 2;"></div>
+      <div class="container page-main-content" style="margin-left: 110px">
+        <span class="hero-subtitle">Legal</span>
+        <h1 class="hero-title">{{ $terms->title ?? 'Terms & Conditions' }}</h1>
+      </div>
+    </div>
+    <div class="container page-body" style="padding: 60px 0; max-width: 900px;">
+        <div style="background: #fff; padding: 40px; border-radius: 16px; border: 1px solid #f0dbe4; line-height: 1.8; color: #4a3a42; font-size: 16px;">
+            {!! $terms->description ?? 'Terms & Conditions content coming soon...' !!}
+        </div>
+    </div>
+  </section>
+
+  <!-- Shipping Policy Page -->
+  <section class="section page-view shipping-page" id="shipping-page">
+    <div class="page-main" style="background-image: none; background-color: #9f9f9f;">
+      <div class="hero-overlay"></div>
+      <div style="position: absolute; inset: 0; background-image: url('{{ asset('premium_assets/images/bg-less/_DSC8175-Photoroom.png') }}'); background-size: auto 110%; background-position: right 10% top 50%; background-repeat: no-repeat; z-index: 2;"></div>
+      <div class="container page-main-content" style="margin-left: 110px">
+        <span class="hero-subtitle">Support</span>
+        <h1 class="hero-title">{{ $delivery->title ?? 'Shipping & Delivery' }}</h1>
+      </div>
+    </div>
+    <div class="container page-body" style="padding: 60px 0; max-width: 900px;">
+        <div style="background: #fff; padding: 40px; border-radius: 16px; border: 1px solid #f0dbe4; line-height: 1.8; color: #4a3a42; font-size: 16px;">
+            {!! $delivery->description ?? 'Shipping and delivery content coming soon...' !!}
+        </div>
     </div>
   </section>
 
@@ -853,7 +940,7 @@
     <div class="split-banner">
       <div class="split-content">
         <span class="section-subtitle" style="margin-bottom: 15px;">Limited Edition</span>
-        <h2 class="split-title">{!! isset($advertisement) ? str_replace(' ', ' <br>', $advertisement->title) : 'The Art of <br>Comfort' !!}</h2>
+        <h2 class="split-title"></h2>
         <p class="split-desc">
           Discover a collection of premium leggings that feel like a second skin. Each piece is meticulously crafted
           with precision and designed to move with you effortlessly.
@@ -862,7 +949,7 @@
           <a href="?page=shop" class="btn">Explore Shop</a>
         </div>
       </div>
-      <div class="split-image"{!! isset($advertisement) && $advertisement->photo ? ' style="background-image: url('.asset($advertisement->photo).');"' : '' !!}></div>
+      <div class="split-image"></div>
     </div>
   </section>
 
@@ -1014,11 +1101,11 @@
         <!-- Legal/Support -->
         <div class="footer-links-col">
           <h4 style="color: #fff; font-size: 1.1rem; margin-bottom: 25px; font-family: 'Outfit', sans-serif;">Support</h4>
-          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 15px;">
-            <li><a href="{{ route('privacypolicy') }}" class="footer-link-item">Privacy Policy</a></li>
-            <li><a href="{{ route('termscondition') }}" class="footer-link-item">Terms & Conditions</a></li>
-            <li><a href="{{ route('deliveryreturn') }}" class="footer-link-item">Shipping Policy</a></li>
-            <li><a href="{{ route('faq') }}" class="footer-link-item">Help Center</a></li>
+           <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 15px;">
+            <li><a href="{{ url('/?page=privacy') }}" class="footer-link-item">Privacy Policy</a></li>
+            <li><a href="{{ url('/?page=terms') }}" class="footer-link-item">Terms & Conditions</a></li>
+            <li><a href="{{ url('/?page=shipping') }}" class="footer-link-item">Shipping Policy</a></li>
+            <li><a href="{{ url('/?page=contact') }}" class="footer-link-item">Help Center</a></li>
           </ul>
         </div>
 
@@ -1057,71 +1144,24 @@
     </div>
   </footer>
 
-  <style>
-    .footer-link-item {
-        color: #888;
-        text-decoration: none;
-        font-size: 0.95rem;
-        transition: all 0.3s ease;
-        position: relative;
-        display: inline-block;
-    }
-    .footer-link-item:hover {
-        color: #fff;
-        transform: translateX(5px);
-    }
-    .social-pill {
-        width: 38px;
-        height: 38px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.05);
-        border-radius: 50%;
-        color: #888;
-        transition: all 0.3s ease;
-        text-decoration: none;
-    }
-    .social-pill:hover {
-        background: var(--primary-color);
-        color: #fff;
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(236, 64, 122, 0.3);
-    }
-    @media (max-width: 991px) {
-        .footer-main-grid {
-            grid-template-columns: 1fr 1fr !important;
-        }
-    }
-    @media (max-width: 600px) {
-        .footer-main-grid {
-            grid-template-columns: 1fr !important;
-            text-align: center;
-        }
-        .footer-brand-col, .footer-contact-col {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .footer-brand-col p {
-            max-width: 100% !important;
-        }
-        .social-links-wrap {
-            justify-content: center;
-        }
-        .footer-link-item:hover {
-            transform: none;
-        }
-    }
-  </style>
 
   <script>
     lucide.createIcons();
 
+    function formatMoney(amount) {
+      return 'INR ' + Math.round(amount).toLocaleString('en-IN');
+    }
+    
+    // Inject real products from DB for ID lookup
+    const DB_PRODUCTS = @json($products);
+    const DB_PRODUCT_MAP = (DB_PRODUCTS || []).reduce((acc, p) => {
+        acc[p.slug || p.id] = p;
+        return acc;
+    }, {});
+
     const params = new URLSearchParams(window.location.search);
     const activePage = params.get('page');
-    const routedPages = ['about', 'shop', 'product', 'new-arrivals', 'blog', 'contact', 'cart', 'login'];
+    const routedPages = ['about', 'shop', 'product', 'new-arrivals', 'blog', 'contact', 'cart', 'login', 'privacy', 'terms', 'shipping'];
     const isRoutedPage = routedPages.includes(activePage);
     if (isRoutedPage) {
       document.body.classList.add(`${activePage}-page-active`);
@@ -1197,12 +1237,40 @@
       });
     }
 
-    // OTP Simulation Logic
+    // Contact Form AJAX
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+      contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(contactForm);
+        formData.append('_token', '{{ csrf_token() }}');
+
+        fetch("{{ route('contact_form') }}", {
+          method: 'POST',
+          body: formData,
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            showToast(data.message || 'Thank you! We have received your message.', 'success');
+            contactForm.reset();
+          } else {
+            showToast('Failed to send message. Please try again.', 'error');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          showToast('Error sending message.', 'error');
+        });
+      });
+    }
+
+    // OTP Real Logic
     const sendOtpBtn = document.getElementById('sendOtpBtn');
     const phoneInputGroup = document.getElementById('phoneInputGroup');
     const otpInputGroup = document.getElementById('otpInputGroup');
     const loginMobileInput = document.getElementById('login-mobile');
-    const STATIC_OTP = '123456';
 
     if (sendOtpBtn && phoneInputGroup && otpInputGroup && loginMobileInput) {
       sendOtpBtn.addEventListener('click', (e) => {
@@ -1213,29 +1281,61 @@
           return;
         }
 
-        console.log('Sending OTP to:', mobile);
-        showToast(`OTP sent to ${mobile}. For simulation, use: ${STATIC_OTP}`, 'info');
+        const formData = new FormData();
+        formData.append('mobile', mobile);
+        formData.append('_token', '{{ csrf_token() }}');
 
-        // Toggle visibility
-        phoneInputGroup.style.display = 'none';
-        otpInputGroup.style.display = 'block';
+        fetch("{{ route('generateotp') }}", {
+          method: 'POST',
+          body: formData,
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.json())
+        .then(data => {
+          showToast(data.message || 'OTP sent successfully. (Try 123456 for testing)', 'info');
+          phoneInputGroup.style.display = 'none';
+          otpInputGroup.style.display = 'block';
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          showToast('Failed to send OTP.', 'error');
+        });
       });
     }
 
     if (loginForm) {
       loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        const mobile = loginMobileInput.value.trim();
         const otpValue = document.getElementById('login-otp')?.value.trim();
-        if (otpValue === STATIC_OTP) {
-          localStorage.setItem('userLoggedIn', 'true');
-          sessionStorage.setItem('justLoggedIn', 'true');
-          showToast('Login successful! Welcome back.', 'success');
-          setTimeout(() => {
-            window.location.href = '{{ url('/') }}';
-          }, 1000);
-        } else {
-          showToast('Invalid OTP. Please enter 123456.', 'error');
-        }
+        
+        const formData = new FormData();
+        formData.append('mobile', mobile);
+        formData.append('otp', otpValue);
+        formData.append('_token', '{{ csrf_token() }}');
+
+        fetch("{{ route('verifyotp') }}", {
+          method: 'POST',
+          body: formData,
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (!data.error) {
+            localStorage.setItem('userLoggedIn', 'true');
+            sessionStorage.setItem('justLoggedIn', 'true');
+            showToast('Login successful!', 'success');
+            setTimeout(() => {
+              window.location.href = '{{ url('/') }}';
+            }, 1000);
+          } else {
+            showToast(data.error.otp || 'Invalid OTP.', 'error');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          showToast('Verification failed.', 'error');
+        });
       });
     }
 
@@ -1315,56 +1415,83 @@
     }
 
     const checkoutAddressForm = document.getElementById('checkoutAddressForm');
+    function syncCartToServer() {
+        const cartItems = getStoredCart();
+        // Since the backend expects individual adds or full sync, we can use an endpoint or just ensure checkout has the latest.
+        // For a seamless flow, we'll send the cart to a sync endpoint when it changes.
+        fetch("/render_carttable", { // Using this as a proxy for sync if needed, or we can use another route
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ cart: cartItems })
+        });
+    }
+
     if (checkoutAddressForm) {
       checkoutAddressForm.addEventListener('submit', (e) => {
         e.preventDefault();
 
         const cartItems = getStoredCart();
-        const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
-        const shipping = subtotal > 999 ? 0 : 49;
-        const total = subtotal + shipping;
+        if (cartItems.length === 0) {
+          showToast('Your cart is empty!', 'error');
+          return;
+        }
 
-        // Capture Address
-        const shippingAddress = {
-          name: document.getElementById('ship-name').value,
-          mobile: document.getElementById('ship-mobile').value,
-          address: document.getElementById('ship-address').value,
-          city: document.getElementById('ship-city').value,
-          pincode: document.getElementById('ship-pincode').value
+        const formData = new FormData(checkoutAddressForm);
+        
+        // Prepare Nested Address Data as expected by CheckoutController
+        const billingAddress = {
+            first_name: document.getElementById('ship-first-name').value,
+            last_name: document.getElementById('ship-last-name').value,
+            phone_number: document.getElementById('ship-mobile').value,
+            email: document.getElementById('ship-email').value,
+            street_1: document.getElementById('ship-address-1').value,
+            street_2: document.getElementById('ship-address-2').value,
+            town: document.getElementById('ship-city').value,
+            state: document.getElementById('ship-state').value,
+            pincode: document.getElementById('ship-pincode').value
         };
 
-        // Generate Order
-        const newOrder = {
-          id: 'ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
-          date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
-          status: 'Paid',
-          total: total,
-          items: cartItems,
-          shipping: shippingAddress
+        const paymentStatus = formData.get('payment_method'); // 'cod' or 'razorpay'
+
+        // We need to match the backend's expected structure
+        const postData = {
+            _token: '{{ csrf_token() }}',
+            billing_address: billingAddress,
+            shipping_address: billingAddress, // Use same for now or add toggle
+            payment_status: paymentStatus,
+            deliver_charge: 0, // Should be calculated
+            ship_discount_amount: 0
         };
 
-        // Save Shipping Address for My Account page
-        localStorage.setItem('userShippingAddress', JSON.stringify(shippingAddress));
-
-        // Save to localStorage
-        const existingOrders = JSON.parse(localStorage.getItem('userOrders') || '[]');
-        existingOrders.unshift(newOrder);
-        localStorage.setItem('userOrders', JSON.stringify(existingOrders));
-
-        // Clear Cart
-        localStorage.removeItem(CART_STORAGE_KEY);
-        updateCartBadge();
-
-        showToast('Order placed successfully! Delivery in 3-5 days.', 'success');
-
-        // Return to empty cart state instead of redirecting
-        setTimeout(() => {
-          document.getElementById('checkoutStage').style.display = 'none';
-          const itemsContainer = document.getElementById('cartItemsContainer');
-          itemsContainer.style.display = 'block';
-          document.getElementById('initiateCheckoutBtn').style.display = 'block';
-          renderCartPage();
-        }, 1500);
+        fetch("{{ route('checkout_store') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify(postData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.response && data.response.success === false) {
+                showToast(data.response.msg || 'Checkout failed.', 'error');
+            } else {
+                showToast('Order placed successfully! Redirecting...', 'success');
+                localStorage.removeItem(CART_STORAGE_KEY);
+                updateCartBadge();
+                setTimeout(() => {
+                    window.location.href = '{{ url('/customer/my_account') }}';
+                }, 1500);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('Order placement failed. Please try again.', 'error');
+        });
       });
     }
 
@@ -1390,8 +1517,10 @@
       const slug = slugifyProductName(name);
 
       if (!productCatalog[slug]) {
+        const dbProduct = DB_PRODUCT_MAP[slug] || DB_PRODUCT_MAP[name];
         productCatalog[slug] = {
           name,
+          db_id: dbProduct ? dbProduct.id : null,
           category: categoryEl ? categoryEl.textContent.trim() : 'Legging',
           meta: metaEl ? metaEl.textContent.trim() : 'Sizes XS - XL',
           price: priceEl.textContent.trim(),
@@ -2188,7 +2317,7 @@
     }
 
     function formatMoney(value) {
-      return `INR ${Number(value || 0).toLocaleString('en-IN')}`;
+      return `INR ${Math.round(Number(value || 0)).toLocaleString('en-IN')}`;
     }
 
     if (productSizeList) {
@@ -2241,6 +2370,7 @@
         } else {
           cartItems.push({
             slug,
+            db_id: selectedProduct.db_id,
             name: selectedProduct.name,
             image: selectedProduct.image,
             price: unitPrice,
@@ -2251,6 +2381,22 @@
         }
 
         setStoredCart(cartItems);
+        
+        // Sync with server if logged in
+        if (selectedProduct.db_id) {
+            const formData = new FormData();
+            formData.append('product_id', selectedProduct.db_id);
+            formData.append('product_qty', 1); // cartstore expects product_qty
+            formData.append('_token', '{{ csrf_token() }}');
+            
+            fetch("{{ route('cart_save') }}", {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+        }
+
+        showToast(`${selectedProduct.name} added to cart.`, 'success');
         const defaultText = 'Add to Cart';
         productAddToCartBtn.textContent = 'Added to Cart';
         productAddToCartBtn.disabled = true;
@@ -2535,7 +2681,14 @@
       const cartItems = getStoredCart();
 
       if (!cartItems.length) {
-        cartItemsWrap.innerHTML = '<p class="cart-empty-state">Your cart is empty. Add products from the shop page.</p>';
+        cartItemsWrap.innerHTML = `
+          <div class="cart-empty-state">
+            <div style="font-size: 48px; margin-bottom: 16px;">🛍️</div>
+            <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-bottom: 10px; color: #3a2530;">Your cart is empty</h3>
+            <p style="color: #7d6771; font-size: 15px; margin-bottom: 24px; line-height: 1.6;">Looks like you haven't added anything yet. Browse our premium collection and find your perfect fit.</p>
+            <a href="?page=shop" class="btn" style="display:inline-block;">Shop Now</a>
+          </div>
+        `;
         if (cartSubtotalValue) cartSubtotalValue.textContent = formatMoney(0);
         if (cartShippingValue) cartShippingValue.textContent = formatMoney(0);
         if (cartTotalValue) cartTotalValue.textContent = formatMoney(0);
@@ -2544,29 +2697,62 @@
 
       cartItemsWrap.innerHTML = cartItems.map((item, index) => `
         <article class="cart-item" data-cart-index="${index}">
-          <img src="${item.image}" alt="${item.name}">
-          <div class="cart-item-info">
-            <button type="button" class="cart-item-remove" data-cart-action="remove" aria-label="Remove item">x</button>
-            <h3>${item.name}</h3>
-            <p>Size: ${item.size}</p>
-            <p>Color: ${item.color}</p>
+          <div class="cart-item-img-wrap">
+            <img src="${item.image}" alt="${item.name}" onerror="this.src='{{ asset('premium_assets/images/logo-new.png') }}'; this.style.padding='10px';">
           </div>
-          <div class="cart-item-qty">
-            <button type="button" data-cart-action="decrease">-</button>
-            <span>${item.qty}</span>
-            <button type="button" data-cart-action="increase">+</button>
+          <div class="cart-item-details">
+            <div class="cart-item-main">
+              <div class="cart-item-brand">YOU LEGGINGS</div>
+              <h3 class="cart-item-name">${item.name}</h3>
+              <div class="cart-item-meta">
+                ${item.size ? `<span>Size: <strong>${item.size}</strong></span>` : ''}
+                ${item.color ? `<span>Color: <strong>${item.color}</strong></span>` : ''}
+              </div>
+              <div class="cart-item-price-each">${formatMoney(item.price)} each</div>
+            </div>
+            <div class="cart-item-actions">
+              <div class="cart-item-qty-stepper">
+                <button type="button" data-cart-action="decrease" title="Decrease">−</button>
+                <span class="qty-val">${item.qty}</span>
+                <button type="button" data-cart-action="increase" title="Increase">+</button>
+              </div>
+              <div class="cart-item-total-price">
+                ${formatMoney(item.price * item.qty)}
+              </div>
+              <button type="button" class="cart-item-del-btn" data-cart-action="remove" title="Remove Item">
+                <i data-lucide="trash-2"></i>
+              </button>
+            </div>
           </div>
-          <div class="cart-item-price">${formatMoney(item.price * item.qty)}</div>
         </article>
       `).join('');
+
+
 
       const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
       const shipping = subtotal > 999 ? 0 : (subtotal > 0 ? 49 : 0);
       const total = subtotal + shipping;
 
       if (cartSubtotalValue) cartSubtotalValue.textContent = formatMoney(subtotal);
-      if (cartShippingValue) cartShippingValue.textContent = formatMoney(shipping);
+      if (cartShippingValue) cartShippingValue.textContent = formatMoney(shipping === 0 && subtotal > 0 ? 0 : shipping);
       if (cartTotalValue) cartTotalValue.textContent = formatMoney(total);
+
+      // Update shipping note visibility
+      const shippingNote = document.getElementById('cartShippingNote');
+      if (shippingNote) {
+        if (subtotal > 0 && subtotal <= 999) {
+          shippingNote.textContent = `Add INR ${(1000 - Math.round(subtotal)).toLocaleString('en-IN')} more for free shipping`;
+          shippingNote.style.display = 'block';
+        } else if (subtotal > 999) {
+          shippingNote.textContent = '✓ Free shipping applied';
+          shippingNote.style.color = '#4caf50';
+        } else {
+          shippingNote.style.display = 'none';
+        }
+      }
+
+      // Re-init lucide icons for dynamic content
+      if (window.lucide) lucide.createIcons();
     }
 
     if (cartItemsWrap) {

@@ -275,16 +275,36 @@
                                                                         N/A
                                                                     @endif
                                                                 </td>
+                                                            ?>
+                                                            <tr>
+                                                                <td class="text-center" width="5%"> {{ $key + 1 }}
+                                                                </td>
+
+                                                                <td>
+                                                                    @if (isset($product_name[$key]))
+                                                                        <b>{{ $product_name[$key] }}</b>
+                                                                    @else
+                                                                        <b>Product Name Not Available</b>
+                                                                    @endif
+                                                                </td>
+
+                                                                <td class="text-end" width="10%">
+                                                                    @if ($products && isset($products->hsn_code))
+                                                                        {{ $products->hsn_code }}
+                                                                    @else
+                                                                        N/A
+                                                                    @endif
+                                                                </td>
                                                                 <td class="text-end">
                                                                     {{ $datas->option }}
                                                                 </td>
                                                                 <td class="text-end" width="10%">{{ $datas->quantity }}
                                                                     Nos</td>
                                                                 <td width="15%" class="fw-bold text-end">
-                                                                    ₹{{ number_format($datas->amount, 2, '.', '') }}</td>
+                                                                    ₹{{ number_format($datas->amount, 0) }}</td>
                                                                 <!--<td></td>-->
                                                                 <td class="text-end" class="text-end">
-                                                                    ₹{{ number_format($datas->amount * $datas->quantity, 2, '.', '') }}
+                                                                    ₹{{ number_format($datas->amount * $datas->quantity, 0) }}
                                                                 </td>
                                                             </tr>
                                                         @endforeach
@@ -298,7 +318,7 @@
                                                             <td></td>
                                                             <td></td>
                                                             <td class="text-end">
-                                                                ₹{{ number_format($order->sub_total, 2, '.', '') }}</td>
+                                                                ₹{{ number_format($order->sub_total, 0) }}</td>
 
                                                         </tr>
                                                         <?php
@@ -320,7 +340,7 @@
                                                             <td></td>
                                                             <td></td>
                                                             <td></td>
-                                                            <td class="text-end">{{ number_format($gst11, 2) }}</td>
+                                                            <td class="text-end">{{ number_format($gst11, 0) }}</td>
 
                                                         </tr>
                                                         <tr>
@@ -331,7 +351,7 @@
                                                             <td></td>
                                                             <td></td>
                                                             <td></td>
-                                                            <td class="text-end">{{ number_format($gst11, 2) }}</td>
+                                                            <td class="text-end">{{ number_format($gst11, 0) }}</td>
 
                                                         </tr>
                                                         <?php }else{?>
@@ -355,7 +375,7 @@
                                                             <td></td>
 
                                                             <td class="text-end" colspan="2">
-                                                                ₹{{ number_format($delivery_charge, 2) }}</td>
+                                                                ₹{{ number_format($delivery_charge, 0) }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td></td>
@@ -365,7 +385,7 @@
                                                             <td></td>
 
                                                             <td class="text-end" colspan="2">
-                                                                ₹{{ number_format($order->ship_discount_amount, 2, '.', '') }}
+                                                                ₹{{ number_format($order->ship_discount_amount, 0) }}
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -376,7 +396,7 @@
                                                             <td></td>
 
                                                             <td class="text-end" colspan="2">
-                                                                ₹{{ number_format($order->discound_amount, 2, '.', '') }}
+                                                                ₹{{ number_format($order->discound_amount, 0) }}
                                                             </td>
                                                         </tr>
 
@@ -388,7 +408,7 @@
                                                             <td></td>
 
                                                             <td class="text-end" colspan="2">
-                                                                ₹{{ number_format($order->sub_total + $order->deliver_charge - $order->discound_amount - $order->ship_discount_amount, 2, '.', '') }}
+                                                                ₹{{ number_format($order->sub_total + $order->deliver_charge - $order->discound_amount - $order->ship_discount_amount, 0) }}
                                                             </td>
                                                         </tr>
 
@@ -452,19 +472,6 @@
                                                             //$amount = 489;
                                                             // echo numberToWords($total); // Output: Four Hundred Eighty Nine
                                                             
-                                                            ?>
-                                                            Amount Chargable (in words): INR <?php echo numberToWords($total); ?>
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr class="text-end">
-                                                        <td>Amount Payabel: ₹{{ number_format($total, 2, '.', '') }}</td>
-                                                    </tr>
-
-                                                </table>
-
-                                                <table style="width:100%" class="table">
-
                                                     <tr>
                                                         <td>Notes:<br>Thank you for the Shopping</td>
 

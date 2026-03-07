@@ -198,12 +198,12 @@
                                 ?>
                                 <h4 class="price">
                                     <div class="product-price">
-                                        <span id="product_price">₹{{ number_format($price, 2, '.', '') }}</span>
+                                        <span id="product_price">₹{{ number_format($price, 0) }}</span>
                                     </div>
                                     @if ($ADiscountpercent != 0)
                                         <span class="price-old">
                                             <span class="price"><span>₹</span> <span
-                                                    id="newdeprice">{{ number_format($newsizevariant1->regular_price, 2, '.', '') }}</span></span>
+                                                    id="newdeprice">{{ number_format($newsizevariant1->regular_price, 0) }}</span></span>
                                     @endif
 
                                 </h4><small>(Incl Of All Taxes)</small>
@@ -357,12 +357,12 @@
                                         <input type="hidden" id="count_prod_qty{{ $product->id }}"
                                             class="count_prod_qty" value="{{ $cart_qty }}"
                                             data-product_id="{{ $product->id }}"
-                                            data-product_price="{{ number_format($product->sale_price, 2, '.', '') }}">
+                                            data-product_price="{{ number_format($product->sale_price, 0) }}">
 
                                         <input type="text" id="quantity{{ $product->id }}" title="Quantity"
                                             class="quantity count_prod_qty{{ $product->id }}"
                                             data-product_id="{{ $product->id }}"
-                                            data-product_price="{{ number_format($product->sale_price, 2, '.', '') }}"
+                                            data-product_price="{{ number_format($product->sale_price, 0) }}"
                                             value="{{ $cart_qty }}" readonly>
 
                                         <div class="dec qty-btn single_product_render_count"
@@ -787,7 +787,7 @@
                                         <div class="product-status">
 
                                             @if ($aDiscountpercent[$key] != 0)
-                                                <span>{{ number_format($aDiscountpercent[$key], 2, '.', '') }} %</span>
+                                                <span>{{ number_format($aDiscountpercent[$key], 0) }} %</span>
                                             @endif
 
                                         </div>

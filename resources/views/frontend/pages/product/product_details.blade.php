@@ -296,21 +296,6 @@
                                     <p class="p1">{!! html_entity_decode($products->summary) !!}<br class="hidden-md hidden-sm hidden-xs"></p>
 
                                     <div class="star">
-
-                                        {!! html_entity_decode(App\Http\Controllers\Frontend\WhatisnewController::productreview($products->id)) !!}
-
-                                    </div>
-
-                                    <div class="prince"><span>$</span><span
-                                            id="offer_price{{ $products->id }}">{{ number_format($variant_value->sale_price) }}</span>
-
-                                        <s class="strike"
-                                            id="original_price">${{ number_format($variant_value->regular_price, 2) }}</s>
-                                    </div>
-
-                                    @if ($variant_val->arrtibute_name != 'default')
-                                        <figure class="fi-option">
-                                            <p class="option">Option</p>
                                         </figure>
                                     @endif
 
