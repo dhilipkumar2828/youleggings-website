@@ -387,7 +387,7 @@
                                                 </td>
                                                 <td class="text-start" width="10%"
                                                     style=" border: 1px solid #908989;padding: 8px;font-size: 14px;"> <img
-                                                        src="https://you.oceansoftwares.in/public/storage/photos/65/1.jpg"
+                                                        src="{{ image_url($aProductvariant_photo) }}"
                                                         style="width:50px;height:50px;"></td>
                                                 <td class="text-start" width="10%"
                                                     style=" border: 1px solid #908989;padding: 8px;font-size: 14px;">

@@ -1,65 +1,80 @@
 @extends('frontend.layouts.app')
 
+@section('title', 'You Leggings | Premium Comfort')
+
 @section('content')
 
   <!-- Hero Section -->
   <section class="hero home-page-section" id="home">
-    @if(count($banners) > 0)
-      @foreach($banners as $banner)
-        @php $is_video = Str::endsWith($banner->photo, ['.mp4', '.webm', '.ogg']); @endphp
-        @if($is_video)
-          <video class="hero-video" autoplay muted loop playsinline>
-            <source src="{{ asset('storage/'.$banner->photo) }}" type="video/mp4">
-          </video>
-        @else
-          <div class="hero-image" style="background-image: url('{{ asset('storage/'.$banner->photo) }}'); background-size: cover; background-position: center; height: 100vh; width: 100%;"></div>
-        @endif
+    @if($banners->isNotEmpty())
+        @foreach($banners as $banner)
+            <div class="hero-slide {{ $loop->first ? 'active' : '' }}">
+                <img src="{{ image_url($banner->photo) }}" class="hero-image" alt="{{ $banner->title }}">
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <span class="hero-subtitle">{{ $banner->subtitle }}</span>
+                    <h1 class="hero-title">{!! nl2br(e($banner->title)) !!}</h1>
+                    @if($banner->link)
+                        <a href="{{ $banner->link }}" class="btn hero-btn">Explore Now</a>
+                    @else
+                        <a href="{{ route('shop') }}" class="btn hero-btn">Explore Now</a>
+                    @endif
+                </div>
+            </div>
+        @endforeach
+    @else
+        <!-- Static Video Hero Fallback -->
+        <video class="hero-video" autoplay muted loop playsinline>
+          <source src="{{ asset('frontend/videos/LEGGINGS.mp4') }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
         <div class="hero-overlay"></div>
         <div class="hero-content">
-          <span class="hero-subtitle">{{ $banner->subtitle ?? 'Premium Collection '.date('Y') }}</span>
-          <h1 class="hero-title">{!! nl2br(e($banner->title)) !!}</h1>
-          @if($banner->link)
-            <a href="{{ $banner->link }}" class="btn hero-btn">Shop The Collection</a>
-          @else
-            <a href="{{ route('shop') }}" class="btn hero-btn">Shop The Collection</a>
-          @endif
+          <span class="hero-subtitle">Premium Collection 2026</span>
+          <h1 class="hero-title">Experience <br>True Comfort</h1>
+          <a href="{{ route('shop') }}" class="btn hero-btn">Shop The Collection</a>
         </div>
-      @endforeach
-    @else
-    <video class="hero-video" autoplay muted loop playsinline>
-      <source src="{{ asset('frontend/videos/LEGGINGS.mp4') }}" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <span class="hero-subtitle">Premium Collection {{ date('Y') }}</span>
-      <h1 class="hero-title">Experience <br>True Comfort</h1>
-      <a href="{{ route('shop') }}" class="btn hero-btn">Shop The Collection</a>
-    </div>
     @endif
   </section>
 
   <!-- Collections Section -->
-  <section class="section home-page-section" id="shop">
+  <section class="section home-categories-section" id="collections">
     <div class="container">
-      <div class="text-center">
+      <div class="text-center section-header">
         <span class="section-subtitle">Our Range</span>
         <h2 class="section-title">Collections</h2>
-        <div class="divider"></div>
+        <div class="header-divider"></div>
       </div>
 
-      <div class="products-grid">
-        @foreach($categories as $category)
-        <a href="{{ route('shop', ['category' => $category->id]) }}" class="product-card">
-          <div class="product-image">
-            <img src="{{ asset('storage/'.$category->photo) }}" alt="{{ $category->title }}">
-          </div>
-          <div class="product-details">
-            <h3 class="product-name">{{ $category->title }}</h3>
-            <div class="product-price">Shop Range</div>
-          </div>
-        </a>
-        @endforeach
+      <div class="products-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px 30px;">
+        @forelse($categories as $category)
+            <a href="{{ route('shop', ['category[]' => $category->id]) }}" class="product-card" style="border: none; box-shadow: none; text-align: center; background: transparent;">
+              <div class="product-image" style="height: 420px; border-radius: 16px; overflow: hidden; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.06);">
+                <img src="{{ $category->photo ? image_url($category->photo) : asset('frontend/images/Products/_DSC8742-Edit.jpg') }}" alt="{{ $category->title }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+              </div>
+              <div class="product-details" style="padding: 0;">
+                <h3 class="product-name" style="font-size: 26px; font-family: var(--font-serif); margin-bottom: 12px; color: #333;">{{ $category->title }}</h3>
+                <div class="product-price" style="color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 13px;">
+                    Explore Collection <i data-lucide="arrow-right" style="width: 16px; height: 16px; vertical-align: middle; margin-left: 6px;"></i>
+                </div>
+              </div>
+            </a>
+        @empty
+            <!-- Fallback Category Cards -->
+            @for($i=1; $i<=3; $i++)
+            <a href="{{ route('shop') }}" class="product-card" style="border: none; box-shadow: none; text-align: center; background: transparent;">
+              <div class="product-image" style="height: 420px; border-radius: 16px; overflow: hidden; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.06);">
+                <img src="{{ asset('frontend/images/Products/_DSC8742-Edit.jpg') }}" alt="Men's Collection" style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
+              <div class="product-details" style="padding: 0;">
+                <h3 class="product-name" style="font-size: 26px; font-family: var(--font-serif); margin-bottom: 12px; color: #333;">Collection {{ $i }}</h3>
+                <div class="product-price" style="color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 13px;">
+                    Explore Collection <i data-lucide="arrow-right" style="width: 16px; height: 16px; vertical-align: middle; margin-left: 6px;"></i>
+                </div>
+              </div>
+            </a>
+            @endfor
+        @endforelse
       </div>
     </div>
   </section>
@@ -68,100 +83,63 @@
   <section class="section home-page-section" id="featured">
     <div class="container">
       <div class="text-center">
-        <span class="section-subtitle">Latest Drop</span>
+        <span class="section-subtitle">Trending Now</span>
         <h2 class="section-title">Featured Products</h2>
         <div class="divider"></div>
       </div>
 
       <div class="products-grid">
-        @foreach($featured_products as $product)
-        <div class="product-card">
-          <div class="product-image">
+        @forelse($featured_products as $product)
             @php
-              $photo = $product->productvariant->first()->photo ?? '';
-              $photos = explode(',', $photo);
+                $photo = $product->productvariant->first()->photo ?? '';
+                $photos = explode(',', $photo);
             @endphp
-            <img src="{{ asset('storage/'.($photos[0] ?? '')) }}" alt="{{ $product->name }}">
-          </div>
-          <div class="product-details">
-            <h3 class="product-name">{{ $product->name }}</h3>
-            <div class="product-price">
-              @if($product->selling_price < $product->regular_price)
-                ₹ {{ number_format($product->selling_price, 0) }} 
-                <span class="product-old-price">₹ {{ number_format($product->regular_price, 0) }}</span>
-              @else
-                ₹ {{ number_format($product->regular_price, 0) }}
-              @endif
-            </div>
-          </div>
-        </div>
-        @endforeach
-      </div>
-
-      <div class="text-center" style="margin-top: 30px;">
-        <a href="{{ route('shop') }}" class="btn">View All Collections</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Split Banner -->
-  <section class="section home-page-section" style="padding: 0; margin-top: 100px;">
-    <div class="split-banner">
-      <div class="split-content">
-        <span class="section-subtitle" style="margin-bottom: 15px;">Limited Edition</span>
-        <h2 class="split-title">The Art of <br>Comfort</h2>
-        <p class="split-desc">
-          Discover a collection of premium leggings that feel like a second skin. Each piece is meticulously crafted
-          with precision and designed to move with you effortlessly.
-        </p>
-        <div>
-          <a href="{{ route('shop') }}" class="btn">Explore Shop</a>
-        </div>
-      </div>
-      <div class="split-image" style="background-image: url('{{ asset('frontend/images/Products/_DSC8716-Edit.jpg') }}'); border: none;"></div>
-    </div>
-  </section>
-
-  <!-- Testimonials -->
-  <section class="section home-page-section" style="background-color: #fff;">
-    <div class="container">
-      <div class="text-center">
-        <span class="section-subtitle">Testimonials</span>
-        <h2 class="section-title">What Our Customers Say</h2>
-      </div>
-
-      <div class="container">
-        <div class="testimonials-carousel-wrap">
-          <div class="testimonials-carousel" id="testimonialsCarousel">
-            @forelse($testimonials as $testimonial)
-            <div class="testimonial-card">
-              <div class="quote-icon">“</div>
-              <p class="testimonial-text">{{ $testimonial->feedback ?? $testimonial->comment }}</p>
-              <div class="client-name">{{ $testimonial->client_name ?? $testimonial->name }}</div>
-              <div style="font-size: 12px; color: #999; margin-top: 5px;">Happy Client</div>
-              <div style="color: #f59e0b; margin-top: 10px;">
-                @for($i=0; $i<($testimonial->rating ?? 5); $i++)★@endfor
+            <a href="{{ route('product_detail', $product->slug) }}" class="product-card">
+              <div class="product-image">
+                <img src="{{ image_url($photos[0]) }}" alt="{{ $product->name }}">
               </div>
-            </div>
-            @empty
-            <div class="testimonial-card">
-              <div class="quote-icon">“</div>
-              <p class="testimonial-text">Very good fabric and reasonable price. I am very satisfied to purchase.</p>
-              <div class="client-name">Jeyanthi RK</div>
-              <div style="font-size: 12px; color: #999; margin-top: 5px;">Happy Client</div>
-              <div style="color: #f59e0b; margin-top: 10px;">★★★★★</div>
-            </div>
-            @endforelse
-          </div>
-
-          <div class="testimonial-dots" id="testimonialDots"
-            style="display: flex; justify-content: center; gap: 10px; margin-top: 30px; padding-bottom: 20px;">
-            @foreach($testimonials as $index => $testimonial)
-            <button class="testimonial-dot {{ $loop->first ? 'is-active' : '' }}" data-index="{{ $index }}" aria-label="Testimonial {{ $index + 1 }}"></button>
-            @endforeach
-          </div>
-        </div>
+              <div class="product-details">
+                <p class="product-card-category" style="font-size: 12px; color: var(--primary-color); text-transform: uppercase; font-weight: 700; letter-spacing: 1.2px; margin-bottom: 6px;">{{ $product->categories->title ?? 'Legging' }}</p>
+                <h3 class="product-name">{{ $product->name }}</h3>
+                <div class="product-price">INR {{ number_format($product->regular_price) }}</div>
+              </div>
+            </a>
+        @empty
+            <p class="text-center w-full">Coming Soon...</p>
+        @endforelse
+      </div>
+      
+      <div class="text-center" style="margin-top: 50px;">
+        <a href="{{ route('shop') }}" class="btn">View All Products</a>
       </div>
     </div>
   </section>
+
+  <!-- Testimonials Section -->
+  @if($testimonials->isNotEmpty())
+    <section class="section home-page-section testimonials" id="testimonials">
+      <div class="container">
+        <div class="text-center">
+          <span class="section-subtitle">What They Say</span>
+          <h2 class="section-title">Customer Reviews</h2>
+          <div class="divider"></div>
+        </div>
+        <div class="testimonials-slider">
+          @foreach($testimonials as $test)
+          <div class="testimonial-card">
+            <p>"{{ $test->feedback }}"</p>
+            <h4>- {{ $test->name }}</h4>
+          </div>
+          @endforeach
+        </div>
+      </div>
+    </section>
+  @endif
+
+@endsection
+
+@section('scripts')
+<script>
+  // Homepage specific scripts (if any)
+</script>
 @endsection

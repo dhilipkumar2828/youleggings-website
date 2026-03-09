@@ -16,6 +16,8 @@ use Illuminate\Support\ServiceProvider;
 
 use Illuminate\Support\Facades\View;
 
+require_once app_path('helpers.php');
+
 class AppServiceProvider extends ServiceProvider
 
 {
@@ -163,3 +165,5 @@ class AppServiceProvider extends ServiceProvider
     }
 
 }
+
+

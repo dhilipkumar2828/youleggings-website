@@ -19,7 +19,7 @@
         @foreach($blogs as $blog)
         <article class="blog-article-card">
           <div class="blog-article-image">
-            <img src="{{ asset('storage/'.$blog->photo) }}" alt="{{ $blog->title }}">
+            <img src="{{ image_url($blog->photo) }}" alt="{{ $blog->title }}">
           </div>
           <div class="blog-article-content">
             <p class="blog-article-date"><i data-lucide="calendar-days"></i>{{ $blog->created_at->format('d-M-Y') }}</p>

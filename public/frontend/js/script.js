@@ -1,14 +1,14 @@
 // Product Image Assets
-const aboutImage = './images/Aqua Flex Active/_DSC9004-Edit.jpg';
-const brandLogo = './images/logo-new.png';
-const solidImage = './images/Cobalt Core Legging/_DSC8962.jpg';
-const patternedImage = './images/Products/_DSC8893-Edit.jpg';
-const activewearImage = './images/Products/_DSC8789-Edit.jpg';
-const essentialsImage = './images/Products/_DSC8716-Edit.jpg';
-const newArrivalOne = './images/Products/_DSC8832.jpg';
-const newArrivalTwo = './images/Products/_DSC8752-Edit.jpg';
-const newArrivalThree = './images/Products/_DSC8597-Edit.jpg';
-const newArrivalFour = './images/Products/_DSC8489-Edit.jpg';
+const aboutImage = '/frontend/images/Aqua Flex Active/_DSC9004-Edit.jpg';
+const brandLogo = '/frontend/images/logo-new.png';
+const solidImage = '/frontend/images/Cobalt Core Legging/_DSC8962.jpg';
+const patternedImage = '/frontend/images/Products/_DSC8893-Edit.jpg';
+const activewearImage = '/frontend/images/Products/_DSC8789-Edit.jpg';
+const essentialsImage = '/frontend/images/Products/_DSC8716-Edit.jpg';
+const newArrivalOne = '/frontend/images/Products/_DSC8832.jpg';
+const newArrivalTwo = '/frontend/images/Products/_DSC8752-Edit.jpg';
+const newArrivalThree = '/frontend/images/Products/_DSC8597-Edit.jpg';
+const newArrivalFour = '/frontend/images/Products/_DSC8489-Edit.jpg';
 
 // Slide Data
 const slides = [

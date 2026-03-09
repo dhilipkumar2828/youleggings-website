@@ -35,7 +35,11 @@ Route::get('/', [IndexController::class, 'index'])->name('index');
 Route::get('/shop', [IndexController::class, 'shop'])->name('shop');
 Route::get('/about-us', [IndexController::class, 'about'])->name('about');
 Route::get('/contact-us', [IndexController::class, 'contact'])->name('contact');
+Route::post('/contact-us', [IndexController::class, 'contact_submit'])->name('contact.submit');
 Route::get('/our-blog', [IndexController::class, 'blog'])->name('blog');
+Route::get('/product/{slug}', [IndexController::class, 'product_detail'])->name('product_detail');
+Route::get('/cart', [IndexController::class, 'cart'])->name('cart');
+Route::get('/login-user', [IndexController::class, 'login_user'])->name('login_user');
 Route::get('/debug-route', function() { return 'hi'; })->name('debug_route');
 
 

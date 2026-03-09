@@ -1,37 +1,38 @@
-  <footer class="footer">
+  <footer class="main-footer">
     <div class="container">
       <div class="footer-grid">
+        <!-- Brand / About -->
         <div class="footer-col">
-          <a href="{{ route('index') }}" class="logo">
-            <img src="{{ asset('storage/' . ($settings->logo ?? '')) }}" 
-                 onerror="this.src='{{ asset('frontend/images/logo-new.png') }}'" 
-                 alt="{{ $settings->title ?? 'You Leggings Logo' }}">
+          <a href="{{ route('index') }}" class="footer-logo">
+            <img src="{{ image_url($settings->logo ?? '') }}" alt="You Leggings">
           </a>
-          <p style="line-height: 1.8; margin-bottom: 20px; color: #999;">
-            {{ $settings->footer_description ?? 'Premium quality leggings designed for the modern woman. Experience the perfect fit that moves with you every day.' }}
+          <p class="footer-desc">
+            Premium quality leggings designed for the modern woman. Experience the perfect fit that moves with you every day.
           </p>
-          <div class="social-icons">
-            <a href="{{ $settings->facebook_link ?? '#' }}" class="social-icon"><i data-lucide="facebook"></i></a>
-            <a href="{{ $settings->instagram_link ?? '#' }}" class="social-icon"><i data-lucide="instagram"></i></a>
-            <a href="{{ $settings->twitter_link ?? '#' }}" class="social-icon"><i data-lucide="twitter"></i></a>
-            <a href="{{ $settings->youtube_link ?? '#' }}" class="social-icon"><i data-lucide="youtube"></i></a>
+          <div class="footer-socials">
+            <a href="{{ $settings->facebook ?? '#' }}" aria-label="Facebook"><i data-lucide="facebook"></i></a>
+            <a href="{{ $settings->instagram ?? '#' }}" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+            <a href="{{ $settings->twitter ?? '#' }}" aria-label="Twitter"><i data-lucide="twitter"></i></a>
+            <a href="{{ $settings->youtube ?? '#' }}" aria-label="YouTube"><i data-lucide="youtube"></i></a>
           </div>
         </div>
 
+        <!-- Explore -->
         <div class="footer-col">
-          <h4>Explore</h4>
-          <ul>
+          <h4 class="footer-title">Explore</h4>
+          <ul class="footer-links">
             <li><a href="{{ route('index') }}">Home</a></li>
             <li><a href="{{ route('about') }}">About Us</a></li>
-            <li><a href="{{ route('shop') }}">Shop Collection</a></li>
-            <li><a href="{{ route('shop') }}">New Arrivals</a></li>
+            <li><a href="{{ route('shop') }}">Shop Selection</a></li>
+            <li><a href="{{ route('shop', ['new-arrivals' => 1]) }}">New Arrivals</a></li>
             <li><a href="{{ route('blog') }}">Style Journal</a></li>
           </ul>
         </div>
 
+        <!-- Support -->
         <div class="footer-col">
-          <h4>Support</h4>
-          <ul>
+          <h4 class="footer-title">Support</h4>
+          <ul class="footer-links">
             <li><a href="#">Privacy Policy</a></li>
             <li><a href="#">Terms & Conditions</a></li>
             <li><a href="#">Shipping Policy</a></li>
@@ -39,28 +40,37 @@
           </ul>
         </div>
 
+        <!-- Contact Us -->
         <div class="footer-col">
-          <h4>Contact Us</h4>
-          <p style="color: #999; margin-bottom: 15px; display: flex; gap: 10px; align-items: flex-start;">
-            <i data-lucide="map-pin" style="width: 20px; height: 20px; flex-shrink: 0; color: var(--primary-color);"></i>
-            <span>{!! nl2br(e($settings->address ?? "5/4, Surya Nagar, 2nd Street, Bridgeway Colony Extn,\nTirupur - 641607")) !!}</span>
-          </p>
-          <p style="color: #999; margin-bottom: 10px; display: flex; gap: 10px; align-items: center;">
-            <i data-lucide="phone" style="width: 18px; height: 18px; color: var(--primary-color);"></i>
-            <span>{{ $settings->phone ?? '+91 740143 24967' }}</span>
-          </p>
-          <p style="color: #999; display: flex; gap: 10px; align-items: center;">
-            <i data-lucide="mail" style="width: 18px; height: 18px; color: var(--primary-color);"></i>
-            <span>{{ $settings->email ?? 'youleggings@gmail.com' }}</span>
-          </p>
+          <h4 class="footer-title">Contact Us</h4>
+          <div class="footer-contact">
+            <div class="contact-item">
+              <i data-lucide="map-pin"></i>
+              <span>{{ $settings->address ?? '5/4, Surya Nagar, 2nd Street, Bridgeway Colony Extn, Tirupur - 641607' }}</span>
+            </div>
+            <div class="contact-item">
+              <i data-lucide="phone"></i>
+              <span>+91 {{ $settings->phone ?? '740143 2496' }}</span>
+            </div>
+            <div class="contact-item">
+              <i data-lucide="mail"></i>
+              <span>{{ $settings->email ?? 'youleggings@gmail.com' }}</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="copyright" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #333; padding-top: 20px;">
-        <div>&copy; {{ date('Y') }} You Leggings. All rights reserved.</div>
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <span>Designed with Love</span>
-          <i data-lucide="credit-card" style="width: 24px;"></i>
+      <div class="footer-bottom">
+        <div class="copyright">
+          &copy; {{ date('Y') }} You Leggings. All rights reserved.
+        </div>
+        <div class="footer-bottom-right">
+          <span class="designed-by">Designed with Love</span>
+          <div class="payment-icons">
+             <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" style="height: 18px;">
+             <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" style="height: 14px;">
+             <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" style="height: 18px;">
+          </div>
         </div>
       </div>
     </div>

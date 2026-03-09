@@ -33,6 +33,12 @@
 
   @include('frontend.partials.footer')
 
+  @if(session('success'))
+    <script>
+      alert("{{ session('success') }}");
+    </script>
+  @endif
+
   <script src="{{ asset('frontend/js/main.js') }}"></script>
   <script>
     lucide.createIcons();

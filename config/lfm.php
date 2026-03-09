@@ -168,7 +168,7 @@ return [
 
      */
 
-    'disk'                     => 'public',
+    'disk'                     => 'uploads',
 
     'rename_file'              => false,
 
