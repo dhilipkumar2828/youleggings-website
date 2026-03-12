@@ -20,7 +20,7 @@ class AboutSeeder extends Seeder
                 'title' => 'Comfort Without Compromise',
                 'sub_title' => 'About You Leggings',
                 'description' => 'Built on TANTEX Legacy, Designed for Every Woman',
-                'photo' => 'about/DSC8682.jpg',
+                'photo' => 'about/_DSC8682-Edit.jpg',
                 'promise_title' => 'Everyday Comfort, Premium Feel',
                 'promise_desc' => 'At You Legging, we believe every woman deserves comfort without compromise. Born from the trusted legacy of TANTEX, we create bottom wear that blends affordability with high-end quality. Our leggings are crafted with premium fabrics for a flattering fit, dependable stretch, and long-lasting durability that stays soft wash after wash. Whether you are at work, running errands, or relaxing at home, You Legging moves with you.',
                 'why_choose_1_title' => 'From TANTEX Legacy',

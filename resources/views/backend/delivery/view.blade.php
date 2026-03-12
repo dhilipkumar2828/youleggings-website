@@ -119,6 +119,8 @@
 
                                 </tbody>
 
+                            </table>
+
                                 {{-- <tr>
 
                                             <td> </td>
@@ -315,15 +317,6 @@
 
         </div><!-- container fluid -->
 
-    </div> <!-- Page content Wrapper -->
-
-    </div> <!-- content -->
-
-    {{--
-
-     --}}
-
-    </div>
 @endsection
 
 @section('scripts')

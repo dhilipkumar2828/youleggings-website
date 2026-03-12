@@ -113,9 +113,9 @@
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('public/vendor/laravel-filemanager/js/stand-alone-button.js') }}"></script>
+
     <script>
-        $('#lfm').filemanager('image');
+
 
         $(document).ready(function() {
             if ($("#elm1").length > 0) {

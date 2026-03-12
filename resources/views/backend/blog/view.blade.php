@@ -39,7 +39,7 @@
 
                                     <div class="col-sm-8">
 
-                                        <textarea class="summernote" required name="description" id="description" value="{{ old('description') }}">{{ strip_tags($heading->value) }}</textarea>
+                                        <textarea class="summernote" required name="description" id="description" value="{{ old('description') }}">{{ $heading->value ?? '' }}</textarea>
 
                                     </div>
 
@@ -115,9 +115,9 @@
                         <div class="col-3">
 
                             @can('Blog Create')
-                                <button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"
-                                    style="margin-top: -63px;border: 1px solid #508aeb;width: 50px;align-items: right;background-color: #508aeb;padding: 3px;border-radius: 0.2rem;align-self: flex-end; margin-right: 10px;">+
-                                    Title </button>
+                                {{-- <button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"
+                                    style="margin-top: -63px; border: 1px solid #508aeb; background-color: #508aeb; padding: 5px 15px; border-radius: 0.2rem; align-self: flex-end; margin-right: 10px; display: inline-block;">+
+                                    Title </button> --}}
 
                                 <a href="{{ route('blog.create') }}" id="add-btn" style="color: #ffffff;"> + ADD</a>
                             @endcan
@@ -186,7 +186,7 @@
 
                                             <td>{!! substr(html_entity_decode($item->description), 0, 200) !!}</td>
 
-                                            <td> <img src="{{ $item->photo }}" alt="banner image"
+                                            <td> <img src="{{ image_url($item->photo) }}" alt="banner image"
                                                     style="max-height: 90px;max-width:120px"></td>
 
                                             <td>
@@ -241,6 +241,8 @@
                                     @endforeach
 
                                 </tbody>
+
+                            </table>
 
                                 {{-- <tr>
 
@@ -440,13 +442,6 @@
 
     </div> <!-- Page content Wrapper -->
 
-    </div> <!-- content -->
-
-    {{--
-
-     --}}
-
-    </div>
 @endsection
 
 @section('scripts')

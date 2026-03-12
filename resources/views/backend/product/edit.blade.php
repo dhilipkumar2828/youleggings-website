@@ -373,7 +373,7 @@
                                                             <span class="error"></span>
                                                             <div id="holder" class="mt-2">
                                                                 @if ($firstImage)
-                                                                    <img src="{{ $firstImage }}"
+                                                                    <img src="{{ image_url($firstImage) }}"
                                                                         class="thumb_image_temp" alt="product image"
                                                                         style="max-height: 90px; max-width:120px">
                                                                 @endif
@@ -765,6 +765,24 @@
 
     <script type="text/javascript">
         // ============================================================
+        // Image URL Helper (mirrors PHP image_url() helper)
+        // Strips hardcoded host:port from DB-stored paths
+        // ============================================================
+        function adminImageUrl(path) {
+            if (!path) return '';
+            // Strip http://127.0.0.1:PORT/public/ or http://localhost:PORT/public/
+            path = path.replace(/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?\/public\//, '');
+            // Strip other known prefixes
+            path = path.replace(/^public\/uploads\//, '')
+                       .replace(/^public\/storage\//, '')
+                       .replace(/^public\//, '')
+                       .replace(/^storage\//, '')
+                       .replace(/^uploads\//, '');
+            path = path.replace(/^\/+/, '');
+            return window.location.origin + '/uploads/' + path;
+        }
+
+        // ============================================================
         // Global Setup & Init
         // ============================================================
         $.ajaxSetup({
@@ -1139,7 +1157,7 @@
                     let imgPath = p.trim();
                     if (imgPath) {
                         imagesHtml +=
-                            `<img src="${imgPath}" style="max-height: 60px; margin-right: 5px; border-radius: 4px;">`;
+                            `<img src="${adminImageUrl(imgPath)}" style="max-height: 60px; margin-right: 5px; border-radius: 4px;">`;
                     }
                 });
             }

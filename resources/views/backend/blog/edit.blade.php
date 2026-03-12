@@ -120,7 +120,7 @@
                                         </div>
 
                                         <div id="holder" style="margin-top:15px;max-height:100px;"><img
-                                                src="{{ $blogs->photo }}"
+                                                src="{{ image_url($blogs->photo) }}"
                                                 alt="promo image"style="max-height: 90px;max-width:120px">
 
                                         </div>
@@ -207,10 +207,10 @@
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('public/vendor/laravel-filemanager/js/stand-alone-button.js') }}"></script>
+
 
     <script>
-        $('#lfm').filemanager('image');
+
     </script>
 
     <script>

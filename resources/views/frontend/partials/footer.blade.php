@@ -33,9 +33,9 @@
         <div class="footer-col">
           <h4 class="footer-title">Support</h4>
           <ul class="footer-links">
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms & Conditions</a></li>
-            <li><a href="#">Shipping Policy</a></li>
+            <li><a href="{{ route('privacy_policy') }}">Privacy Policy</a></li>
+            <li><a href="{{ route('terms_conditions') }}">Terms & Conditions</a></li>
+            <li><a href="{{ route('shipping_policy') }}">Shipping Policy</a></li>
             <li><a href="#">Help Center</a></li>
           </ul>
         </div>

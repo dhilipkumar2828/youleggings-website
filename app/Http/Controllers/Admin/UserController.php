@@ -315,7 +315,18 @@ class UserController extends Controller
             return back()->with('error','Data not  found');
 
         }
-
     }
 
+    public function customerlist()
+    {
+        $Users = User::orderBy('id','DESC')->where('role','customer')->get();
+        return view('backend.user.view',compact('Users'));
+    }
+
+    public function customerview($id)
+    {
+        $user = User::findOrFail($id);
+        $roles = Role::get();
+        return view('backend.user.edit',compact('user', 'roles'));
+    }
 }

@@ -253,9 +253,26 @@
     }
 
     function getImageUrl(path) {
-        // Use the same logic as your image_url helper
-        if (path.startsWith('http')) return path;
-        return '/uploads/' + path.replace(/^\//, ''); // Simplified for client side
+        if (!path) return '';
+
+        // Strip any hardcoded host:port/public/ prefix (same logic as PHP image_url helper)
+        // Handles: http://127.0.0.1:ANY_PORT/public/ or http://localhost:ANY_PORT/public/
+        path = path.replace(/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?\/public\//, '');
+
+        // Also strip leftover plain prefixes
+        path = path.replace(/^public\/uploads\//, '')
+                   .replace(/^public\/storage\//, '')
+                   .replace(/^public\//, '')
+                   .replace(/^storage\//, '')
+                   .replace(/^uploads\//, '');
+
+        path = path.replace(/^\/+/, '');
+
+        // Now rebuild with current origin using same priority as PHP helper
+        const base = window.location.origin;
+
+        // Check uploads path (most common for product images)
+        return base + '/uploads/' + path;
     }
 
     // Dynamic Tab Logic

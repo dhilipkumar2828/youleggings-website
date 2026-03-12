@@ -273,7 +273,7 @@
                                         <td><input type="checkbox" class="product-checkbox" value="{{ $pro->id }}">
                                         </td>
 
-                                        <td><img src="{{ url($Aproductimg_variant[$key]) }}"alt="product image"
+                                        <td><img src="{{ image_url($Aproductimg_variant[$key]) }}" alt="product image"
                                                 style="max-height: 90px;max-width:120px"></td>
                                         <td>{{ $pro->name }}</td>
                                         <td>

@@ -63,8 +63,13 @@
                                         <tr>
                                             <td>{{ $loop->iteration }} </td>
                                             <!-- <td> {{ $item->title }}</td> -->
-                                            <td> <img src="{{ $item->photo }}" alt="banner image"
-                                                    style="max-height: 90px;max-width:120px"></td>
+                                            <td> 
+                                                @if($item->photo && preg_match('/\.(mp4|mov|ogg|qt)$/i', $item->photo))
+                                                    <video src="{{ $item->photo }}" style="max-height: 90px;max-width:120px" controls></video>
+                                                @else
+                                                    <img src="{{ $item->photo }}" alt="banner image" style="max-height: 90px;max-width:120px">
+                                                @endif
+                                            </td>
 
                                             <!-- <td> <img src="{{ $item->mobile_photo }}"-->
                                             <!--style="max-height: 90px;max-width:120px"></td>-->

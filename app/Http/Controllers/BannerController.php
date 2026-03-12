@@ -74,7 +74,7 @@ class BannerController extends Controller
     public function store(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'photo'=>'required',
+            'photo'=>'required|file',
             'title'=>'nullable|string',
             'subtitle'=>'nullable|string',
             'status'=>'required|nullable|in:active,inactive',
@@ -92,8 +92,14 @@ class BannerController extends Controller
         }
         
         $data=$request->all();
-        $data['link']=$request->category;
         
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/banner'), $filename);
+            $data['photo'] = '/uploads/banner/' . $filename;
+        }
+
         $status=Banner::create($data);
         if($status){
             Session::put('success','Successfully created banner');
@@ -149,23 +155,25 @@ class BannerController extends Controller
 
         if($banner){
            $validate = Validator::make($request->all(), [
-            'photo'=>'required',
+            'photo'=>'nullable|file',
             'title'=>'nullable|string',
             'subtitle'=>'nullable|string',
             'status'=>'required|nullable|in:active,inactive',
-         ],
-
-        [
-            'photo.required' => 'Photo field is required',
-        ]
-        );
+         ]);
         if($validate->fails()){
 
             Session::put('errors',$validate->errors());
             return redirect()->back();
         }
         $data=$request->all();
-        $data['link']=$request->category;
+        
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/banner'), $filename);
+            $data['photo'] = '/uploads/banner/' . $filename;
+        }
+
         $status=$banner->fill($data)->save();
         if($status){
             Session::put('success','Successfully update banner');

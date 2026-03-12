@@ -1550,15 +1550,13 @@ public function importform()
     }
 
     public function product_heading(Request $request){
-
-        $headings=DB::table('headings')->where('type',$request->type)->where('status','active')->update(['value'=>$request->value]);
-
+        DB::table('headings')->updateOrInsert(
+            ['type' => $request->type],
+            ['value' => $request->value, 'status' => 'active']
+        );
         $resval['success']=true;
-
         Session::put('success','Saved Successfully');
-
         return response()->json(['resval'=>$resval]);
-
     }
     public function bulkDeletebk(Request $request)
     {

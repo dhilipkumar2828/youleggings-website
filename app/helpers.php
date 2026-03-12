@@ -10,11 +10,16 @@ if (!function_exists('image_url')) {
         }
         
         // Strip various old domains or prefixes if they exist in the stored string
+        // Also remove any full http://host:port/public/ prefix (any port, any localhost variant)
+        $path = preg_replace('#^https?://(127\.0\.0\.1|localhost)(:\d+)?/public/#', '', $path);
+
         $path = str_replace([
             'http://127.0.0.1:8000/public/storage/',
             'http://localhost:8000/public/storage/',
             'public/storage/',
-            'storage/'
+            'storage/',
+            'public/uploads/',
+            'public/',
         ], '', $path);
         
         $path = ltrim($path, '/');

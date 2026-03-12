@@ -46,9 +46,12 @@ class LoginController extends Controller
     public function logout(Request $request)
 
     {
+       $role = $request->user() ? $request->user()->role : null;
        $this->performLogout($request);
-
-        return redirect()->route('admin');
+       if ($role === 'admin') {
+           return redirect('/login');
+       }
+       return redirect()->route('index');
 
     }
 }

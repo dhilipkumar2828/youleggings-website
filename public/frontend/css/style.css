@@ -1722,6 +1722,12 @@ section[id] {
   transform: translateY(-2px);
 }
 
+.blog-link-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+}
+
 .about-hero {
   margin: 56px 0 26px;
   text-align: center;

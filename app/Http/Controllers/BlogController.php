@@ -26,9 +26,12 @@ class BlogController extends Controller
          $this->middleware('permission:Blog Delete', ['only' => ['destroy']]);
 
          $this->middleware(function ($request, $next) {
-             if (Auth::check()) {
+             if (Auth::check() && count(Auth::user()->roles) > 0) {
                  $this->userid = Auth::user()->roles[0]->id;
                  $this->username = Auth::user()->roles[0]->name;
+             } else {
+                 $this->userid = null;
+                 $this->username = null;
              }
              return $next($request);
          });

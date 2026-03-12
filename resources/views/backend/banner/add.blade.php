@@ -38,7 +38,7 @@
                                         textual HTML5 <code class="highlighter-rouge">&lt;input&gt;</code> <code
                                                 class="highlighter-rouge">type</code>.</p> -->
 
-                            <form action="{{ route('banner.store') }}" method="POST">
+                            <form action="{{ route('banner.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <!-- <div class="form-group row">
                                             <label for="example-text-input" class="col-sm-2 col-form-label">Title <span style="color:red">*</span></label>
@@ -74,21 +74,6 @@
                                             </div>
                                         </div>  -->
                                 <div class="form-group row">
-                                    <label for="example-text-input" class="col-sm-2 col-form-label">Category <span
-                                            style="color:red">*</span></label>
-                                    <div class="col-sm-10">
-                                        <select class="form-control" name="category" id="category" required>
-                                            <option value="">Select Category</option>
-                                            <?php
-                                            foreach ($categories as $val) {
-
-                                            ?>
-                                            <option value="<?php echo $val->slug; ?>"><?php echo $val->title; ?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
                                     <label for="title" class="col-sm-2 col-form-label">Title</label>
                                     <div class="col-sm-10">
                                         <input class="form-control" type="text" name="title" value="{{ old('title') }}" placeholder="Enter Banner Title">
@@ -101,27 +86,9 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="example-text-input" class="col-sm-2 col-form-label">Image <span
-                                            style="color:red">*</span></label>
-                                    <!-- <img src="assets/images/image.png" class="admin-image"> -->
+                                    <label for="example-text-input" class="col-sm-2 col-form-label">Image / Video <span style="color:red">*</span></label>
                                     <div class="col-sm-10">
-                                        <div class="input-group"
-                                            style="border: 1px dashed #ced4da; border-radius: 8px; padding: 5px; background: #fff;">
-                                            <span class="input-group-btn" style="margin-right:0;">
-                                                <a id="lfm" data-input="thumbnail" data-preview="holder"
-                                                    class="btn btn-primary ripple"
-                                                    style="border-radius: 6px; padding: 8px 15px;">
-                                                    <i class="fa fa-picture-o"></i> Choose
-                                                </a>
-                                            </span>
-                                            <input id="thumbnail" required class="form-control" type="text"
-                                                value=\"{{ old('photo') }}\" name=\"photo\"
-                                                style="border: none !important; box-shadow: none !important; background: transparent !important; margin-left: 10px; height: 100% !important; padding-top: 10px;"
-                                                placeholder="Select an image...">
-                                        </div>
-                                        {{-- <span class="text-note">*NOTE : Maximum image size must be 1900 x 500</span>                                                                              --}}
-
-                                        <div id="holder" style="margin-top:15px;max-height:100px;"></div>
+                                        <input type="file" class="form-control" name="photo" accept="image/*,video/*" required>
                                     </div>
                                 </div>
 
@@ -214,7 +181,7 @@
 
     <script>
         var lfm_route = (typeof route_prefix !== 'undefined') ? route_prefix : ($('meta[name="route_prefix"]').attr('content') || '/laravel-filemanager');
-        $('#lfm').filemanager('image', {prefix: lfm_route});
-        $('#lfm_mobile').filemanager('image', {prefix: lfm_route});
+        $('#lfm').filemanager('file', {prefix: lfm_route});
+        $('#lfm_mobile').filemanager('file', {prefix: lfm_route});
     </script>
 @endsection

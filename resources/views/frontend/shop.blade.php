@@ -2,6 +2,42 @@
 
 @section('title', 'Shop | You Leggings')
 
+@section('styles')
+<style>
+  .product-card:hover .view-product-overlay {
+    opacity: 1 !important;
+    transform: translateX(-50%) translateY(-10px) !important;
+  }
+  @if(request('new-arrivals'))
+  .shop-product-card {
+    background: #fff !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    border: 1px solid #f0f0f0 !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.04) !important;
+    transition: all 0.4s ease !important;
+  }
+  .shop-product-card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08) !important;
+  }
+  .shop-page .shop-products .products-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 30px !important;
+  }
+  @media (max-width: 1199px) {
+    .shop-page .shop-products .products-grid { grid-template-columns: repeat(3, 1fr) !important; }
+  }
+  @media (max-width: 991px) {
+    .shop-page .shop-products .products-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  }
+  @media (max-width: 575px) {
+    .shop-page .shop-products .products-grid { grid-template-columns: 1fr !important; }
+  }
+  @endif
+</style>
+@endsection
+
 @section('content')
   <!-- Shop Page -->
   <section class="section page-view shop-page" id="shop-page" style="display: block;">
@@ -18,10 +54,11 @@
 
     <div class="container page-body">
       <div class="text-center">
-        <span class="section-subtitle">Curated Picks</span>
-        <h2 class="section-title">Shop Products</h2>
+        <span class="section-subtitle">{{ request('new-arrivals') ? 'Just In' : 'Curated Picks' }}</span>
+        <h2 class="section-title">{{ request('new-arrivals') ? 'Fresh Styles This Month' : 'Shop Products' }}</h2>
       </div>
-      <div class="shop-layout">
+      <div class="shop-layout" @if(request('new-arrivals')) style="display: block;" @endif>
+        @if(!request('new-arrivals'))
         <aside class="shop-filters">
           <form action="{{ route('shop') }}" method="GET" id="shopFilterForm">
               <div class="filter-group">
@@ -80,25 +117,41 @@
               <a href="{{ route('shop') }}" class="shop-clear-filters text-center" style="display:block; text-decoration:none;">Clear Filters</a>
           </form>
         </aside>
+        @endif
 
-        <div class="shop-products">
+        <div class="shop-products" @if(request('new-arrivals')) style="width: 100%;" @endif>
           <div class="products-grid">
             @forelse($products as $product)
                 <div class="product-card shop-product-card">
                   <a href="{{ route('product_detail', $product->slug) }}" style="text-decoration:none; color:inherit;">
-                  <div class="product-image">
+                  <div class="product-image" @if(request('new-arrivals')) style="height: 380px; position: relative; background: #f4f4f4;" @endif>
                     @php
                         $photo = $product->productvariant->first()->photo ?? '';
                         $photos = explode(',', $photo);
                     @endphp
-                    <img src="{{ image_url($photos[0]) }}" alt="{{ $product->name }}">
+                    <img src="{{ image_url($photos[0]) }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    @if(request('new-arrivals'))
+                      <div class="view-product-overlay" style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); background: #fff; color: #333; padding: 14px 28px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-radius: 50px; transition: 0.3s; opacity: 0; white-space: nowrap; z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">View Product</div>
+                    @endif
                   </div>
-                  <div class="product-details shop-product-details">
-                    <p class="shop-product-category">{{ $product->categories->title ?? 'Legging' }}</p>
-                    <h3 class="product-name">{{ $product->name }}</h3>
-                    <div class="shop-product-bottom">
-                      <div class="product-price">INR {{ number_format($product->regular_price) }}</div>
-                      <span class="shop-product-link">View</span>
+                  <div class="product-details shop-product-details" style="padding: 15px; text-align: center; background: #fff;">
+                    <p class="shop-product-category" style="font-size: 10px; color: #ec407a; text-transform: uppercase; font-weight: 700; letter-spacing: 2px; margin-bottom: 4px;">{{ request('new-arrivals') ? 'New Arrival' : ($product->categories->title ?? 'Legging') }}</p>
+                    <h3 class="product-name" style="font-family: var(--font-serif, serif); font-size: 18px; color: #222; margin-bottom: 15px; font-weight: 500;">{{ $product->name }}</h3>
+                    <div class="shop-product-bottom" style="display: flex; justify-content: space-between; align-items: center; padding-top: 0;">
+                      @php
+                        $regularPrice = $product->regular_price ?? 0;
+                        $discount = $product->discount ?? 0;
+                        $sellingPrice = $regularPrice;
+                        if($discount > 0) {
+                            if($product->discount_type == 'percent') {
+                                $sellingPrice = $regularPrice - ($regularPrice * $discount / 100);
+                            } else {
+                                $sellingPrice = $regularPrice - $discount;
+                            }
+                        }
+                      @endphp
+                      <div class="product-price" style="font-size: 18px; font-weight: 700; color: #ec407a;">INR {{ number_format($sellingPrice) }}</div>
+                      <span class="shop-product-link" style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #ec407a; border: 1px solid #fdeef2; padding: 10px 20px; border-radius: 4px; background: #fff;">{{ request('new-arrivals') ? 'BUY NOW' : 'VIEW' }}</span>
                     </div>
                   </div>
                   </a>

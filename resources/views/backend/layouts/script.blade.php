@@ -55,7 +55,7 @@
 <script src="{{ asset('assets/js/jquery.multifield.min.js') }}"></script>
 
 <script>
-    var route_prefix = "{{ url('laravel-filemanager') }}";
+    var route_prefix = "{{ url('admin/laravel-filemanager') }}";
 </script>
 <script src="{{ asset('assets/js/main.js?v=2.2') }}"></script>
 

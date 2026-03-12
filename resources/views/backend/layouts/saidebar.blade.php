@@ -116,10 +116,10 @@
                     </a>
                 </li>
 
-                @if (auth()->user()->can('Blog-view'))
+                @if (auth()->user()->can('Blog List'))
                     <li>
                         <a href="{{ route('blog.index') }}" class="waves-effect">
-                            <i class="dripicons-blog"></i>
+                            <i class="dripicons-article"></i>
                             <span> Blogs </span>
                         </a>
                     </li>
@@ -139,7 +139,7 @@
                         @can('FAQs List')
                             <li><a href="{{ route('faqs.index') }}"><i class="mdi mdi-help-circle-outline"></i>FAQs</a></li>
                         @endcan
-                        <li><a href="{{ route('terms.index') }}"><i class="mdi mdi-file-document-outline"></i>Terms & Conditions</a></li>
+                        <li><a href="{{ route('terms.index') }}"><i class="mdi mdi-file-document"></i>Terms & Conditions</a></li>
                         <li><a href="{{ route('privacy.index') }}"><i class="mdi mdi-lock-outline"></i>Privacy Policy</a></li>
                         <li><a href="{{ route('delivery.index') }}"><i class="mdi mdi-truck-delivery"></i>Delivery & Returns</a></li>
                     </ul>

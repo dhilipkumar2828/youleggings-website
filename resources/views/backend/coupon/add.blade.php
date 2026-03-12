@@ -118,7 +118,7 @@
                                             <label for="product_select" class="col-sm-4 col-form-label">Select
                                                 Products</label>
                                             <div class="col-sm-8" id="others">
-                                                <select name="product_id[]" class="form-control" multiple
+                                                <select name="product_id[]" class="form-control select2" multiple
                                                     id="product_select">
                                                     @foreach ($product as $products)
                                                         <option value="{{ $products->id }}">{{ $products->name }} -
@@ -127,7 +127,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-sm-8" id="flat" style="display:none;">
-                                                <select name="product_id[]" class="form-control" multiple>
+                                                <select name="product_id[]" class="form-control select2" multiple>
                                                     <option value="0">All Products</option>
                                                 </select>
                                             </div>
@@ -428,6 +428,11 @@
 
         <script>
             $(document).ready(function() {
+                $('.select2').select2({
+                    placeholder: "Select Products",
+                    allowClear: true,
+                    width: '100%'
+                });
 
                 if ($("#elm1").length > 0) {
 

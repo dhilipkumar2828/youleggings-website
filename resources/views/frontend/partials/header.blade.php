@@ -26,18 +26,25 @@
         <button id="searchToggleBtn" class="nav-icon-btn" type="button" aria-label="Search">
           <i data-lucide="search"></i>
         </button>
+        
+        @guest
         <div class="nav-tooltip-wrap">
-          <a href="{{ route('login_user') }}" id="loginPageBtn" class="nav-icon-btn" aria-label="Account">
+          <a href="{{ route('login_user') }}" class="nav-icon-btn" aria-label="Login">
             <i data-lucide="user"></i>
           </a>
-          <span class="nav-tooltip">Login</span>
+          <span class="nav-tooltip">Login / Register</span>
         </div>
+        @endguest
+
+        @auth
         <div class="nav-tooltip-wrap">
-          <a href="{{ route('login_user') }}" id="dashboardBtn" class="nav-icon-btn" style="display: none;" aria-label="Dashboard">
-            <i data-lucide="layout-dashboard"></i>
+          <a href="{{ route('my_account') }}" class="nav-icon-btn" aria-label="Account">
+            <i data-lucide="user"></i>
           </a>
-          <span class="nav-tooltip">Dashboard</span>
+          <span class="nav-tooltip">My Account</span>
         </div>
+        @endauth
+
         <a href="{{ route('cart') }}" id="cartPageBtn" class="nav-icon-btn" aria-label="Cart">
           <i data-lucide="shopping-bag"></i>
           <span id="cartCountBadge" class="cart-count-badge" aria-live="polite">0</span>
