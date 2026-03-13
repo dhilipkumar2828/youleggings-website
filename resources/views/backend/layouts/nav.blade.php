@@ -55,7 +55,14 @@
         <li class="list-inline-item dropdown notification-list">
             <a class="nav-link dropdown-toggle arrow-none waves-effect nav-user" data-toggle="dropdown" href="#"
                 role="button" aria-haspopup="false" aria-expanded="false">
-                <img src="{{ asset('frontend/img/user.png') }}" alt="user" class="rounded-circle">
+                @php
+                    $photo = Auth::user()->photo;
+                    $photo = str_replace(['http://127.0.0.1:8000/public/', 'http://127.0.0.1:8001/public/'], '', $photo);
+                    if ($photo && !str_starts_with($photo, 'http')) {
+                        $photo = asset($photo);
+                    }
+                @endphp
+                <img src="{{ $photo ? $photo : asset('frontend/img/user.png') }}" alt="user" class="rounded-circle">
             </a>
             <div class="dropdown-menu dropdown-menu-right dropdown-menu-animated profile-dropdown ">
                 <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle m-r-5 text-muted"></i>

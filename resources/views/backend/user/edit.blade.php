@@ -69,7 +69,7 @@
 
                         <div class="card-body">
 
-                            <form action="{{ url('user_update', $user->id) }}" method="post">
+                            <form action="{{ route('user.update', $user->id) }}" method="post">
 
                                 @csrf
 
@@ -101,32 +101,6 @@
 
                                 </div>
 
-                                {{-- <div class="form-group row">
-
-                                    <label for="example-search-input" class="col-sm-2 col-form-label">Password <span style="color:red">*</span></label>
-
-                                 <div class="col-sm-10">
-
-                                     <input class="form-control" type="password" placeholder="Enter Password" required name="password"value="{{old('password')}}" id="password">
-
-                                            <span class="text-danger password_err"></span>
-
-                                    </div>
-
-                             </div> --}}
-
-                                {{-- <div class="form-group row">
-
-                                    <label for="example-search-input" class="col-sm-2 col-form-label">Password <span style="color:red">*</span></label>
-
-                                 <div class="col-sm-10">
-
-                                     <input class="form-control" type="password"placeholder="Enter Password" minlength="6" maxlength="8" name="password"value="{{$user->password}}" id="example-search-input">
-
-                                 </div>
-
-                                </div> --}}
-
                                 <div class="form-group row">
 
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Mobile Number</label>
@@ -139,6 +113,32 @@
 
                                     </div>
 
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="photo" class="col-sm-2 col-form-label">Photo</label>
+                                    <div class="col-sm-10">
+                                        <div class="input-group">
+                                            <span class="input-group-btn">
+                                                <a id="lfm" data-input="photo" data-preview="holder" class="btn btn-primary" style="color: white">
+                                                    <i class="fa fa-picture-o"></i> Choose
+                                                </a>
+                                            </span>
+                                            <input id="photo" class="form-control" type="text" name="photo" value="{{ $user->photo }}">
+                                        </div>
+                                        <div id="holder" style="margin-top:15px;max-height:100px;">
+                                            @if($user->photo)
+                                                @php
+                                                    $preview = $user->photo;
+                                                    $preview = str_replace(['http://127.0.0.1:8000/public/', 'http://127.0.0.1:8001/public/'], '', $preview);
+                                                    if ($preview && !str_starts_with($preview, 'http')) {
+                                                        $preview = asset($preview);
+                                                    }
+                                                @endphp
+                                                <img src="{{ $preview }}" style="height: 5rem;">
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="form-group row">
@@ -166,53 +166,9 @@
 
                                 </div>
 
-                                <!-- <div class="form-group row">
-
-                                            <label for="status" class="col-sm-2 col-form-label">Status <span style="color:red">*</span></label>
-
-                                            <div class="col-sm-10">
-
-                                                <select class="form-control" required name='status'>
-
-                                                    <option>--Status--</option>
-
-                                                    <option value="active" {{ $user->status == 'active' ? 'selected' : '' }}>Active</option>
-
-                                                    <option value="inactive" {{ $user->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
-
-                                                </select>
-
-                                            </div>
-
-                                        </div> -->
-
-                                {{--  <div class="form-group row">
-
-                                    <label for="condition" class="col-sm-2 col-form-label">Role</label>
-
-                                    <div class="col-sm-10">
-
-                                        <select class="form-control" name='role'>
-
-                                            <option>--Role--</option>
-
-                                            <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
-
-                                            <option value="vendor" {{ $user->role == 'vendor' ? 'selected' : '' }}>Vendor </option>
-
-                                            <option value="customer" {{ $user->role == 'customer' ? 'selected' : '' }}>Customer </option>
-
-                                        </select>
-
-                                    </div>
-
-                                </div>  --}}
-
                                 <div class="d-flex">
 
                                     <button class="btn btn-primary" type="submit">Submit</button>&nbsp;
-
-                                    <!-- <button class="btn btn-secondary" type="submit">Cancel</button> -->
 
                                 </div>
 

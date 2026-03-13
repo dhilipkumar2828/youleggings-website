@@ -124,12 +124,18 @@
             @forelse($products as $product)
                 <div class="product-card shop-product-card">
                   <a href="{{ route('product_detail', $product->slug) }}" style="text-decoration:none; color:inherit;">
-                  <div class="product-image" @if(request('new-arrivals')) style="height: 380px; position: relative; background: #f4f4f4;" @endif>
+                  <div class="product-image" style="position: relative; {{ request('new-arrivals') ? 'height: 380px; background: #f4f4f4;' : '' }}">
                     @php
                         $photo = $product->productvariant->first()->photo ?? '';
                         $photos = explode(',', $photo);
                     @endphp
                     <img src="{{ image_url($photos[0]) }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    
+                    <!-- Wishlist Button -->
+                    <button type="button" class="wishlist-toggle-btn" onclick="toggleWishlist(event, {{ $product->id }})" style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.9); border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #888; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10;">
+                        <i data-lucide="heart" style="width: 18px; {{ Auth::check() && \App\Models\Wishlist::where('customer_id', Auth::id())->where('product_id', $product->id)->exists() ? 'fill: #ec407a; stroke: #ec407a;' : '' }}"></i>
+                    </button>
+
                     @if(request('new-arrivals'))
                       <div class="view-product-overlay" style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); background: #fff; color: #333; padding: 14px 28px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-radius: 50px; transition: 0.3s; opacity: 0; white-space: nowrap; z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">View Product</div>
                     @endif
@@ -170,4 +176,34 @@
       </div>
     </div>
   </section>
+@section('scripts')
+<script>
+  // -- Wishlist Logic --
+  function toggleWishlist(event, productId) {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      fetch("{{ route('wishlist.add') }}", {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': '{{ csrf_token() }}'
+          },
+          body: JSON.stringify({ product_id: productId })
+      })
+      .then(response => response.json())
+      .then(data => {
+          if(data.status === 'success' || data.status === 'info') {
+              window.location.reload();
+          } else {
+              alert(data.msg);
+              if(data.msg.includes('login')) {
+                  window.location.href = "{{ route('login_user') }}";
+              }
+          }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+</script>
+@endsection
 @endsection

@@ -217,8 +217,8 @@
             });
 
             // Status Toggle
-            $('input[name=toogle]').on('change', function() {
-                const mode = $(this).prop('checked');
+            $(document).on('change', 'input[name=toogle]', function() {
+                const mode = $(this).prop('checked') ? 'true' : 'false';
                 const id = $(this).val();
                 $.ajax({
                     url: "{{ route('category.status') }}",
@@ -229,7 +229,9 @@
                         id: id,
                     },
                     success: function(response) {
-                        // Optional toast notification
+                        if (response.status) {
+                            // swal("Success", response.msg, "success");
+                        }
                     }
                 });
             });

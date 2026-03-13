@@ -175,12 +175,10 @@
     </script>
 
     <script>
-        $('input[name=toogle]').change(function() {
-            var mode = $(this).prop('checked');
+        $(document).on('change', 'input[name=toogle]', function() {
+            var mode = $(this).prop('checked') ? 'true' : 'false';
             var id = $(this).val();
-            // alert(id);
             $.ajax({
-
                 url: "{{ route('banner_status') }}",
                 type: "POST",
                 data: {
@@ -189,7 +187,7 @@
                     id: id,
                 },
                 success: function(response) {
-                    //  console.log(response.status);
+                    // Success handling
                 }
             })
         });

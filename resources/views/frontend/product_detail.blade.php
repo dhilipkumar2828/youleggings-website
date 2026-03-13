@@ -89,8 +89,11 @@
             </div>
           </div>
 
-          <div class="product-detail-actions compact-actions" style="margin-top: 20px;">
-            <button id="productAddToCartBtn" type="button" class="btn" style="background: #333; color: #fff; width: 100%; padding: 18px; font-weight: 700; letter-spacing: 2px;">ADD TO CART</button>
+          <div class="product-detail-actions compact-actions" style="margin-top: 20px; display: flex; gap: 15px;">
+            <button id="productAddToCartBtn" type="button" class="btn" style="background: #333; color: #fff; flex: 1; padding: 18px; font-weight: 700; letter-spacing: 2px;">ADD TO CART</button>
+            <button type="button" class="btn" onclick="toggleWishlist(event, {{ $product->id }})" style="background: #fff; color: #333; border: 1px solid #333; width: 60px; display: flex; align-items: center; justify-content: center;">
+                <i data-lucide="heart" style="width: 24px;"></i>
+            </button>
           </div>
 
           <div class="product-service-strip compact-service-strip" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 30px;">
@@ -116,9 +119,11 @@
 
       <div class="product-tab-section"
         style="margin-top: 60px; background: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(125, 84, 101, 0.08); border: 1px solid #f0dbe4;">
-        <div class="product-tab-nav" role="tablist" style="border-bottom: 2px solid #f7f7f7; margin-bottom: 30px; display: flex; gap: 30px;">
-          <button type="button" class="product-tab-btn is-active" data-tab-target="desc" style="padding: 10px 0; border: none; background: none; font-weight: 700; cursor: pointer; color: #5d3f4c; border-bottom: 2px solid transparent; transition: all 0.3s; font-size: 15px; letter-spacing: 1px;">DESCRIPTION</button>
-          <button type="button" class="product-tab-btn" data-tab-target="reviews" style="padding: 10px 0; border: none; background: none; font-weight: 700; cursor: pointer; color: #5d3f4c; border-bottom: 2px solid transparent; transition: all 0.3s; font-size: 15px; letter-spacing: 1px;">REVIEWS</button>
+        <div class="product-tab-nav" role="tablist" style="margin-bottom: 30px; display: flex; gap: 15px; flex-wrap: wrap;">
+          <button type="button" class="product-tab-btn is-active" data-tab-target="desc">DESCRIPTION</button>
+          <button type="button" class="product-tab-btn" data-tab-target="specs">SPECIFICATIONS</button>
+          <button type="button" class="product-tab-btn" data-tab-target="fab">FABRICATION</button>
+          <button type="button" class="product-tab-btn" data-tab-target="reviews">REVIEWS</button>
         </div>
         <div class="product-tab-panels">
           <div class="product-tab-panel is-active" id="desc">
@@ -126,13 +131,63 @@
                 {!! $product->description !!}
             </div>
           </div>
+          <div class="product-tab-panel" id="specs" style="display:none;">
+            <div style="color: #6b5a63; line-height: 1.8; font-size: 15px;">
+                <p><strong>Material:</strong> Premium Cotton-Elastane Blend</p>
+                <p><strong>Fit:</strong> High-Waisted, 4-Way Stretch</p>
+                <p><strong>Pattern:</strong> Solid / Comfort Grip</p>
+                <p><strong>Occasion:</strong> Workwear, Yoga, Casual</p>
+            </div>
+          </div>
+          <div class="product-tab-panel" id="fab" style="display:none;">
+            <div style="color: #6b5a63; line-height: 1.8; font-size: 15px;">
+                <p>Crafted with our signature TANTEX™ technology. The fabric undergoes a special bio-wash process for extra softness and long-lasting color retention. Breathable and moisture-wicking to keep you fresh all day.</p>
+            </div>
+          </div>
           <div class="product-tab-panel" id="reviews" style="display:none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h3 style="font-size: 20px; color: #5d3f4c; font-weight: 700;">Customer Reviews</h3>
+                <button type="button" class="btn btn-dark" onclick="toggleReviewForm()" style="background: #333; color: #fff; padding: 10px 25px; font-weight: 700; border: none; letter-spacing: 1px;">ADD A REVIEW</button>
+            </div>
+
+            <!-- Review Form -->
+            <div id="reviewForm" style="display: none; background: #fffafc; padding: 30px; border-radius: 12px; border: 1px solid #f0dbe4; margin-bottom: 40px;">
+                <form action="{{ route('review.submit') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #5d3f4c;">Your Name</label>
+                            <input type="text" name="name" required style="width: 100%; padding: 12px; border: 1px solid #f0dbe4; border-radius: 8px;" value="{{ Auth::user()->name ?? '' }}">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #5d3f4c;">Your Email</label>
+                            <input type="email" name="email" required style="width: 100%; padding: 12px; border: 1px solid #f0dbe4; border-radius: 8px;" value="{{ Auth::user()->email ?? '' }}">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #5d3f4c;">Rating</label>
+                        <div class="rating-input" style="display: flex; gap: 10px; font-size: 24px; flex-direction: row-reverse; justify-content: flex-end;">
+                            @for($i=5; $i>=1; $i--)
+                                <input type="radio" name="rate" value="{{ $i }}" id="rate-{{ $i }}" style="display: none;" {{ $i==5 ? 'checked' : '' }}>
+                                <label for="rate-{{ $i }}" style="cursor: pointer; color: #cbd5e1;" class="star-label">★</label>
+                            @endfor
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #5d3f4c;">Your Review</label>
+                        <textarea name="review" required style="width: 100%; padding: 12px; border: 1px solid #f0dbe4; border-radius: 8px; height: 120px;" placeholder="What did you like or dislike?"></textarea>
+                    </div>
+                    <button type="submit" class="btn" style="background: var(--primary-color); color: #fff; padding: 12px 30px; border: none; font-weight: 700; border-radius: 8px;">SUBMIT REVIEW</button>
+                </form>
+            </div>
+
             <div id="productDetailTabReviews">
                 @forelse($product->reviews as $review)
                     <div style="margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #f0dbe4;">
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
                           <strong style="font-size: 15px; color: #5d3f4c;">{{ $review->name }}</strong>
-                          <span style="color: #f59e0b; font-size: 14px;">{{ str_repeat('★', $review->stars) }}</span>
+                          <span style="color: #f59e0b; font-size: 14px;">{{ str_repeat('★', $review->rate) }}</span>
                         </div>
                         <p style="font-size: 14px; color: #6b5a63; margin-top: 5px;">{{ $review->review }}</p>
                     </div>
@@ -292,16 +347,103 @@
 
     // Initialize first tab
     if (document.querySelector('.product-tab-btn.is-active')) {
-        document.querySelector('.product-tab-btn.is-active').style.borderBottomColor = 'var(--primary-color)';
+        // No need to set border bottom color anymore, using pills
     }
+
+    function toggleReviewForm() {
+        const form = document.getElementById('reviewForm');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        if (form.style.display === 'block') {
+            form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    // Star Rating Interaction
+    document.querySelectorAll('.star-label').forEach((star, index, stars) => {
+        star.addEventListener('mouseover', () => {
+            stars.forEach((s, idx) => {
+                if (idx >= index) s.style.color = '#f59e0b';
+                else s.style.color = '#cbd5e1';
+            });
+        });
+        star.addEventListener('mouseout', () => {
+            const checkedId = document.querySelector('input[name="rate"]:checked')?.id;
+            const checkedIndex = checkedId ? Array.from(stars).reverse().findIndex(s => s.getAttribute('for') === checkedId) : -1;
+            stars.forEach((s, idx) => {
+                if (checkedIndex !== -1 && idx >= (4 - checkedIndex)) s.style.color = '#f59e0b';
+                else s.style.color = '#cbd5e1';
+            });
+        });
+        star.addEventListener('click', () => {
+            // Handled by radio input, but update colors
+            stars.forEach((s, idx) => {
+                if (idx >= index) s.style.color = '#f59e0b';
+                else s.style.color = '#cbd5e1';
+            });
+        });
+    });
+
+    // Initialize stars color based on default checked (5)
+    window.addEventListener('load', () => {
+        document.querySelectorAll('.star-label').forEach(s => s.style.color = '#f59e0b');
+    });
 </script>
 <style>
+    .product-tab-btn {
+        padding: 10px 25px; 
+        border: 1px solid #f0dbe4; 
+        background: #fff; 
+        font-weight: 700; 
+        cursor: pointer; 
+        color: #777; 
+        border-radius: 30px; 
+        transition: all 0.3s; 
+        font-size: 13px; 
+        letter-spacing: 1px;
+    }
+    .product-tab-btn.is-active {
+        background: #cf2e6d !important;
+        color: #fff !important;
+        border-color: #cf2e6d !important;
+        box-shadow: 0 4px 15px rgba(207, 46, 109, 0.3);
+    }
     .product-color.is-active {
         border-color: var(--primary-color) !important;
         transform: scale(1.1);
     }
-    .product-tab-btn.is-active {
-        color: var(--primary-color) !important;
+    .rating-input .star-label:hover ~ .star-label {
+        color: #f59e0b !important;
+    }
+    .rating-input input:checked ~ label {
+        color: #f59e0b !important;
     }
 </style>
+<script>
+  // -- Wishlist Logic --
+  function toggleWishlist(event, productId) {
+      event.preventDefault();
+      const btn = event.currentTarget;
+      const icon = btn.querySelector('i');
+      fetch("{{ route('wishlist.add') }}", {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': '{{ csrf_token() }}'
+          },
+          body: JSON.stringify({ product_id: productId })
+      })
+      .then(response => response.json())
+      .then(data => {
+          if(data.status === 'success' || data.status === 'info') {
+              window.location.reload();
+          } else {
+              alert(data.msg);
+              if(data.msg.includes('login')) {
+                  window.location.href = "{{ route('login_user') }}";
+              }
+          }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+</script>
 @endsection

@@ -222,8 +222,8 @@
                                     <th>Product Name</th>
                                     <th>Category</th>
 
-                                    <th>Sub category</th>
-                                    <th>Child category</th>
+                                    {{-- <th>Sub category</th>
+                                    <th>Child category</th> --}}
 
                                     <th>Regular Price</th>
                                     <th>Stock</th>
@@ -301,14 +301,14 @@
 
                                         </td>
 
-                                        <td>
+                                        {{-- <td>
                                             {{ $subcategoryname }}
 
                                         </td>
                                         <td>
                                             {{ $childcategoryname }}
 
-                                        </td>
+                                        </td> --}}
 
                                         <td>{{ $pro->regular_price }} </td>
                                         <td>{{ $pro->stock }} </td>
@@ -316,7 +316,7 @@
                                         <!-- <td>{{ $pro->size }} </td> -->
                                         {{-- @if (auth()->user()->can('products-edit')) --}}
                                             <td>
-                                                <input type="checkbox" name="toogle" value="{{ $pro->id }}"
+                                                <input type="checkbox" name="toggle" class="product-status-toggle" value="{{ $pro->id }}"
                                                     data-toggle="switchbutton"
                                                     {{ $pro->status == 'active' ? 'checked' : '' }} data-onlabel="Active"
                                                     data-offlabel="Inactive" data-size="sm" data-onstyle="success"
@@ -621,10 +621,9 @@
     </script>
 
     <script>
-        $('input[name=toogle]').change(function() {
-            var mode = $(this).prop('checked');
+        $(document).on('change', '.product-status-toggle', function() {
+            var mode = $(this).prop('checked') ? 'true' : 'false';
             var id = $(this).val();
-            // alert(id);
             $.ajax({
                 url: "{{ route('product.status') }}",
                 type: "POST",
@@ -634,7 +633,9 @@
                     id: id,
                 },
                 success: function(response) {
-                    //console.log(response.status);
+                    if(response.status) {
+                        // Success toast if needed
+                    }
                 }
             })
         });

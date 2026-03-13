@@ -45,6 +45,17 @@
         </div>
         @endauth
 
+        <div class="nav-tooltip-wrap">
+          <a href="{{ route('wishlist') }}" class="nav-icon-btn" aria-label="Wishlist">
+            <i data-lucide="heart"></i>
+            @php
+                $wishlistCount = Auth::check() ? \App\Models\Wishlist::where('customer_id', Auth::id())->count() : 0;
+            @endphp
+            <span id="wishlistCountBadge" class="cart-count-badge {{ $wishlistCount > 0 ? 'has-items' : '' }}" style="background: var(--primary-color, #ec407a); z-index: 5;">{{ $wishlistCount }}</span>
+          </a>
+          <span class="nav-tooltip">Wishlist</span>
+        </div>
+
         <a href="{{ route('cart') }}" id="cartPageBtn" class="nav-icon-btn" aria-label="Cart">
           <i data-lucide="shopping-bag"></i>
           <span id="cartCountBadge" class="cart-count-badge" aria-live="polite">0</span>

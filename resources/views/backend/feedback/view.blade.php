@@ -89,7 +89,7 @@
 
                                             <td>{{ $feedback->phone_number }}</td>
 
-                                            <td><input type="checkbox" name="toogle" value="{{ $feedback->id }}"
+                                            <td><input type="checkbox" name="toggle" class="testimonial-status-toggle" value="{{ $feedback->id }}"
                                                     data-toggle="switchbutton"
                                                     {{ $feedback->status == 'active' ? 'checked' : '' }}
                                                     data-onlabel="active" data-offlabel="inactive" data-size="sm"
@@ -151,137 +151,47 @@
 
     <script>
         $.ajaxSetup({
-
             headers: {
-
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-
             }
-
         });
 
         $('.dltBtn').click(function(e) {
-
             var form = $(this).closest('form');
-
             var dataID = $(this).data('id');
-
             e.preventDefault();
-
             swal({
-
                     title: "Are you sure?",
-
                     text: "Once deleted, you will not be able to recover",
-
                     icon: "warning",
-
                     buttons: true,
-
                     dangerMode: true,
-
                 })
-
                 .then((willDelete) => {
-
                     if (willDelete) {
-
                         form.submit();
-
-                        swal("Poof! Your imaginary file has been deleted!", {
-
-                            icon: "success",
-
-                        });
-
-                    } else {
-
-                        swal("Your imaginary file is safe!");
-
                     }
-
                 });
-
         });
-    </script>
 
-    <script>
-        $('input[name=toogle]').change(function() {
-
-            var mode = $(this).prop('checked');
-
+        $(document).on('change', '.testimonial-status-toggle', function() {
+            var mode = $(this).prop('checked') ? 'active' : 'inactive';
             var id = $(this).val();
 
-            // alert(id);
-
             $.ajax({
-
-                url: "{{ route('category.status') }}",
-
+                url: "{{ route('testimonial.update') }}",
                 type: "POST",
-
                 data: {
-
                     _token: '{{ csrf_token() }}',
-
                     mode: mode,
-
                     id: id,
-
                 },
-
                 success: function(response) {
-
-                    //   console.log(response.status);
-
+                    if (response.status) {
+                        // Status updated successfully
+                    }
                 }
-
             })
-
-        });
-    </script>
-
-    <script>
-        $('input[name=toogle]').change(function() {
-
-            var mode = $(this).prop('checked');
-
-            var id = $(this).val();
-
-            if (mode == true) {
-
-                mode = "active";
-
-            } else {
-
-                mode = "inactive";
-
-            }
-
-            $.ajax({
-
-                url: "{{ url('update_feedback') }}",
-
-                type: "POST",
-
-                data: {
-
-                    _token: '{{ csrf_token() }}',
-
-                    mode: mode,
-
-                    id: id,
-
-                },
-
-                success: function(response) {
-
-                    //   console.log(response.status);
-
-                }
-
-            })
-
         });
     </script>
 @endsection

@@ -308,12 +308,21 @@ class CouponController extends Controller
             return back()->with('error','Data not  found');
         }
     }
-    public function coupon_show(request $request)
+    public function coupon_show(Request $request)
     {
-        $id=$request;
-        $coupon=Coupon::find($id)->first();
-        //print_r($coupon);
-        //echo $coupon->coupon_code;
-        return response()->json(['coupon_name'=>$coupon->coupon_name,'minimum_order_amount'=>$coupon->minimum_order_amount,'coupon_code'=> $coupon->coupon_code,'value'=> $coupon->value,'start_date'=> $coupon->start_date,'end_date'=> $coupon->end_date,'discount_type'=> $coupon->discount_type,'status'=> $coupon->Status]);
+        $coupon = Coupon::find($request->id);
+        if ($coupon) {
+            return response()->json([
+                'coupon_name' => $coupon->coupon_name,
+                'minimum_order_amount' => $coupon->minimum_order_amount,
+                'coupon_code' => $coupon->coupon_code,
+                'value' => $coupon->value,
+                'start_date' => $coupon->start_date,
+                'end_date' => $coupon->end_date,
+                'discount_type' => $coupon->discount_type,
+                'status' => $coupon->Status
+            ]);
+        }
+        return response()->json(['error' => 'Coupon not found'], 404);
     }
 }

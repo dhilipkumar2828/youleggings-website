@@ -25,21 +25,14 @@ class Admin
      */
 
     public function handle(Request $request, Closure $next)
-
     {
-
-        if(auth()->user()->role=='admin'){
-
+        $role = auth()->user()->role;
+        if($role == 'admin' || $role == 'Super Admin'){
             return $next($request);
-
         }
-
         else{
-
-            return redirect()->route(auth()->user()->role)->with('error',"You don't have access");
-
+            return redirect()->route('login')->with('error',"You don't have access");
         }
-
     }
 
 }

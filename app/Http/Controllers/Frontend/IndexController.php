@@ -8,6 +8,8 @@ use App\Models\Category;
 use App\Models\Banner;
 use App\Models\Blog;
 use App\Models\Clientfeedback;
+use App\Models\ProductReviews;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -20,9 +22,45 @@ class IndexController extends Controller
         $banners = Banner::where('status', 'active')->get();
         $categories = Category::where('status', 'active')->whereNull('parent_id')->get();
         $featured_products = Product::with('productvariant')->where('status', 'active')->take(8)->get();
-        $testimonials = Clientfeedback::where('status', 'accept')->get();
+        
+        // Final attempt to get testimonials - just get all of them
+        $testimonials = DB::table('client_feedback')->orderBy('id', 'desc')->get();
         
         return view('frontend.index', compact('banners', 'categories', 'featured_products', 'testimonials'));
+    }
+
+    public function wishlist()
+    {
+        if(!Auth::check()) {
+            return redirect()->route('login_user')->with('error', 'Please login to view your wishlist');
+        }
+        $wishlist = Wishlist::where('customer_id', Auth::id())->with('wishlist1')->get();
+        return view('frontend.wishlist', compact('wishlist'));
+    }
+
+    public function wishlist_add(Request $request)
+    {
+        if(!Auth::check()) {
+            return response()->json(['status' => 'error', 'msg' => 'Please login first']);
+        }
+        
+        $exists = Wishlist::where('customer_id', Auth::id())->where('product_id', $request->product_id)->first();
+        if($exists) {
+            return response()->json(['status' => 'info', 'msg' => 'Already in wishlist']);
+        }
+
+        Wishlist::create([
+            'customer_id' => Auth::id(),
+            'product_id' => $request->product_id,
+        ]);
+
+        return response()->json(['status' => 'success', 'msg' => 'Added to wishlist']);
+    }
+
+    public function wishlist_remove(Request $request)
+    {
+        Wishlist::where('customer_id', Auth::id())->where('product_id', $request->product_id)->delete();
+        return back()->with('success', 'Removed from wishlist');
     }
 
     public function shop(Request $request)
@@ -481,5 +519,28 @@ class IndexController extends Controller
     {
         $content = \App\Models\Delivery::first();
         return view('frontend.shipping_policy', compact('content'));
+    }
+
+    public function review_submit(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'name'       => 'required|string|max:100',
+            'email'      => 'required|email|max:100',
+            'rate'       => 'required|integer|min:1|max:5',
+            'review'     => 'required|string|max:1000',
+        ]);
+
+        \App\Models\ProductReviews::create([
+            'product_id'  => $request->product_id,
+            'customer_id' => Auth::id() ?? null,
+            'name'        => $request->name,
+            'email'       => $request->email,
+            'rate'        => $request->rate,
+            'review'      => $request->review,
+            'status'      => 'inactive', // Moderation needed
+        ]);
+
+        return back()->with('success', 'Thank you for your review! It will be visible after approval.');
     }
 }

@@ -69,13 +69,13 @@
 
                         <div class="card-body">
 
-                            <form action="{{ url('user_save') }}" method="post">
+                            <form action="{{ route('user.store') }}" method="post">
 
                                 @csrf
 
                                 <div class="form-group row">
 
-                                    <label for="example-text-input" class="col-sm-2 col-form-label">Name <span
+                                    <label for="name" class="col-sm-2 col-form-label">Name <span
                                             style="color:red">*</span></label>
 
                                     <div class="col-sm-10">
@@ -91,7 +91,7 @@
 
                                 <div class="form-group row">
 
-                                    <label for="example-text-input" class="col-sm-2 col-form-label">Email <span
+                                    <label for="email" class="col-sm-2 col-form-label">Email <span
                                             style="color:red">*</span></label>
 
                                     <div class="col-sm-10">
@@ -107,7 +107,7 @@
 
                                 <div class="form-group row">
 
-                                    <label for="example-search-input" class="col-sm-2 col-form-label">Password <span
+                                    <label for="password" class="col-sm-2 col-form-label">Password <span
                                             style="color:red">*</span></label>
 
                                     <div class="col-sm-10">
@@ -123,7 +123,7 @@
 
                                 <div class="form-group row">
 
-                                    <label for="example-text-input" class="col-sm-2 col-form-label">Mobile Number <span
+                                    <label for="phone" class="col-sm-2 col-form-label">Mobile Number <span
                                             style="color:red">*</span></label>
 
                                     <div class="col-sm-10">
@@ -139,8 +139,23 @@
                                 </div>
 
                                 <div class="form-group row">
+                                    <label for="photo" class="col-sm-2 col-form-label">Photo</label>
+                                    <div class="col-sm-10">
+                                        <div class="input-group">
+                                            <span class="input-group-btn">
+                                                <a id="lfm" data-input="photo" data-preview="holder" class="btn btn-primary" style="color: white">
+                                                    <i class="fa fa-picture-o"></i> Choose
+                                                </a>
+                                            </span>
+                                            <input id="photo" class="form-control" type="text" name="photo" value="{{ old('photo') }}">
+                                        </div>
+                                        <div id="holder" style="margin-top:15px;max-height:100px;"></div>
+                                    </div>
+                                </div>
 
-                                    <label for="status" class="col-sm-2 col-form-label">Role <span
+                                <div class="form-group row">
+
+                                    <label for="role" class="col-sm-2 col-form-label">Role <span
                                             style="color:red">*</span></label>
 
                                     <div class="col-sm-10">
@@ -161,31 +176,9 @@
 
                                 </div>
 
-                                {{--  <div class="form-group row">
-
-                                    <label for="condition" class="col-sm-2 col-form-label">Role</label>
-
-                                    <div class="col-sm-10">
-
-                                        <select class="form-control" name='role'>
-
-                                            <option>--Role--</option>
-
-                                            <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-
-                                            <option value="vendor" {{ old('role') == 'vendor' ? 'selected' : '' }}>Vendor </option>
-
-                                            <option value="customer" {{ old('role') == 'customer' ? 'selected' : '' }}>Customer </option>
-
-                                        </select>
-
-                                    </div>
-
-                                </div>  --}}
-
                                 <div class="d-flex">
 
-                                    <button class="btn btn-primary" type="button" id="user_save">Submit</button>&nbsp;
+                                    <button class="btn btn-primary" type="submit">Submit</button>&nbsp;
 
                                     <button class="btn btn-secondary" type="reset">Cancel</button>
 
@@ -216,6 +209,10 @@
 
     <script>
         $(document).ready(function() {
+
+            $('#user_save').click(function() {
+                $(this).closest('form').submit();
+            });
 
             if ($("#elm1").length > 0) {
 

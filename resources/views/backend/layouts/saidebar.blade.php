@@ -51,20 +51,7 @@
                     </li>
                 @endif
 
-                @if (auth()->user()->can('inventory-view'))
-                    <li class="has_sub">
-                        <a href="javascript:void(0);" class="waves-effect"><i class="dripicons-stack"></i><span>
-                                Inventory </span> <span class="menu-arrow float-right"><i
-                                    class="mdi mdi-chevron-right"></i></span></a>
-                        <ul class="list-unstyled">
-                            <li><a href="{{ route('product.listproduct') }}"><i class="mdi mdi-clipboard-text"></i>Stock List</a></li>
-                            <li><a href="{{ route('product.stockoutproduct') }}"><i class="mdi mdi-package-down"></i>Out of Stock</a></li>
-                            <li><a href="{{ route('product.inactiveproduct') }}"><i class="mdi mdi-eye-off"></i>Inactive Items</a></li>
-                        </ul>
-                    </li>
-                @endif
-
-                @if (auth()->user()->can('banner-view') || auth()->user()->can('advertisement-index'))
+                @if (auth()->user()->can('banner-view'))
                     <li class="has_sub">
                         <a href="javascript:void(0);" class="waves-effect"><i class="dripicons-photo"></i><span>
                                 Appearance </span> <span class="menu-arrow float-right"><i
@@ -73,10 +60,8 @@
                             @can('banner-view')
                                 <li><a href="{{ route('banner.index') }}"><i class="mdi mdi-image-filter"></i>Home Banners</a></li>
                             @endcan
-                            @can('banner-view')
-                                <li><a href="{{ route('advertisement.index') }}"><i class="mdi mdi-bullhorn"></i>Advertisements</a></li>
-                            @endcan
-                                <li><a href="{{ route('client.riviewes') }}"><i class="mdi mdi-message-text"></i>Client Feedback</a></li>
+                            <li><a href="{{ route('product_review.index') }}"><i class="mdi mdi-star-circle"></i>Product Reviews</a></li>
+                            <li><a href="{{ route('testimonial.index') }}"><i class="mdi mdi-comment-account"></i>Testimonials</a></li>
                         </ul>
                     </li>
                 @endif
@@ -101,9 +86,6 @@
                             @endcan
                             @can('customer-view')
                                 <li><a href="{{ route('customer.list') }}"><i class="mdi mdi-account-multiple"></i>Customers</a></li>
-                            @endcan
-                            @can('role-view')
-                                <li><a href="{{ url('roleview') }}"><i class="mdi mdi-key-variant"></i>Roles & Permissions</a></li>
                             @endcan
                         </ul>
                     </li>

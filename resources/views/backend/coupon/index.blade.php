@@ -165,7 +165,7 @@
                                         @if (auth()->user()->can('coupon-edit'))
                                             <td>
 
-                                                <input type="checkbox" name="toogle" value="{{ $value->id }}"
+                                                <input type="checkbox" name="toggle" class="coupon-status-toggle" value="{{ $value->id }}"
                                                     data-toggle="switchbutton"
                                                     {{ $value->Status == 'active' ? 'checked' : '' }}
                                                     data-onlabel="Active" data-offlabel="Inactive" data-size="sm"
@@ -479,141 +479,69 @@
 @endsection
 
 @section('scripts')
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
-    $('.dltBtn').click(function() {
-
-        var val = $(this).data('id');
-
-        $('.delete').attr('data-id', val);
-
-    });
-
-    $('.delete').click(function() {
-
-        var id = $(this).data('id');
-
-        var form = $('#form-' + id);
-
-        form.submit();
-
-    });
-
-    $('.view').click(function() {
-
-        var item = $(this).data('id');
-
-        // alert(item);
-
-        $.ajax({
-
-            url: "{{ route('coupon_show') }}",
-
-            type: "POST",
-
-            data: {
-
-                _token: '{{ csrf_token() }}',
-
-                id: item
-
-            },
-
-            success: function(response) {
-
-                // alert(response);
-
-                $('#coupon_name').val(response.coupon_name);
-
-                $('#coupon_code').val(response.coupon_code);
-
-                $('#value').val(response.value);
-
-                $('#start_date').val(response.start_date);
-
-                $('#end_date').val(response.end_date);
-
-                $('#type').val(response.discount_type);
-
-                $('#minimum_order_amount').val(response.minimum_order_amount);
-
-                $('.status').html(response.status);
-
-            }
-
-        })
-
-    });
-
-    // $('.status1').change(function () {
-
-    //     var mode=$(this).prop('checked');
-
-    //     var id=$(this).val();
-
-    //     // alert(id);
-
-    //     $.ajax({
-
-    //         url:"{{ route('status') }}",
-
-    //         type:"POST",
-
-    //         data:{
-
-    //             _token:'{{ csrf_token() }}',
-
-    //             mode:mode,
-
-    //             id:id,
-
-    //         },
-
-    //         success:function (response)  {
-
-    //           //  console.log(response.status);
-
-    //         }
-
-    //     })
-
-    // });
-</script>
-
-<script>
-    $('input[name=toogle]').change(function() {
-
-        var mode = $(this).prop('checked');
-
-        var id = $(this).val();
-
-        // alert(id);
-
-        $.ajax({
-
-            url: "{{ route('brand_status') }}",
-
-            type: "POST",
-
-            data: {
-
-                _token: '{{ csrf_token() }}',
-
-                mode: mode,
-
-                id: id,
-
-            },
-
-            success: function(response) {
-
-                console.log(response.status);
-
-                $('.status').html(response.coupon_status);
-
-            }
-
-        })
-
+    $(document).ready(function() {
+        // Delete Confirmation
+        $(document).on('click', '.dltBtn', function(e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            var form = $('#form-' + id);
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    form.submit();
+                }
+            });
+        });
+
+        // View Coupon Modal
+        $(document).on('click', '.view', function() {
+            var item = $(this).data('id');
+            $.ajax({
+                url: "{{ route('coupon_show') }}",
+                type: "POST",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: item
+                },
+                success: function(response) {
+                    $('#coupon_name').val(response.coupon_name);
+                    $('#coupon_code').val(response.coupon_code);
+                    $('#value').val(response.value);
+                    $('#start_date').val(response.start_date);
+                    $('#end_date').val(response.end_date);
+                    $('#type').val(response.discount_type);
+                    $('#minimum_order_amount').val(response.minimum_order_amount);
+                    $('.status').html(response.status);
+                }
+            })
+        });
+
+        // Status Toggle
+        $(document).on('change', '.coupon-status-toggle', function() {
+            var mode = $(this).prop('checked') ? 'true' : 'false';
+            var id = $(this).val();
+            $.ajax({
+                url: "{{ route('coupon.status') }}",
+                type: "POST",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    mode: mode,
+                    id: id,
+                },
+                success: function(response) {
+                    if(response.status) {
+                        // success
+                    }
+                }
+            })
+        });
     });
 </script>
 @endsection

@@ -164,78 +164,79 @@
   }
 
   /* Testimonial Section */
-  .testimonials-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    margin-top: 50px;
-    max-width: 1100px;
-    margin-left: auto;
-    margin-right: auto;
+  .testimonials-section {
+    position: relative;
+    overflow: hidden;
   }
-  @media (max-width: 991px) {
-    .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+  .testimonial-slider {
+    max-width: 900px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
   }
-  @media (max-width: 767px) {
-    .testimonials-grid { grid-template-columns: 1fr; }
+  .testimonial-inner {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .testimonial-slide {
+    min-width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
   }
   .testimonial-card {
     background: #fff;
-    padding: 45px 35px;
-    border-radius: 10px;
+    padding: 60px 50px;
+    border-radius: 20px;
     border: 1px solid #fdeef2;
-    box-shadow: 0 15px 35px rgba(193, 139, 149, 0.03);
+    box-shadow: 0 20px 40px rgba(193, 139, 149, 0.05);
     text-align: center;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: all 0.3s ease;
+    position: relative;
   }
-  .quote-icon {
-    color: #ec407a;
-    font-size: 48px;
+  .quote-mark {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 80px;
+    color: #fdeef2;
+    z-index: 0;
     line-height: 1;
-    margin-bottom: 20px;
-    font-family: var(--font-serif, serif);
-    font-weight: 700;
+    font-family: serif;
+  }
+  .testimonial-content {
+    position: relative;
+    z-index: 1;
   }
   .testimonial-text {
-    font-size: 15px;
+    font-size: 18px;
     font-style: italic;
     color: #4a4a4a;
-    line-height: 1.7;
-    margin-bottom: 30px;
-    flex-grow: 1;
+    line-height: 1.8;
+    margin-bottom: 35px;
   }
   .testimonial-author {
     color: #ec407a;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
-    font-size: 13px;
-    letter-spacing: 1.5px;
-    margin-bottom: 6px;
-  }
-  .testimonial-designation {
-    color: #b0b0b0;
-    font-size: 11px;
-    margin-bottom: 18px;
-    text-transform: capitalize;
+    font-size: 14px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
   }
   .testimonial-stars {
     color: #ffb400;
     display: flex;
-    gap: 4px;
+    gap: 5px;
     justify-content: center;
+    margin-top: 15px;
   }
   .t-dots {
-    display: flex; justify-content: center; gap: 12px; margin-top: 50px;
+    display: flex; justify-content: center; gap: 12px; margin-top: 40px;
   }
   .t-dot {
     width: 10px; height: 10px; border-radius: 50%;
-    background: #e0e0e0; cursor: pointer; transition: 0.3s;
+    background: #f0f0f0; cursor: pointer; transition: 0.3s;
   }
-  .t-dot.active { background: #ec407a; }
+  .t-dot.active { background: #ec407a; transform: scale(1.3); }
 </style>
 @endsection
 
@@ -410,6 +411,10 @@
                   @endif
                 </div>
               </div>
+              <!-- Wishlist Button -->
+              <button type="button" class="wishlist-toggle-btn" onclick="toggleWishlist(event, {{ $product->id }})" style="position: absolute; top: 25px; right: 25px; background: rgba(255,255,255,0.9); border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #888; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10;">
+                <i data-lucide="heart" style="width: 18px;"></i>
+              </button>
             </a>
         @empty
             <p class="text-center" style="width: 100%; padding: 40px; color: #888;">Discoveries coming soon...</p>
@@ -438,35 +443,43 @@
   </section>
 
   <!-- Testimonials Section -->
-  @if(isset($testimonials) && $testimonials->isNotEmpty())
-    <section class="section testimonials-section" id="testimonials" style="padding: 100px 0; background: #fff;">
+  <!-- Testimonials Section -->
+  @if(isset($testimonials) && count($testimonials) > 0)
+    <section class="section testimonials-section" id="testimonials" style="padding: 100px 0; background: #fffafc;">
       <div class="container">
-        <div class="text-center" style="margin-bottom: 20px;">
-          <span class="section-subtitle" style="color: #ec407a; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; font-size: 11px; display: block; margin-bottom: 15px;">Testimonials</span>
-          <h2 class="section-title" style="font-family: var(--font-serif, serif); font-size: 3.2rem; line-height: 1.2; color: #333; font-style: italic; font-weight: 400; margin-bottom: 0;">What Our Customers Say</h2>
+        <div class="text-center" style="margin-bottom: 50px;">
+          <span class="section-subtitle" style="color: #ec407a; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; font-size: 12px; display: block; margin-bottom: 15px;">Voices of Comfort</span>
+          <h2 class="section-title" style="font-family: var(--font-serif, serif); font-size: 3rem; color: #333;">What Our Customers Say</h2>
         </div>
         
-        <div class="testimonials-grid">
-            @foreach($testimonials->take(3) as $test)
-            <div class="testimonial-card">
-              <div class="quote-icon">““</div>
-              <p class="testimonial-text">{{ $test->feedback }}</p>
-              <h4 class="testimonial-author">{{ $test->name }}</h4>
-              <div class="testimonial-designation">Happy Client</div>
-              <div class="testimonial-stars">
-                @for($i=0; $i<5; $i++)
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#ffb400" stroke="none"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                @endfor
+        <div class="testimonial-slider">
+          <div class="testimonial-inner" id="t-inner">
+            @foreach($testimonials as $test)
+            <div class="testimonial-slide">
+              <div class="testimonial-card">
+                <div class="quote-mark">“</div>
+                <div class="testimonial-content">
+                  <p class="testimonial-text">"{{ $test->feedback }}"</p>
+                  <h4 class="testimonial-author">{{ $test->name }}</h4>
+                  <div class="testimonial-stars">
+                    @for($i=0; $i<5; $i++)
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffb400" stroke="none"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    @endfor
+                  </div>
+                </div>
               </div>
             </div>
             @endforeach
+          </div>
         </div>
 
+        @if(count($testimonials) > 1)
         <div class="t-dots">
-          <div class="t-dot"></div>
-          <div class="t-dot"></div>
-          <div class="t-dot active"></div>
+          @foreach($testimonials as $index => $test)
+            <div class="t-dot {{ $index === 0 ? 'active' : '' }}" onclick="goToTestimonial({{ $index }})"></div>
+          @endforeach
         </div>
+        @endif
       </div>
     </section>
   @endif
@@ -557,5 +570,36 @@
             if(img) img.style.transform = 'scale(1)';
         });
   });
+
+  // -- Wishlist Logic --
+  function toggleWishlist(event, productId) {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      const btn = event.currentTarget;
+      const icon = btn.querySelector('i');
+      
+      fetch("{{ route('wishlist.add') }}", {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': '{{ csrf_token() }}'
+          },
+          body: JSON.stringify({ product_id: productId })
+      })
+      .then(response => response.json())
+      .then(data => {
+          if(data.status === 'success' || data.status === 'info') {
+              // Reload page to show updated wishlist count/state
+              window.location.reload();
+          } else {
+              alert(data.msg);
+              if(data.msg.includes('login')) {
+                  window.location.href = "{{ route('login_user') }}";
+              }
+          }
+      })
+      .catch(error => console.error('Error:', error));
+  }
 </script>
 @endsection

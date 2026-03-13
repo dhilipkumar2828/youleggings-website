@@ -20,11 +20,12 @@ use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Support\Facades\Session;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
-
 {
+    public $userid;
+    public $username;
 
     function __construct()
 
@@ -132,13 +133,15 @@ class UserController extends Controller
 
         }else{
 
-        $data= $request->all();
+        $data = $request->all();
+        $data['password'] = Hash::make($request->password);
 
-        //dd($data);
+        // Store photo if present
+        if ($request->has('photo')) {
+            $data['photo'] = $request->photo;
+        }
 
-        $data['password']= Hash::make($request->password);
-
-        $user=User::create($data);
+        $user = User::create($data);
 
         $user->assignRole($request->input('role'));
 
@@ -250,11 +253,19 @@ class UserController extends Controller
 
         }else{
 
-        $data= $request->all();
+        $data = $request->all();
 
-        // $data['password'] = Hash::make($data['password']);
+        // Handle password update if provided
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        } else {
+            unset($data['password']);
+        }
 
-        //dd($data);
+        // Handle photo update
+        if ($request->has('photo')) {
+            $data['photo'] = $request->photo;
+        }
 
         $User->update($data);
 
