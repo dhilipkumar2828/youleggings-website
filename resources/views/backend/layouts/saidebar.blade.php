@@ -107,7 +107,7 @@
                     </li>
                 @endif
 
-                <li class="has_sub">
+                {{-- <li class="has_sub">
                     <a href="javascript:void(0);" class="waves-effect"><i class="dripicons-document"></i><span>
                             CMS Pages </span> <span class="menu-arrow float-right"><i
                                 class="mdi mdi-chevron-right"></i></span></a>
@@ -121,16 +121,13 @@
                         @can('FAQs List')
                             <li><a href="{{ route('faqs.index') }}"><i class="mdi mdi-help-circle-outline"></i>FAQs</a></li>
                         @endcan
-                        <li><a href="{{ route('terms.index') }}"><i class="mdi mdi-file-document"></i>Terms & Conditions</a></li>
-                        <li><a href="{{ route('privacy.index') }}"><i class="mdi mdi-lock-outline"></i>Privacy Policy</a></li>
-                        <li><a href="{{ route('delivery.index') }}"><i class="mdi mdi-truck-delivery"></i>Delivery & Returns</a></li>
                     </ul>
-                </li>
+                </li> --}}
 
                 <li>
                     <a href="{{ route('contactlist.index') }}" class="waves-effect">
                         <i class="dripicons-mail"></i>
-                        <span> Contact Submissions </span>
+                        <span> Inquiries </span>
                     </a>
                 </li>
 

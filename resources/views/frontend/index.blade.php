@@ -260,7 +260,7 @@
                     <div class="hero-content">
                         <span class="hero-subtitle">{{ $banner->subtitle ?? 'Premium Selection' }}</span>
                         <h1 class="hero-title">{!! nl2br(e($banner->title)) !!}</h1>
-                        <a href="{{ $banner->link ?: route('shop') }}" class="btn hero-btn" style="padding: 16px 35px; background: #fff; color: #000; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-radius: 0; font-size: 13px;">Explore Collection</a>
+                        <a href="{{ $banner->link ?: route('shop') }}" class="btn hero-btn" style="padding: 16px 35px; background: #333; color: #fff; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-radius: 0; font-size: 13px;">Explore Collection</a>
                     </div>
                 </div>
             </div>
@@ -285,7 +285,7 @@
                 <div class="hero-content">
                     <span class="hero-subtitle">Premium Collection 2026</span>
                     <h1 class="hero-title">Experience <br>True Comfort</h1>
-                    <a href="{{ route('shop') }}" class="btn hero-btn" style="padding: 16px 35px; background: #fff; color: #000; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-radius: 0; font-size: 13px;">Shop The Collection</a>
+                    <a href="{{ route('shop') }}" class="btn hero-btn" style="padding: 16px 35px; background: #333; color: #fff; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-radius: 0; font-size: 13px;">Shop The Collection</a>
                 </div>
             </div>
         </div>
@@ -372,7 +372,7 @@
               </div>
               <!-- Wishlist Button -->
               <button type="button" class="wishlist-toggle-btn" onclick="toggleWishlist(event, {{ $product->id }})" style="position: absolute; top: 25px; right: 25px; background: rgba(255,255,255,0.9); border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #888; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10;">
-                <i data-lucide="heart" style="width: 18px;"></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
               </button>
             </a>
         @empty
@@ -395,7 +395,7 @@
         Discover a collection of premium leggings that feel like a second skin. Meticulously crafted for movement and designed for the modern woman.
       </p>
       <div>
-        <a href="{{ route('shop') }}" class="btn" style="padding: 15px 35px; border: 1px solid #333; color: #333; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Explore Collection</a>
+        <a href="{{ route('shop') }}" class="btn" style="padding: 15px 35px; background: #333; color: #fff; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; border: none;">Explore Collection</a>
       </div>
     </div>
     <div class="split-image" style="background-image: url('{{ asset('frontend/images/Products/_DSC8723-Edit.jpg') }}'); background-size: cover; background-position: center; min-height: 400px; transition: transform 1.5s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"></div>

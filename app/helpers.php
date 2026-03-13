@@ -9,47 +9,76 @@ if (!function_exists('image_url')) {
             return asset('frontend/images/logo-new.png');
         }
         
-        // Strip various old domains or prefixes if they exist in the stored string
-        // Also remove any full http://host:port/public/ prefix (any port, any localhost variant)
-        $path = preg_replace('#^https?://(127\.0\.0\.1|localhost)(:\d+)?/public/#', '', $path);
+        $originalPath = $path;
 
+        // 1. Handle nested/double URLs
+        if (preg_match('#https?://#', substr($path, 8))) {
+            $path = substr($path, strpos($path, 'http', 8));
+        }
+
+        // 2. Remove ANY full URL prefixes for known local/demo domains to make it relative
+        $path = preg_replace('#^https?://(you\.oceansoftwares\.in|127\.0\.0\.1|localhost)(:(\d+))?(/demo)?(/public)?/#', '', $path);
+
+        // 3. Remove common relative prefixes to get just the filename or subpath
         $path = str_replace([
-            'http://127.0.0.1:8000/public/storage/',
-            'http://localhost:8000/public/storage/',
             'public/storage/',
-            'storage/',
             'public/uploads/',
+            'public/photos/',
+            'storage/',
+            'uploads/',
+            'photos/',
             'public/',
         ], '', $path);
-        
+
         $path = ltrim($path, '/');
         
-        // Priority 0: Check if the path itself is valid from public root
-        if (file_exists(public_path($path))) {
-            return asset($path);
-        }
-
-        // Priority 1: Check in public/uploads
-        if (file_exists(public_path('uploads/' . $path))) {
-            return asset('uploads/' . $path);
-        }
-        
-        // Priority 2: Check in public/photos (standard LFM folder)
-        if (file_exists(public_path('photos/' . $path))) {
-            return asset('photos/' . $path);
-        }
-
-        // Priority 3: Check in public/storage
-        if (file_exists(public_path('storage/' . $path))) {
-            return asset('storage/' . $path);
-        }
-        
-        // If it's still a full URL (external), return it
-        if (filter_var($path, FILTER_VALIDATE_URL)) {
+        // 4. If it's STILL a full URL, it's truly external
+        if (filter_var($path, FILTER_VALIDATE_URL) && strpos($path, 'you.oceansoftwares.in') === false && strpos($path, '127.0.0.1') === false && strpos($path, 'localhost') === false) {
             return $path;
         }
 
-        // Fallback: If not found, try uploads prefix
-        return asset('uploads/' . $path);
+        // 5. Try to find the file locally with various folder prefixes
+        $toCheck = [
+            $path,
+            'uploads/' . $path,
+            'photos/' . $path,
+            'storage/' . $path,
+            'uploads/photos/' . $path,
+        ];
+
+        // Handle extension mismatches (jpg vs png vs jpeg)
+        $ext = pathinfo($path, PATHINFO_EXTENSION);
+        if (in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'webp'])) {
+            $baseName = substr($path, 0, - (strlen($ext) + 1));
+            $alts = ['png', 'jpg', 'jpeg', 'webp'];
+            foreach ($alts as $a) {
+                if (strtolower($a) == strtolower($ext)) continue;
+                $altPath = $baseName . '.' . $a;
+                $toCheck[] = $altPath;
+                $toCheck[] = 'uploads/photos/' . $altPath;
+                $toCheck[] = 'uploads/' . $altPath;
+                $toCheck[] = 'photos/' . $altPath;
+            }
+        }
+
+        foreach ($toCheck as $p) {
+            if (file_exists(public_path($p))) {
+                return asset($p);
+            }
+        }
+
+        // 6. Fallback if not found: try to guess the most likely location if it was from our domains
+        $isInternal = (strpos($originalPath, 'you.oceansoftwares.in') !== false || strpos($originalPath, '127.0.0.1') !== false || strpos($originalPath, 'localhost') !== false);
+        
+        if ($isInternal) {
+            // Check if it already has a common prefix
+            if (preg_match('#^(photos|uploads|storage)/#', $path)) {
+                return asset($path);
+            }
+            // Default to uploads/photos for variant images
+            return asset('uploads/photos/' . $path);
+        }
+
+        return asset($path);
     }
 }

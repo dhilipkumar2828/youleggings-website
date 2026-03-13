@@ -92,7 +92,7 @@
           <div class="product-detail-actions compact-actions" style="margin-top: 20px; display: flex; gap: 15px;">
             <button id="productAddToCartBtn" type="button" class="btn" style="background: #333; color: #fff; flex: 1; padding: 18px; font-weight: 700; letter-spacing: 2px;">ADD TO CART</button>
             <button type="button" class="btn" onclick="toggleWishlist(event, {{ $product->id }})" style="background: #fff; color: #333; border: 1px solid #333; width: 60px; display: flex; align-items: center; justify-content: center;">
-                <i data-lucide="heart" style="width: 24px;"></i>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ec407a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             </button>
           </div>
 
@@ -310,24 +310,24 @@
     function getImageUrl(path) {
         if (!path) return '';
 
-        // Strip any hardcoded host:port/public/ prefix (same logic as PHP image_url helper)
-        // Handles: http://127.0.0.1:ANY_PORT/public/ or http://localhost:ANY_PORT/public/
-        path = path.replace(/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?\/public\//, '');
+        // 1. Handle nested URLs
+        if (path.includes('http', 8)) {
+            path = path.substring(path.indexOf('http', 8));
+        }
 
-        // Also strip leftover plain prefixes
-        path = path.replace(/^public\/uploads\//, '')
-                   .replace(/^public\/storage\//, '')
-                   .replace(/^public\//, '')
-                   .replace(/^storage\//, '')
-                   .replace(/^uploads\//, '');
+        // 2. Remove ANY full URL prefixes for our known local/demo domains
+        path = path.replace(/^https?:\/\/(you\.oceansoftwares\.in|127\.0\.0\.1|localhost)(:\d+)?(\/demo)?(\/public)?\//, '');
 
-        path = path.replace(/^\/+/, '');
+        // 3. Remove common relative prefixes to get just the filename
+        path = path.replace(/^(public\/|uploads\/|photos\/|storage\/)+/g, '');
 
-        // Now rebuild with current origin using same priority as PHP helper
-        const base = window.location.origin;
+        // 4. If it's still a full URL, it's external
+        if (path.startsWith('http')) return path;
 
-        // Check uploads path (most common for product images)
-        return base + '/uploads/' + path;
+        // 5. Rebuild with origin. Try to guess the folder.
+        // We'll use a relative path from the domain root or try to preserve context.
+        // Most reliable for this project's structure:
+        return window.location.origin + '/demo/public/uploads/photos/' + path;
     }
 
     // Dynamic Tab Logic

@@ -133,7 +133,10 @@
                     
                     <!-- Wishlist Button -->
                     <button type="button" class="wishlist-toggle-btn" onclick="toggleWishlist(event, {{ $product->id }})" style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.9); border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #888; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10;">
-                        <i data-lucide="heart" style="width: 18px; {{ Auth::check() && \App\Models\Wishlist::where('customer_id', Auth::id())->where('product_id', $product->id)->exists() ? 'fill: #ec407a; stroke: #ec407a;' : '' }}"></i>
+                        @php
+                            $isInWishlist = Auth::check() && \App\Models\Wishlist::where('customer_id', Auth::id())->where('product_id', $product->id)->exists();
+                        @endphp
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="{{ $isInWishlist ? '#ec407a' : 'none' }}" stroke="{{ $isInWishlist ? '#ec407a' : 'currentColor' }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                     </button>
 
                     @if(request('new-arrivals'))
