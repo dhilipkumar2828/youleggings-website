@@ -329,47 +329,6 @@
     </div>
   </section>
 
-  <!-- Our Process / Features Section -->
-  <section class="features-section" style="padding: 100px 0; background: #fff; border-top: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0;">
-    <div class="container">
-      <div class="text-center" style="margin-bottom: 60px;">
-        <span class="section-subtitle" style="color: var(--primary-color, #c18b95); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size: 12px; display: block; margin-bottom: 10px;">The Silk Journey</span>
-        <h2 class="section-title" style="font-family: var(--font-serif, serif); font-size: 2.5rem;">How We Create Comfort</h2>
-      </div>
-
-      <div class="process-steps" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 30px; flex-wrap: wrap;">
-        <div class="step" style="flex: 1; min-width: 180px; text-align: center;">
-          <div class="step-icon-box" style="width: 80px; height: 80px; border: 1px solid #c18b95; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: #c18b95; transition: 0.3s;" onmouseover="this.style.background='#c18b95'; this.style.color='#fff'" onmouseout="this.style.background='transparent'; this.style.color='#c18b95'">
-            <i data-lucide="scissors" style="width: 32px; height: 32px;"></i>
-          </div>
-          <h3 class="step-title" style="font-size: 18px; font-weight: 600; margin-bottom: 10px;">Expert Design</h3>
-          <p class="step-desc" style="font-size: 13px; color: #777;">Meticulously drafted patterns for the perfect anatomical fit.</p>
-        </div>
-        <div class="step" style="flex: 1; min-width: 180px; text-align: center;">
-          <div class="step-icon-box" style="width: 80px; height: 80px; border: 1px solid #c18b95; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: #c18b95; transition: 0.3s;" onmouseover="this.style.background='#c18b95'; this.style.color='#fff'" onmouseout="this.style.background='transparent'; this.style.color='#c18b95'">
-            <i data-lucide="clover" style="width: 32px; height: 32px;"></i>
-          </div>
-          <h3 class="step-title" style="font-size: 18px; font-weight: 600; margin-bottom: 10px;">Premium Fabric</h3>
-          <p class="step-desc" style="font-size: 13px; color: #777;">High-grade cotton-elastane blends for breathable stretch.</p>
-        </div>
-        <div class="step" style="flex: 1; min-width: 180px; text-align: center;">
-          <div class="step-icon-box" style="width: 80px; height: 80px; border: 1px solid #c18b95; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: #c18b95; transition: 0.3s;" onmouseover="this.style.background='#c18b95'; this.style.color='#fff'" onmouseout="this.style.background='transparent'; this.style.color='#c18b95'">
-            <i data-lucide="layers" style="width: 32px; height: 32px;"></i>
-          </div>
-          <h3 class="step-title" style="font-size: 18px; font-weight: 600; margin-bottom: 10px;">Quality Build</h3>
-          <p class="step-desc" style="font-size: 13px; color: #777;">Reinforced stitching ensured by the TANTEX legacy.</p>
-        </div>
-        <div class="step" style="flex: 1; min-width: 180px; text-align: center;">
-          <div class="step-icon-box" style="width: 80px; height: 80px; border: 1px solid #c18b95; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: #c18b95; transition: 0.3s;" onmouseover="this.style.background='#c18b95'; this.style.color='#fff'" onmouseout="this.style.background='transparent'; this.style.color='#c18b95'">
-            <i data-lucide="smile" style="width: 32px; height: 32px;"></i>
-          </div>
-          <h3 class="step-title" style="font-size: 18px; font-weight: 600; margin-bottom: 10px;">Final Polish</h3>
-          <p class="step-desc" style="font-size: 13px; color: #777;">Rigorous testing for durability wash after wash.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Featured Products Section -->
   <section class="section home-page-section" id="featured" style="padding: 80px 0; background: #fbf9fa;">
     <div class="container">

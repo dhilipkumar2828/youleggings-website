@@ -12,6 +12,6 @@ class ProductAttribute extends Model
 
     use HasFactory;
 
-    protected $fillable=['product_id','arrtibute_name','arrtibute_value','status'];
+    protected $fillable=['product_id','attribute_name','attribute_value','status'];
 
 }

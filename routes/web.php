@@ -100,7 +100,7 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function(
     Route::delete('/categories/bulk-delete', [CategoryController::class, 'bulkDelete'])->name('category.bulkDelete');
     
     Route::resource('/product', ProductController::class)->except(['show']);
-    Route::post('product_status', [ProductController::class, 'productStatus'])->name('product.status');
+    Route::any('product_status', [ProductController::class, 'productStatus'])->name('product.status');
     Route::get('/productlist', [ProductController::class, 'listproduct'])->name('product.listproduct');
     Route::get('/stockoutproduct', [ProductController::class, 'stockoutproduct'])->name('product.stockoutproduct');
     Route::get('/inactiveproduct', [ProductController::class, 'inactiveproduct'])->name('product.inactiveproduct');
@@ -109,6 +109,14 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function(
     Route::post('/product/bulkdeactive', [ProductController::class, 'bulkdeactive'])->name('product.bulkdeactive');
     Route::post('product_show', [ProductController::class, 'product_show'])->name('product_show');
     Route::post('product_heading', [ProductController::class, 'product_heading'])->name('product_heading');
+    Route::post('productattribute', [ProductController::class, 'getAttributeByID'])->name('productattribute');
+    Route::post('product_attribute', [ProductController::class, 'getAttributeByID'])->name('product.attribute');
+    Route::post('product_variant', [ProductController::class, 'getVariant'])->name('product.variant');
+    Route::post('addproduct_attribute/{id}', [ProductController::class, 'add_product_attribute'])->name('addproduct.attribute');
+    Route::match(['get', 'post', 'patch'], 'product_updateattribute/{id}', [ProductController::class, 'AttributeUpdate'])->name('product.updateattribute');
+    Route::match(['get', 'post', 'delete'], 'product_attribute_destroy/{id}', [ProductController::class, 'add_product_attribute_delete'])->name('product.attribute.destroy');
+    Route::get('get_subproducts', [ProductController::class, 'get_subproducts'])->name('get_subproducts');
+    Route::get('get_childproducts', [ProductController::class, 'get_childproducts'])->name('get_childproducts');
     Route::post('import-file', [ProductController::class, 'import'])->name('import_file');
     Route::get('export-file', [ProductController::class, 'export'])->name('export_file');
     Route::get('/updatestockmanually/{id}', [ProductController::class, 'updatestockmanually'])->name('updatestockmanually');
@@ -188,6 +196,8 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function(
 
     // Testimonials (Client Feedback)
     Route::get('/testimonials', [TestimonialController::class, 'index'])->name('testimonial.index');
+    Route::get('/testimonial/add', [TestimonialController::class, 'add_feedback'])->name('testimonial.create');
+    Route::post('/testimonial/save', [TestimonialController::class, 'store_feedback'])->name('testimonial.store');
     Route::post('/update_feedback', [TestimonialController::class, 'update_feedback'])->name('testimonial.update');
     Route::post('/delete_feedback/{id}', [TestimonialController::class, 'delete_feedback'])->name('testimonial.delete');
 

@@ -52,8 +52,8 @@
                                             <td>
                                                 <input type="checkbox" name="toggle" class="review-status-toggle" value="{{ $review->id }}"
                                                     data-toggle="switchbutton"
-                                                    {{ $review->status == 'active' ? 'checked' : '' }}
-                                                    data-onlabel="active" data-offlabel="inactive" data-size="sm"
+                                                    {{ $review->status == 'accept' ? 'checked' : '' }}
+                                                    data-onlabel="Active" data-offlabel="Inactive" data-size="sm"
                                                     data-onstyle="success" data-offstyle="danger">
                                             </td>
                                             <td>

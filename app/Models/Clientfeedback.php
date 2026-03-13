@@ -14,6 +14,6 @@ class Clientfeedback extends Model
 
     protected $table="client_feedback";
 
-    protected $fillable=['name','phone_number','feedback','status','created_by','updated_at'];
+    protected $fillable=['name','phone_number','feedback','status','rate','updated_at'];
 
 }

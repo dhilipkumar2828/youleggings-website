@@ -13,7 +13,7 @@
 
                         <ol class="breadcrumb">
 
-                            <li class="breadcrumb-item"><a>Appearence</a></li>
+                            <li class="breadcrumb-item"><a>Appearance</a></li>
 
                             <li class="breadcrumb-item active">Feedbacks</li>
 
@@ -21,7 +21,7 @@
 
                     </div>
 
-                    <h5 class="page-title">Appearence</h5>
+                    <h5 class="page-title">Appearance</h5>
 
                 </div>
 
@@ -30,9 +30,12 @@
             <!-- end row -->
 
             <div class="card m-b-30 card-body">
-
-                <h4 class="card-title font-20 mt-0">Feedbacks</h4>
-
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="card-title font-20 mt-0">Feedbacks</h4>
+                    <a href="{{ route('testimonial.create') }}" class="btn btn-primary waves-effect waves-light">
+                        <i class="mdi mdi-plus mr-2"></i> Add Feedback
+                    </a>
+                </div>
             </div>
 
             <div class="row">
@@ -91,8 +94,8 @@
 
                                             <td><input type="checkbox" name="toggle" class="testimonial-status-toggle" value="{{ $feedback->id }}"
                                                     data-toggle="switchbutton"
-                                                    {{ $feedback->status == 'active' ? 'checked' : '' }}
-                                                    data-onlabel="active" data-offlabel="inactive" data-size="sm"
+                                                    {{ $feedback->status == 'accept' ? 'checked' : '' }}
+                                                    data-onlabel="Active" data-offlabel="Inactive" data-size="sm"
                                                     data-onstyle="success" data-offstyle="danger"></td>
 
                                             @if (auth()->user()->can('Client Feedback Delete'))

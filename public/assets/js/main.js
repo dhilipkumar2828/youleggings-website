@@ -142,9 +142,8 @@ jQuery(document).ready(function(){
 
 
 $('#cat_id').change(function(){
-
     var token=$('meta[name="csrf-token"]').attr('content');
-     var path=$('meta[name="base_url"]').attr('content')+'/get_subproducts';
+    var path=$('meta[name="base_url"]').attr('content')+'/admin/get_subproducts';
       $('#subcat_id').val('');
     $('#childcat_id').val('');
             $.ajax({
@@ -256,7 +255,7 @@ $('input[name=toogle]').change(function() {
 
 function cat1(val, j) {
     var token=$('meta[name="csrf-token"]').attr('content');
-    var path=$('meta[name="base_url"]').attr('content')+'/productattribute';
+    var path=$('meta[name="base_url"]').attr('content')+'/admin/productattribute';
     var cat_id = val;
     if (cat_id != null) {
         $.ajax({
@@ -296,7 +295,7 @@ function variants(cat_id,option="",attrid){
 
     var token=$('meta[name="csrf-token"]').attr('content');
    var base_url = window.location.pathname ;
-    var path=$('meta[name="base_url"]').attr('content')+'/productattribute';
+    var path=$('meta[name="base_url"]').attr('content')+'/admin/productattribute';
 $('.variant1').removeClass('d-none');
         if (attr.indexOf(cat_id) == -1) {
             attr.push(cat_id);
@@ -431,11 +430,11 @@ $('.addvariant').click(function() {
             '</div>' +
             '<div class="col-md-6">' +
             '<label for="example-text-input" ></label>' +
-            '<button type="button" class="tn btn-sm my-2 btn-danger pull-right mr-1" id="' +
+            '<button type="button" class="btn btn-sm my-2 btn-danger pull-right mr-1" id="' +
             vid + '|' + comboKey +
             '" onclick="removevariant(this)"><i class="fa fa-trash-o"></i></button>' +
-            '<button type="button" class="tn btn-sm my-2 btn-primary pull-right mr-1"  onclick=exvariant("vo' +
-            vid + '")><i class="fa fa-expand"></i></button>' +
+            '<button type="button" class="btn btn-sm my-2 btn-primary pull-right mr-1"  onclick="exvariant(\'vo' +
+            vid + '\')"><i class="fa fa-expand"></i></button>' +
             '</div>' +
             '<div class="col-md-12" id="vo' + vid + '">' +
             '<div class="row" style="padding: 10px 15px;">' +
@@ -534,7 +533,7 @@ $(document).on("change","#parent_category",function(){
 
     $(document).on("change","#cat_id",function(){
      var token=$('meta[name="csrf-token"]').attr('content');
-     var path=$('meta[name="base_url"]').attr('content')+'/get_subproducts';
+    var path=$('meta[name="base_url"]').attr('content')+'/admin/get_subproducts';
             $.ajax({
                 url:path,
                 type: "GET",

@@ -1,0 +1,25 @@
+﻿
+   INFO  Running migrations.  
+
+  2022_10_12_084611_create_products  10ms FAIL
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'products' already exists (SQL: create table `products` (`id` bigint unsigned not null auto_increment primary key, `name` varchar(255) not null, `description` text not null, `category` int not null, `brand_name` varchar(255) not null, `tax_id` int not null, `stock` int not null, `regular_price` decimal(12, 2) not null, `status` varchar(255) not null default 'active', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci')
+
+  at C:\xampp\htdocs\youleggings\vendor\laravel\framework\src\Illuminate\Database\Connection.php:760
+    756Γûò         // If an exception occurs when attempting to run a query, we'll format the error
+    757Γûò         // message to include the bindings with SQL, which will make this exception a
+    758Γûò         // lot more helpful to the developer instead of just the database's errors.
+    759Γûò         catch (Exception $e) {
+  Γ₧£ 760Γûò             throw new QueryException(
+    761Γûò                 $query, $this->prepareBindings($bindings), $e
+    762Γûò             );
+    763Γûò         }
+    764Γûò     }
+
+  1   C:\xampp\htdocs\youleggings\vendor\laravel\framework\src\Illuminate\Database\Connection.php:545
+      PDOException::("SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'products' already exists")
+
+  2   C:\xampp\htdocs\youleggings\vendor\laravel\framework\src\Illuminate\Database\Connection.php:545
+      PDOStatement::execute()

@@ -23,8 +23,8 @@ class IndexController extends Controller
         $categories = Category::where('status', 'active')->whereNull('parent_id')->get();
         $featured_products = Product::with('productvariant')->where('status', 'active')->take(8)->get();
         
-        // Final attempt to get testimonials - just get all of them
-        $testimonials = DB::table('client_feedback')->orderBy('id', 'desc')->get();
+        // Fetch only active testimonials
+        $testimonials = Clientfeedback::where('status', 'accept')->orderBy('id', 'desc')->get();
         
         return view('frontend.index', compact('banners', 'categories', 'featured_products', 'testimonials'));
     }

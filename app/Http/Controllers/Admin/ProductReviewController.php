@@ -31,9 +31,9 @@ class ProductReviewController extends Controller
     public function reviewStatus(Request $request)
     {
         if ($request->mode == 'true') {
-            $status = 'active';
+            $status = 'accept';
         } else {
-            $status = 'inactive';
+            $status = 'reject';
         }
         ProductReviews::where('id', $request->id)->update(['status' => $status]);
         return response()->json(['msg' => 'Successfully updated status', 'status' => true]);

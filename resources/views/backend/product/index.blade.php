@@ -342,11 +342,11 @@
                                                         </a>
 
                                                         <!-- Update Stocks -->
-                                                        <a href="{{ route('updatestockmanually', $pro->id) }}"
+                                                        {{-- <a href="{{ route('updatestockmanually', $pro->id) }}"
                                                             class="action-icon btn-info-icon" data-toggle="tooltip"
                                                             title="Update Stocks">
                                                             <i class="fa fa-tasks"></i>
-                                                        </a>
+                                                        </a> --}}
                                                     {{-- @endcan --}}
                                                     <!-- Delete (if separate, add here or if it was in dropdown) -->
                                                 </div>

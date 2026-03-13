@@ -26,7 +26,7 @@ class Product extends Model
     }
 
     public function reviews(){
-        return $this->hasMany('App\Models\ProductReviews', 'product_id')->where('status', 'active');
+        return $this->hasMany('App\Models\ProductReviews', 'product_id')->where('status', 'accept');
     }
 
       public function cartItems()

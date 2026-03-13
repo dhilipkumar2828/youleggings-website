@@ -1,0 +1,121 @@
+﻿c:\xampp\htdocs\youleggings\app\Http\Controllers\Admin\ProductController.php:62:        //  $this->middleware('permission:inventory-view', ['only' => ['listproduct']]);
+c:\xampp\htdocs\youleggings\app\Http\Controllers\Admin\ProductController.php:196:            return view('backend.inventory.product',compact('product'));
+c:\xampp\htdocs\youleggings\app\Http\Controllers\Admin\ProductController.php:216:        return view('backend.inventory.stockoutproduct', compact('product'));
+c:\xampp\htdocs\youleggings\app\Http\Controllers\Admin\ProductController.php:234:            return view('backend.inventory.inactiveproduct',compact('product'));
+c:\xampp\htdocs\youleggings\app\Http\Controllers\Admin\ProductController.php:1451:            return view('backend.inventory.addstock',compact(['Product','productattribute','productvariant']));
+c:\xampp\htdocs\youleggings\app\Http\Controllers\Admin\ProductController.php:1549:          return view('backend.inventory.stockupdate',compact(['Product','productvariant']));
+c:\xampp\htdocs\youleggings\app\Http\Controllers\Admin\ProductController.php:1599:          return view('backend.inventory.viewstockslog',compact(['data']));
+c:\xampp\htdocs\youleggings\database\migrations\2022_10_12_090557_create_product_inventorys.php:16:        Schema::create('product_inventorys', function (Blueprint $table) {
+c:\xampp\htdocs\youleggings\database\migrations\2022_10_12_090557_create_product_inventorys.php:34:        Schema::dropIfExists('product_inventorys');
+c:\xampp\htdocs\youleggings\resources\views\backend\index.blade.php:98:                <!-- Inventory -->
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\delivery-docket.blade.php:7:        <form class="" action="{{ route('inventory.store') }}" method="post">
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\delivery-docket.blade.php:21:                                <li class="breadcrumb-item"><a href="#"> Inventory</a></li>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\delivery-docket.blade.php:23:                                <li class="breadcrumb-item active">Inventory Receiving Voucher</li>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\delivery-docket.blade.php:29:                        <h5 class="page-title">Inventory Receiving Voucher</h5>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\delivery-docket.blade.php:85:                                        @if (count(\App\Models\Inventory::orderBy('id', 'DESC')->limit('1')->get('id')) > 0)
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\delivery-docket.blade.php:86:                                            @foreach (\App\Models\Inventory::orderBy('id', 'DESC')->limit('1')->get('delivery_number') as $item)
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\delivery-docket.blade.php:189:                                        <textarea class="form-control" name="inventory_note" placeholder="Note" rows="5"></textarea>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\delivery-docket.blade.php:410:                                        <label>Value of inventory</label>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\delivery-docket.blade.php:414:                                            <input type="hidden" class="form-control" name="value_of_inventory"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inactiveproduct.blade.php:12:                            <li class="breadcrumb-item"><a href="#">Inventory</a></li>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inactiveproduct.blade.php:16:                    <h5 class="page-title">Inventory</h5>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inactiveproduct.blade.php:22:                <h4 class="card-title font-20 mt-0">Inventory</h4>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-histroy.blade.php:16:                            <li class="breadcrumb-item"><a href="#"> Inventory</a></li>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-histroy.blade.php:18:                            <li class="breadcrumb-item active">Inventory History</li>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-histroy.blade.php:24:                    <h5 class="page-title">Inventory History</h5>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-histroy.blade.php:60:                <h4 class="card-title font-20 mt-0">Inventory History</h4>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-histroy.blade.php:105:                                    @foreach ($inventory as $value)
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:20:                                <li class="breadcrumb-item"><a href="#"> Inventory</a></li>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:22:                                <li class="breadcrumb-item active">Inventory Receiving Voucher</li>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:28:                        <h5 class="page-title">Inventory Receiving Voucher</h5>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:85:                                            placeholder="Enter" value="{{ $inventory->delivery_number }}" readonly
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:102:                                            @foreach (\App\Models\PurchaseOrder::where('id', $inventory->purchase_order_id)->orderBy('id', 'ASC')->get() as $key => $value)
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:152:                                            @foreach (\App\Models\User::where('id', $inventory->buyer)->orderBy('id', 'ASC')->get() as $key => $value)
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:169:                                            value="{{ $inventory->deliverer }}" class="form-control"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:182:                                        <textarea class="form-control" readonly name="inventory_note" value="{{ $inventory->note }}" placeholder="Note"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:183:                                            rows="5">{{ $inventory->note }}</textarea>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:224:                                                    value="{{ $inventory->accounting_date }}" placeholder="mm/dd/yyyy"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:242:                                                    value="{{ $inventory->voucher_date }}" placeholder="mm/dd/yyyy"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:263:                                                    @if ($inventory->warehouse == $value->id)
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:285:                                                value="{{ \App\Models\Invoice::where('id', $inventory->invoice_id)->get()[0]['invoice_id'] }}"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:289:                                                id="invoice_id" value="{{ $inventory->invoice_id }}"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:305:                                                    value="{{ $inventory->expiry_date }}" placeholder="mm/dd/yyyy"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:381:                                        @foreach ($inventoryproduct as $data)
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:429:                                                value="{{ $inventory->total_tax }}" name="total_tax"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:442:                                        <label>Value of inventory</label>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:447:                                                value="{{ $inventory->value_of_inventory }}" name="value_of_inventory"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher-view.blade.php:461:                                                value="{{ $inventory->total_amount }}" id="total_amount" required
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher.blade.php:16:                            <li class="breadcrumb-item"><a href="#"> Inventory</a></li>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher.blade.php:18:                            <li class="breadcrumb-item active">Inventory Receiving Voucher</li>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher.blade.php:24:                    <h5 class="page-title">Inventory Receiving Voucher</h5>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher.blade.php:66:                            @can('Inventory Receiving Voucher Create')
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher.blade.php:92:                                        <!-- <th>Value of Inventory </th> -->
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher.blade.php:106:                                    @foreach ($inventory as $value)
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher.blade.php:139:                                                        @can('Inventory Receiving Voucher View')
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher.blade.php:141:                                                                href="{{ route('inventory.show', $value->id) }}"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher.blade.php:145:                                                        <form action="{{ route('inventory.destroy', $value->id) }}"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\inventory-receiving-voucher.blade.php:152:                                                            @can('Inventory Receiving Voucher Delete')
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:6:        <form class="" action="{{ route('inventory.update', $inventory->id) }}" method="post">
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:22:                                <li class="breadcrumb-item"><a href="#"> Inventory</a></li>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:24:                                <li class="breadcrumb-item active">Inventory Loss Adjustment </li>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:30:                        <h5 class="page-title">Inventory Loss Adjustment </h5>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:87:                                            placeholder="Enter" value="{{ $inventory->delivery_number }}" readonly
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:90:                                        <input class="form-control" type="hidden" name="inventory_id" readonly
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:91:                                            placeholder="Enter" value="{{ $inventory->inventory_id }}" readonly
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:108:                                            @foreach (\App\Models\PurchaseOrder::where('id', $inventory->purchase_order_id)->orderBy('id', 'ASC')->get() as $key => $value)
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:162:                                            @foreach (\App\Models\User::where('id', $inventory->buyer)->orderBy('id', 'ASC')->get() as $key => $value)
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:181:                                            value="{{ $inventory->deliverer }}" class="form-control"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:194:                                        <textarea class="form-control" name="inventory_note" readonly value="{{ $inventory->note }}" placeholder="Note"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:195:                                            rows="5">{{ $inventory->note }}</textarea>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:236:                                                    value="{{ $inventory->accounting_date }}" placeholder="mm/dd/yyyy"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:254:                                                    value="{{ $inventory->voucher_date }}" placeholder="mm/dd/yyyy"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:276:                                                    @if ($inventory->warehouse == $value->id)
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:297:                                                value="{{ \App\Models\Invoice::where('id', $inventory->invoice_id)->get()[0]['invoice_id'] }}"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:301:                                                id="invoice_id" value="{{ $inventory->invoice_id }}"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:317:                                                    value="{{ $inventory->expiry_date }}" placeholder="mm/dd/yyyy"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:393:                                        @foreach ($inventoryproduct as $data)
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:451:                                                value="{{ $inventory->total_tax }}" id="total_tax" name="total_tax"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:464:                                        <label>Value of inventory</label>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:469:                                                value="{{ $inventory->value_of_inventory }}" name="value_of_inventory"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:483:                                                value="{{ $inventory->total_amount }}" id="total_amount" required
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:501:                                                value="{{ $inventory->adjust_date }}" placeholder="mm/dd/yyyy"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:514:                                            <textarea class="form-control" name="adjust_reason" value="{{ $inventory->adjust_reason }}" required
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-update.blade.php:515:                                                placeholder="Note" rows="5">{{ $inventory->adjust_reason }}</textarea>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:20:                                <li class="breadcrumb-item"><a href="#"> Inventory</a></li>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:22:                                <li class="breadcrumb-item active">Inventory Loss Adjustment </li>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:28:                        <h5 class="page-title">Inventory Loss Adjustment </h5>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:85:                                            placeholder="Enter" value="{{ $inventory->delivery_number }}" readonly
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:102:                                            @foreach (\App\Models\PurchaseOrder::where('id', $inventory->purchase_order_id)->orderBy('id', 'ASC')->get() as $key => $value)
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:152:                                            @foreach (\App\Models\User::where('id', $inventory->buyer)->orderBy('id', 'ASC')->get() as $key => $value)
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:169:                                            value="{{ $inventory->deliverer }}" class="form-control"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:182:                                        <textarea class="form-control" readonly name="inventory_note" value="{{ $inventory->note }}" placeholder="Note"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:183:                                            rows="5">{{ $inventory->note }}</textarea>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:224:                                                    value="{{ $inventory->accounting_date }}" placeholder="mm/dd/yyyy"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:242:                                                    value="{{ $inventory->voucher_date }}" placeholder="mm/dd/yyyy"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:263:                                                    @if ($inventory->warehouse == $value->id)
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:285:                                                value="{{ \App\Models\Invoice::where('id', $inventory->invoice_id)->get()[0]['invoice_id'] }}"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:289:                                                id="invoice_id" value="{{ $inventory->invoice_id }}"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:305:                                                    value="{{ $inventory->expiry_date }}" placeholder="mm/dd/yyyy"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:381:                                        @foreach ($inventoryproduct as $data)
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:429:                                                value="{{ $inventory->total_tax }}" name="total_tax"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:442:                                        <label>Value of inventory</label>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:447:                                                value="{{ $inventory->value_of_inventory }}" name="value_of_inventory"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:461:                                                value="{{ $inventory->total_amount }}" id="total_amount" required
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:479:                                                value="{{ $inventory->adjust_date }}" placeholder="mm/dd/yyyy"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:492:                                            <textarea readonly class="form-control" name="adjust_reason" value="{{ $inventory->adjust_reason }}"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust-view.blade.php:493:                                                placeholder="Note" rows="5">{{ $inventory->adjust_reason }}</textarea>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust.blade.php:16:                            <li class="breadcrumb-item"><a href="#"> Inventory</a></li>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust.blade.php:18:                            <li class="breadcrumb-item active">Inventory Loss Adjustment</li>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust.blade.php:24:                    <h5 class="page-title">Inventory Loss Adjustment</h5>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust.blade.php:75:                                        <th>Inventory Id</th>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust.blade.php:93:                                    @foreach ($inventory as $value)
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust.blade.php:122:                                                                href="{{ route('inventory.edit', $value->id) }}"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\loss-adjust.blade.php:126:                                                                href="{{ route('inventory.loss-view', $value->id) }}"
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\product.blade.php:12:                            <li class="breadcrumb-item"><a href="#">Inventory</a></li>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\product.blade.php:16:                    <h5 class="page-title">Inventory</h5>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\product.blade.php:22:                <h4 class="card-title font-20 mt-0">Inventory</h4>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\stockoutproduct.blade.php:12:                            <li class="breadcrumb-item"><a href="#">Inventory</a></li>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\stockoutproduct.blade.php:16:                    <h5 class="page-title">Inventory</h5>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\stockoutproduct.blade.php:22:                <h4 class="card-title font-20 mt-0">Inventory</h4>
+c:\xampp\htdocs\youleggings\resources\views\backend\inventory\warehouse.blade.php:15:                            <li class="breadcrumb-item"><a href="#"> Inventory</a></li>
+c:\xampp\htdocs\youleggings\storage\framework\views\385e8dd855b0f063e70d0dea5d9e4a0ab9998a63.php:1495:<?php echo $__env->make('backend.layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\youleggings\resources\views/backend/inventory/stockupdate.blade.php ENDPATH**/ ?>c:\xampp\htdocs\youleggings\storage\framework\views\858f2fbce73009dd1b4561968342eceb05fedcb7.php:99:                <!-- Inventory -->

@@ -23,7 +23,6 @@ use App\Imports\UsersImport;
 use App\Models\ProductAttribute;
 
 use App\Models\Tax;
-
 use App\Models\Inventory;
 
 use App\Models\ProductVariant;
@@ -444,21 +443,13 @@ if ($searchTerm) {
        if(isset($data['attribute_name']) && (!isset($data['is_variant']) || $data['is_variant'] == 'yes')){
 
         foreach($data['attribute_name'] as $key=>$val){
-
             if(!empty($val)){
-
                 $attribute=new ProductAttribute;
-
-                $attribute['attribute_value']=implode(',',$data['attribute_value']);
-
+                $attribute['attribute_value']=implode(',',$data['attribute_value_'.$val] ?? []);
                 $attribute['product_id']=$product->id;
-
-                $attribute['attribute_name']=$data['attribute_name'][$key];
-
+                $attribute['attribute_name']=$val;
                 $attribute->save();
-
             }
-
         }
 
         if(isset($data['attribute_value'] )){
@@ -540,10 +531,8 @@ if ($searchTerm) {
            $Productinventory->save();
 
         }
-
     }
-
-        }else{
+}else{
 
             $product_variant=new ProductVariant;
 
@@ -572,6 +561,7 @@ if ($searchTerm) {
             $Productinventory->in_stock=(isset($data['prod_stock'])) ? $data['prod_stock'] : 0;
 
             $Productinventory->save();
+
 
                 //   Logs for Stocks
                 $dataa = [];
@@ -687,51 +677,28 @@ public function add_product_attribute(Request $request,$id)
   //ProductVariant
 
   if(isset($data['attribute_name'] )){
-
-  foreach($data['attribute_name'] as $key=>$val){
-
-      if(!empty($val)){
-
-          $attribute=new ProductAttribute;
-
-          $attribute['arrtibute_value']=implode(',',$data['attribute_value_'.$val]);
-
-          $attribute['product_id']=$id;
-
-          $attribute['arrtibute_name']=$data['attribute_name'][$key];
-
-          $attribute->save();
-
-      }
-
-  }
-
-  DB::table('product_variants')->where('product_id',$id)->where('variant_id',0)->where('arrtibute_name',"default")->delete();
-
-  for($i=0;$i<count($data['attribute_value']);$i++){
-
-    $attribute=new ProductVariant;
-
-    $attribute['product_id']=$id;
-
-    $attribute['sku']=$data['sku'][$i];
-
-    $attribute['variant_id']=$data['variant_id'][$i];
-
-    $attribute['photo']=$data['photo'][$i];
-
-    $attribute['regular_price']=$data['regular_price'][$i];
-
-    $attribute['sale_price']=$data['sale_price'][$i];
-
-    $attribute['stock']=$data['stock'][$i];
-
-    $attribute['arrtibute_name']=$data['attribute_value'][$i];
-
-    $attribute->save();
-
-}
-
+    foreach($data['attribute_name'] as $key=>$val){
+        if(!empty($val)){
+            $attribute=new ProductAttribute;
+            $attribute['attribute_value']=implode(',',$data['attribute_value_'.$val] ?? []);
+            $attribute['product_id']=$id;
+            $attribute['attribute_name']=$val;
+            $attribute->save();
+        }
+    }
+    DB::table('product_variants')->where('product_id',$id)->where('variant_id',0)->where('variants',"default")->delete();
+    for($i=0;$i<count($data['attribute_value']);$i++){
+        $attribute=new ProductVariant;
+        $attribute['product_id']=$id;
+        $attribute['sku']=$data['sku'][$i];
+        $attribute['variant_id']=$data['variant_id'][$i];
+        $attribute['photo']=$data['photo'][$i];
+        $attribute['regular_price']=$data['regular_price'][$i];
+        $attribute['sale_price']=$data['sale_price'][$i];
+        $attribute['in_stock']=$data['stock'][$i];
+        $attribute['variants']=$data['attribute_value'][$i];
+        $attribute->save();
+    }
   }
 
  Session::put('success','Product Attribute Successfully Added');
@@ -958,8 +925,11 @@ public function add_product_attribute_delete($id)
     }
 
 public function AttributeUpdate(Request $request, $id){
-
-$data=$request->all();
+    $product = Product::find($id);
+    if(!$product){
+        return back()->with('error','Product not found');
+    }
+    $data=$request->all();
 
 // print_r($data);exit();
 
@@ -986,15 +956,9 @@ $attribute_delete->delete();
 // $variant_delete->delete();
 
   if(isset($data['warehouse_id'])){
-
-    $prod=new Product;
-
-    $prod['warehouse_id']=$data['warehouse_id'];
-
-    $prod['supplier_id']=$data['supplier_id'];
-
-    $prod->update();
-
+    $product->warehouse_id=$data['warehouse_id'];
+    $product->supplier_id=$data['supplier_id'];
+    $product->save();
   }
 
   $sku = random_int(100000, 9999999);
@@ -1006,23 +970,14 @@ $attribute_delete->delete();
   }
 
   if(isset($data['attribute_name'])){
-
-  foreach(@$data['attribute_name'] as $key=>$val){
-
+    foreach(@$data['attribute_name'] as $key=>$val){
         if(!empty($val)){
-
             $attribute=new ProductAttribute;
-
-            $attribute['attribute_value']=implode(',',$data['attribute_value_'.$val]);
-
+            $attribute['attribute_value']=implode(',',$data['attribute_value_'.$val] ?? []);
             $attribute['product_id']=$id;
-
-            $attribute['attribute_name']=$data['attribute_name'][$key];
-
+            $attribute['attribute_name']=$val;
             $attribute->save();
-
         }
-
     }
 
     $tempVarientSku = [];
@@ -1072,6 +1027,17 @@ $tempVarientSku[]=$data['sku'][$i];
 
              $variantAvail->save();
 
+             // Update Inventory
+             $Productinventory = Inventory::where('prod_variant_id', $variantAvail->id)->first();
+             if (!$Productinventory) {
+                 $Productinventory = new Inventory;
+                 $Productinventory->prod_variant_id = $variantAvail->id;
+                 $Productinventory->sold = 0;
+             }
+             $Productinventory->total_stock = $data['stock'][$i];
+             $Productinventory->in_stock = $data['stock'][$i];
+             $Productinventory->save();
+
         } else {
 
               $attribute=new ProductVariant;
@@ -1100,6 +1066,14 @@ $tempVarientSku[]=$data['sku'][$i];
 
       $attribute->save();
 
+      // Create Inventory
+      $Productinventory = new Inventory;
+      $Productinventory->prod_variant_id = $attribute->id;
+      $Productinventory->total_stock = $data['stock'][$i];
+      $Productinventory->sold = 0;
+      $Productinventory->in_stock = $data['stock'][$i];
+      $Productinventory->save();
+
         }
 
            //specifications
@@ -1114,19 +1088,7 @@ $tempVarientSku[]=$data['sku'][$i];
 
            $ProductSpecifications->save();
 
-           //inventory
 
-           $Productinventory=new Inventory;
-
-           $Productinventory->prod_variant_id=$attribute->id;
-
-           $Productinventory->total_stock=$data['stock'][$i];
-
-           $Productinventory->sold=0;
-
-           $Productinventory->in_stock=$data['stock'][$i];
-
-           $Productinventory->save();
 
     }
 
@@ -1166,17 +1128,7 @@ $tempVarientSku[]=$data['sku'][$i];
 
     $product_variant->save();
 
-    // Update Inventory
-    $Productinventory = Inventory::where('prod_variant_id', $product_variant->id)->first();
-    if (!$Productinventory) {
-        $Productinventory = new Inventory;
-        $Productinventory->prod_variant_id = $product_variant->id;
-        $Productinventory->sold = 0;
-    }
 
-    $Productinventory->total_stock = (isset($data['prod_stock'])) ? $data['prod_stock'] : 0;
-    $Productinventory->in_stock = (isset($data['prod_stock'])) ? $data['prod_stock'] : 0;
-    $Productinventory->save();
 
 }
 

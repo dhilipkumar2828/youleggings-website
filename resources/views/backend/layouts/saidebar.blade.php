@@ -75,15 +75,15 @@
                     </li>
                 @endif
 
-                @if (auth()->user()->can('user-view') || auth()->user()->can('customer-view'))
+                @if (auth()->user()->can('customer-view'))
                     <li class="has_sub">
                         <a href="javascript:void(0);" class="waves-effect"><i class="dripicons-user-group"></i><span>
                                 Users </span> <span class="menu-arrow float-right"><i
                                     class="mdi mdi-chevron-right"></i></span></a>
                         <ul class="list-unstyled">
-                            @can('user-view')
+                            {{-- @can('user-view')
                                 <li><a href="{{ url('user_view') }}"><i class="mdi mdi-account-star"></i>Staff Admin</a></li>
-                            @endcan
+                            @endcan --}}
                             @can('customer-view')
                                 <li><a href="{{ route('customer.list') }}"><i class="mdi mdi-account-multiple"></i>Customers</a></li>
                             @endcan
