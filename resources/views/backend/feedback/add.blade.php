@@ -53,10 +53,9 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
+                                <div class="form-group row float-right text-right">
                                     <div class="col-sm-10 offset-sm-2">
-                                        <button type="submit" class="btn btn-primary">Save Testimonial</button>
-                                        <a href="{{ route('testimonial.index') }}" class="btn btn-secondary">Cancel</a>
+                                        <button type="submit" class="btn btn-primary">Save </button>
                                     </div>
                                 </div>
                             </form>

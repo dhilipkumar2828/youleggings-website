@@ -37,19 +37,19 @@ class RedirectIfAuthenticated
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
-
             if (Auth::guard($guard)->check()) {
-
-                return redirect(RouteServiceProvider::HOME);
-
+                $user = Auth::guard($guard)->user();
+                // If it's an admin, go to HOME (/admin)
+                if ($user && ($user->role == 'admin' || $user->role == 'Super Admin')) {
+                    return redirect(RouteServiceProvider::HOME);
+                }
+                // If it's a customer, go to frontend instead of being trapped in admin loop
+                return redirect()->route('index');
             }
 
-       if ($guard=="customer" && Auth::guard($guard)->check()) {
-
+            if ($guard=="customer" && Auth::guard($guard)->check()) {
                 return redirect('user/auth');
-
             }
-
         }
 
         return $next($request);

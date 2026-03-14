@@ -131,17 +131,14 @@
                     @endphp
                     <img src="{{ image_url($photos[0]) }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover;">
                     
+                    @php
+                        $isInWishlist = Auth::check() && \App\Models\Wishlist::where('customer_id', Auth::id())->where('product_id', $product->id)->exists();
+                    @endphp
                     <!-- Wishlist Button -->
-                    <button type="button" class="wishlist-toggle-btn" onclick="toggleWishlist(event, {{ $product->id }})" style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.9); border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #888; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10;">
-                        @php
-                            $isInWishlist = Auth::check() && \App\Models\Wishlist::where('customer_id', Auth::id())->where('product_id', $product->id)->exists();
-                        @endphp
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="{{ $isInWishlist ? '#ec407a' : 'none' }}" stroke="{{ $isInWishlist ? '#ec407a' : 'currentColor' }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    <button type="button" class="wishlist-toggle-btn" onclick="toggleWishlist(event, {{ $product->id }})" style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.95); border: 1px solid rgba(0,0,0,0.05); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: {{ $isInWishlist ? '#ec407a' : '#555' }}; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.12); z-index: 10;">
+                        <i data-lucide="heart" style="width: 18px; height: 18px; fill: {{ $isInWishlist ? '#ec407a' : 'none' }};"></i>
                     </button>
 
-                    @if(request('new-arrivals'))
-                      <div class="view-product-overlay" style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); background: #fff; color: #333; padding: 14px 28px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-radius: 50px; transition: 0.3s; opacity: 0; white-space: nowrap; z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">View Product</div>
-                    @endif
                   </div>
                   <div class="product-details shop-product-details" style="padding: 15px; text-align: center; background: #fff;">
                     <p class="shop-product-category" style="font-size: 10px; color: #ec407a; text-transform: uppercase; font-weight: 700; letter-spacing: 2px; margin-bottom: 4px;">{{ request('new-arrivals') ? 'New Arrival' : ($product->categories->title ?? 'Legging') }}</p>

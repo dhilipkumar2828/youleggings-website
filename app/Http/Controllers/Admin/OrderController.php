@@ -16,7 +16,7 @@ use App\Traits\PriceTrait;
 use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
-use PDF;
+use niklasravnsborg\LaravelPdf\Facades\Pdf;
 
 class OrderController extends Controller
 {
@@ -265,10 +265,9 @@ class OrderController extends Controller
                 $product_name[] = $product->name . ' (Deactivated)';
             } else {
                 // If product is not deleted or deactivated, process it normally
-                $product_name[] = $product->name;
+            $product_name[] = $product->name;
 
             $product_variant=DB::table('product_variants')->where('product_id',$d->product_id)->where('variants',$d->option)->first();
-            array_push($product_name,$product->name);
             if($product->discount_type == "fixed"){
                 $data[$key]['discount_value']=$product->discount;
             }else{
@@ -483,7 +482,7 @@ class OrderController extends Controller
     'http' => array('ignore_errors' => true),
 ));
                     $output = file_get_contents($url, false, $context);
-                } catch(Exception $e) {
+                } catch(\Exception $e) {
 
                 }
 
@@ -593,7 +592,7 @@ foreach($suborders as $order){
 
     public function pdfdownload(Request $request){
 
-        $pdf = PDF::loadView('backend.order.pdf');
+        $pdf = Pdf::loadView('backend.order.pdf');
         return $pdf->download();
     }
     public function deleteOrders(Request $request)

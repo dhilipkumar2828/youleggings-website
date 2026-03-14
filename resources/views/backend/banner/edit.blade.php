@@ -5,25 +5,17 @@
 
         <div class="container-fluid">
 
-            <div class="row">
+            <div class="row card">
                 <div class="col-sm-12">
                     <div class="float-right page-breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a>Appearence</a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('banner.index') }}">Banner</a></li>
-                            <li class="breadcrumb-item active">Edit Banner</li>
-                        </ol>
+                        <a href="{{ route('banner.index') }}" id="add-btn" style="color: #ffffff;"><i class="fa fa-angle-left"
+                        aria-hidden="true"></i> Back</a>
                     </div>
-                    <h5 class="page-title">Appearence</h5>
+                    <h5 class="page-title">Edit Banner</h5>
 
                 </div>
             </div>
-            <div class="card m-b-30 card-body">
-                <h4 class="card-title font-20 mt-0">Edit Banner</h4>
-                <a href="{{ route('banner.index') }}" id="add-btn" style="color: #ffffff;"><i class="fa fa-angle-left"
-                        aria-hidden="true"></i> Back</a>
-
-            </div>
+           
             <div class="row">
 
                 <div class="col-12">
@@ -124,19 +116,20 @@
                                     </div>
                                 </div> --}}
 
-                                <div class="form-group row">
+                                <div class="form-group row align-items-center">
                                     <label for="status" class="col-sm-2 col-form-label">Status</label>
                                     <div class="col-sm-10">
-                                        <select class="form-control" required name='status'
-                                            value="{{ $banner->status }}">
-                                            <option value="">--Status--</option>
-                                            <option value="active" {{ $banner->status == 'active' ? 'selected' : '' }}>
-                                                Active</option>
-
-                                            <option value="inactive"
-                                                {{ $banner->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
-
-                                        </select>
+                                        <div class="premium-switch-group">
+                                            <input type="radio" name="status" id="status_active" value="active" {{ $banner->status == 'active' ? 'checked' : '' }}>
+                                            <label for="status_active">
+                                                <i class="fa fa-check-circle"></i> Active
+                                            </label>
+                                            
+                                            <input type="radio" name="status" id="status_inactive" value="inactive" {{ $banner->status == 'inactive' ? 'checked' : '' }}>
+                                            <label for="status_inactive">
+                                                <i class="fa fa-times-circle"></i> Inactive
+                                            </label>
+                                        </div>
                                         @if ($errors)
                                             <span class="text-danger">{{ $errors->first('status') }}</span>
                                         @endif
@@ -144,7 +137,6 @@
                                 </div>
                                 <div class="d-flex">
                                     <button class="btn btn-primary" type="submit">Update</button>&nbsp;
-                                    <!-- <button class="btn btn-secondary" type="Reset">Cancel</button> -->
                                 </div>
                             </form>
                         </div>

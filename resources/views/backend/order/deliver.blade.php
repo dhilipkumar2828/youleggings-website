@@ -19,11 +19,11 @@
                 </div>
             </div>
             <!-- end row -->
-            <div class="card m-b-30 card-body">
+            {{-- <div class="card m-b-30 card-body">
                 <h4 class="card-title font-20 mt-0">Dispatched Orders</h4>
                 <!-- <a href="#" id="add-btn" style="color: #ffffff;"> + ADD</a> -->
 
-            </div>
+            </div> --}}
 
             <div class="row">
                 <div class="col-12">

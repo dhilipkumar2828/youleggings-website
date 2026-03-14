@@ -6,39 +6,24 @@
 
         <div class="container-fluid">
 
-            <div class="row">
+            <div class="row card">
 
-                <div class="col-sm-12">
+                <div class="col-sm-12 ">
 
-                    <div class="float-right page-breadcrumb">
+                    <div class="float-right page-breadcrumb mt-1">
 
-                        <ol class="breadcrumb">
-
-                            <li class="breadcrumb-item"><a href="{{ route('admin') }}">Home</a></li>
-
-                            <li class="breadcrumb-item"><a href="{{ route('user.index') }}"> User </a></li>
-
-                            <li class="breadcrumb-item active">System User </li>
-
-                        </ol>
+                        <a href="{{ route('user.index') }}" id="add-btn" style="color: #ffffff;"><i class="fa fa-angle-left"
+                        aria-hidden="true"></i> Back</a>
 
                     </div>
 
-                    <h5 class="page-title">System User </h5>
+                    <h5 class="page-title">Add User </h5>
 
                 </div>
 
             </div>
 
-            <div class="card m-b-30 card-body">
-
-                <h4 class="card-title font-20 mt-0"> System User </h4>
-
-                <a href="{{ route('user.index') }}" id="add-btn" style="color: #ffffff;"><i class="fa fa-angle-left"
-                        aria-hidden="true"></i> Back</a>
-
-            </div>
-
+           
             <div class="row">
 
                 <div class="col-md-12">
@@ -179,8 +164,6 @@
                                 <div class="d-flex">
 
                                     <button class="btn btn-primary" type="submit">Submit</button>&nbsp;
-
-                                    <button class="btn btn-secondary" type="reset">Cancel</button>
 
                                 </div>
 

@@ -36,8 +36,36 @@ class AdminController extends Controller
 
         if ($user && $user->status === 'active') {
             $orders = Order::orderBy('id', 'DESC')->limit(5)->get();
+            // Stats Calculations
+            $totalSales = Order::where('status', 'Delivered')->sum('total');
+            
+            $thisMonthStart = now()->startOfMonth();
+            $lastMonthStart = now()->subMonth()->startOfMonth();
+            $lastMonthEnd = now()->subMonth()->endOfMonth();
 
-            // Monthly sales data for chart (Last 6 months with padding)
+            $salesThisMonth = Order::where('status', 'Delivered')
+                ->where('created_at', '>=', $thisMonthStart)
+                ->sum('total');
+
+            $salesLastMonth = Order::where('status', 'Delivered')
+                ->where('created_at', '>=', $lastMonthStart)
+                ->where('created_at', '<=', $lastMonthEnd)
+                ->sum('total');
+
+            $salesGrowth = 0;
+            if ($salesLastMonth > 0) {
+                $salesGrowth = (($salesThisMonth - $salesLastMonth) / $salesLastMonth) * 100;
+            } elseif ($salesThisMonth > 0) {
+                $salesGrowth = 100;
+            }
+
+            $ordersToday = Order::where('created_at', '>=', now()->startOfDay())->count();
+            $totalPaidOrders = Order::where('payment_status', 'paid')->count();
+            $totalCustomers = \App\Models\User::where('role', 'customer')->count();
+            $totalProducts = \App\Models\Product::count();
+            $lowStockProducts = \App\Models\Product::where('stock', '<=', 5)->count();
+
+            // Monthly sales data for chart
             $sales_data = [];
             for ($i = 5; $i >= 0; $i--) {
                 $month = date('Y-m', strtotime("-$i months"));
@@ -70,7 +98,11 @@ class AdminController extends Controller
                     return ['label' => $item->status, 'value' => $item->count];
                 });
 
-            return view('backend.index', compact('orders', 'user', 'monthly_sales', 'status_counts'));
+            return view('backend.index', compact(
+                'orders', 'user', 'monthly_sales', 'status_counts', 
+                'totalSales', 'salesGrowth', 'ordersToday', 
+                'totalPaidOrders', 'totalCustomers', 'totalProducts', 'lowStockProducts'
+            ));
         }
 
         Auth::logout();

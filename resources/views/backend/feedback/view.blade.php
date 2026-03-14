@@ -5,38 +5,25 @@
 
         <div class="container-fluid">
 
-            <div class="row">
+            <div class="row card" style="width: 100%;margin-left:0px">
 
                 <div class="col-sm-12">
 
-                    <div class="float-right page-breadcrumb">
+                    <div class="float-right page-breadcrumb mt-2">
 
-                        <ol class="breadcrumb">
-
-                            <li class="breadcrumb-item"><a>Appearance</a></li>
-
-                            <li class="breadcrumb-item active">Feedbacks</li>
-
-                        </ol>
+                        <a href="{{ route('testimonial.create') }}" class="btn btn-primary waves-effect waves-light">
+                        <i class="mdi mdi-plus mr-2"></i> Add Feedback
+                    </a>
 
                     </div>
 
-                    <h5 class="page-title">Appearance</h5>
+                    <h5 class="page-title">Feedbacks</h5>
 
                 </div>
 
             </div>
 
-            <!-- end row -->
-
-            <div class="card m-b-30 card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h4 class="card-title font-20 mt-0">Feedbacks</h4>
-                    <a href="{{ route('testimonial.create') }}" class="btn btn-primary waves-effect waves-light">
-                        <i class="mdi mdi-plus mr-2"></i> Add Feedback
-                    </a>
-                </div>
-            </div>
+           
 
             <div class="row">
 
@@ -48,11 +35,7 @@
 
                 <div class="col-12">
 
-                    <div>
-
-                        <h4> Total Feedbacks : {{ count($feedbacks) }}</h4>
-
-                    </div>
+                   
 
                     <div class="card m-b-30">
 

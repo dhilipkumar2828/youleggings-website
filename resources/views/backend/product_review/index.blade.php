@@ -15,9 +15,9 @@
                 </div>
             </div>
 
-            <div class="card m-b-30 card-body">
+            {{-- <div class="card m-b-30 card-body">
                 <h4 class="card-title font-20 mt-0">Manage Product Reviews</h4>
-            </div>
+            </div> --}}
 
             <div class="row">
                 <div class="col-lg-12">

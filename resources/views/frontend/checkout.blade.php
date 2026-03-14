@@ -113,12 +113,17 @@
     transition: 0.3s;
   }
   .place-order-btn:hover { background: #ec407a; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(236, 64, 122, 0.2); }
+
+  .address-card { border: 2px solid #eee; border-radius: 12px; padding: 15px; cursor: pointer; transition: 0.3s; position: relative; background: #fff; }
+  .address-card:hover { border-color: #fdeef2; background: #fffafb; }
+  .address-card.active { border-color: #ec407a; background: #fffafb; }
+  .address-card.active .check-mark { display: block !important; }
 </style>
 @endsection
 
 @section('content')
   <section class="section page-view checkout-page" style="display: block; background: #fdfbfb;">
-    <div class="container" style="padding: 160px 0 100px;">
+    <div class="container" style="padding: 50px 0 100px;">
       
       <!-- Stepper -->
       <div class="checkout-stepper" style="display: flex; justify-content: center; align-items: center; margin-bottom: 50px; gap: 15px;">
@@ -138,7 +143,7 @@
         </div>
       </div>
 
-      <form id="checkoutForm" action="{{ route('checkout.store') }}" method="POST" onsubmit="return handleOrderSubmit(event)">
+      <form id="checkoutForm" action="{{ route('checkout.store') }}" method="POST" onsubmit="return handleOrderSubmit(event)" class="validate">
         @csrf
         <div class="checkout-grid">
           @if(session('error'))
@@ -156,6 +161,32 @@
             </div>
           @endif
           <div class="checkout-left">
+            @if(isset($addresses) && count($addresses) > 0)
+            <div class="checkout-section">
+              <div class="section-header">
+                <i data-lucide="map-pin"></i>
+                <h3>Saved Addresses</h3>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; margin-bottom: 10px;">
+                @foreach($addresses as $addr)
+                <div class="address-card" onclick="selectSavedAddress({{ json_encode($addr) }}, this)">
+                  <div style="font-weight: 700; margin-bottom: 5px; color: #333;">{{ $addr->sfirst_name }} {{ $addr->slast_name }}</div>
+                  <div style="font-size: 12px; color: #666; line-height: 1.6; margin-bottom: 5px;">
+                    <i data-lucide="map-pin" style="width: 12px; display: inline; vertical-align: middle;"></i> {{ $addr->saddress }}<br>
+                    {{ $addr->scity }}, {{ $addr->sstate }} - {{ $addr->spincode }}
+                  </div>
+                  <div style="font-size: 12px; color: #888;">
+                    <i data-lucide="phone" style="width: 12px; display: inline; vertical-align: middle;"></i> {{ $addr->sphone_number }}
+                  </div>
+                  <div class="check-mark" style="position: absolute; top: 12px; right: 12px; color: #ec407a; display: none;">
+                    <i data-lucide="check-circle-2" style="width: 20px; height: 20px;"></i>
+                  </div>
+                </div>
+                @endforeach
+              </div>
+            </div>
+            @endif
+
             <div class="checkout-section">
               <div class="section-header">
                 <i data-lucide="user"></i>
@@ -197,7 +228,45 @@
                 </div>
                 <div class="form-group">
                   <label>State</label>
-                  <input type="text" class="form-control" name="state" required placeholder="Odisha">
+                  <select class="form-control" name="state" required onchange="calculateShipping()">
+                    <option value="">Select State</option>
+                    <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                    <option value="Assam">Assam</option>
+                    <option value="Bihar">Bihar</option>
+                    <option value="Chandigarh">Chandigarh</option>
+                    <option value="Chhattisgarh">Chhattisgarh</option>
+                    <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Goa">Goa</option>
+                    <option value="Gujarat">Gujarat</option>
+                    <option value="Haryana">Haryana</option>
+                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                    <option value="Jharkhand">Jharkhand</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Kerala">Kerala</option>
+                    <option value="Ladakh">Ladakh</option>
+                    <option value="Lakshadweep">Lakshadweep</option>
+                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Manipur">Manipur</option>
+                    <option value="Meghalaya">Meghalaya</option>
+                    <option value="Mizoram">Mizoram</option>
+                    <option value="Nagaland">Nagaland</option>
+                    <option value="Odisha">Odisha</option>
+                    <option value="Puducherry">Puducherry</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Rajasthan">Rajasthan</option>
+                    <option value="Sikkim">Sikkim</option>
+                    <option value="Tamil Nadu">Tamil Nadu</option>
+                    <option value="Telangana">Telangana</option>
+                    <option value="Tripura">Tripura</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="Uttarakhand">Uttarakhand</option>
+                    <option value="West Bengal">West Bengal</option>
+                  </select>
                 </div>
                 <div class="form-group">
                   <label>Pincode</label>
@@ -261,7 +330,7 @@
               <span>Coupon</span>
               <strong id="checkoutDiscount">₹0</strong>
             </div>
-            <div class="review-row">
+            <div class="review-row" id="shippingRow" style="display: none;">
               <span>Shipping Fee</span>
               <strong id="checkoutShipping">₹0</strong>
             </div>
@@ -317,11 +386,9 @@
             `;
         });
 
-        const shipping = subtotal > 1499 ? 0 : 99;
         const discount = parseFloat(document.getElementById('hiddenDiscountAmount').value) || 0;
         
         document.getElementById('checkoutSubtotal').innerText = '₹' + subtotal.toLocaleString();
-        document.getElementById('checkoutShipping').innerText = shipping === 0 ? 'FREE' : '₹' + shipping;
         
         if (discount > 0) {
             document.getElementById('discountRow').style.display = 'flex';
@@ -329,9 +396,69 @@
         } else {
             document.getElementById('discountRow').style.display = 'none';
         }
-        
-        document.getElementById('checkoutTotal').innerText = '₹' + (subtotal + shipping - discount).toLocaleString();
+
+        // We will call calculateShipping() which will update Shipping and Total
+        calculateShipping();
     }
+
+    async function calculateShipping() {
+        const stateInput = document.getElementsByName('state')[0];
+        const state = stateInput.value.trim();
+        const cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+        let subtotal = 0;
+        cart.forEach(item => subtotal += (item.price * item.qty));
+        const discount = parseFloat(document.getElementById('hiddenDiscountAmount').value) || 0;
+
+        if (!state) {
+            document.getElementById('shippingRow').style.display = 'none';
+            document.getElementById('checkoutTotal').innerText = '₹' + (subtotal - discount).toLocaleString();
+            return;
+        }
+
+        try {
+            const response = await fetch('{{ route("get_shipping_charge") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ state: state, subtotal: subtotal })
+            });
+            const data = await response.json();
+            
+            const shipping = data.shipping || 0;
+            document.getElementById('shippingRow').style.display = 'flex';
+            document.getElementById('checkoutShipping').innerText = shipping === 0 ? 'FREE' : '₹' + shipping.toLocaleString();
+            document.getElementById('checkoutTotal').innerText = '₹' + (subtotal + shipping - discount).toLocaleString();
+        } catch (error) {
+            console.error('Error fetching shipping:', error);
+        }
+    }
+
+    // Add listener to state input
+    document.getElementsByName('state')[0].addEventListener('change', calculateShipping);
+
+    window.selectSavedAddress = function(addr, element) {
+        // Highlight selected card
+        document.querySelectorAll('.address-card').forEach(card => card.classList.remove('active'));
+        element.classList.add('active');
+
+        // Fill form fields
+        document.getElementsByName('first_name')[0].value = addr.sfirst_name;
+        document.getElementsByName('last_name')[0].value = addr.slast_name;
+        document.getElementsByName('email')[0].value = addr.semail;
+        document.getElementsByName('phone')[0].value = addr.sphone_number;
+        document.getElementsByName('address')[0].value = addr.saddress;
+        document.getElementsByName('city')[0].value = addr.scity;
+        document.getElementsByName('state')[0].value = addr.sstate;
+        document.getElementsByName('pincode')[0].value = addr.spincode;
+
+        // Trigger shipping calculation
+        calculateShipping();
+
+        // Scroll to personal info briefly to show it's filled
+        // document.querySelector('.checkout-section:nth-child(2)').scrollIntoView({ behavior: 'smooth' });
+    };
 
 
     // Inject cart JSON into hidden field before form submit

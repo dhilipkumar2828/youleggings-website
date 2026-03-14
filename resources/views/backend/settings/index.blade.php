@@ -121,7 +121,7 @@
                                     </div>
                                 </div>
 
-                                <div class="mt-4">
+                                <div class="mt-4 float-right">
                                     <button class="btn btn-primary" type="submit">Update Settings</button>
                                 </div>
                             </form>

@@ -5,140 +5,94 @@
 
         <div class="container-fluid">
 
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="float-right page-breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a>Appearence</a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('banner.index') }}">Banner</a></li>
-                        </ol>
+            <div class="row card m-b-30" style="width: 100%;margin-left:0px">
+                <div class="col-md-12">
+                    <div class="float-right mt-3">
+                        <a href="{{ route('banner.create') }}" class="btn btn-primary ripple px-4">
+                            <i class="fa fa-plus"></i> Add Banner
+                        </a>
                     </div>
-                    <h5 class="page-title">Appearence</h5>
-
+                        <h5 class="page-title m-0">Home Banners</h5>
                 </div>
+            </div>
 
-            </div>
-            <!-- end row -->
-            <div class="card m-b-30 card-body">
-                <h4 class="card-title font-20 mt-0">Banner</h4>
-                {{-- @can('banner-add') --}}
-                    <a href="{{ route('banner.create') }}" id="add-btn"> + Add</a>
-                {{-- @endcan --}}
-            </div>
 
             <div class="row">
 
                 <div class="col-lg-12">
                     @include('backend.layouts.notification')
                 </div>
-                <div class="col-12">
-                    <div>
-                        <h4> Total Banner : {{ \App\Models\Banner::count() }}</h4>
-                    </div>
 
+                <div class="col-12">
                     <div class="card m-b-30">
                         <div class="card-body">
-                            <table id="datatable" class="table table-bordered dt-responsive nowrap">
-                                <thead>
-                                    <tr>
-                                        <th>S.No</th>
-                                        <!-- <th>Title</th> -->
-                                        <th>Image</th>
-                                        <!--<th>Mobile Image</th>-->
-
-                                        <!--<th>Details</th>-->
-                                        {{-- @if (auth()->user()->can('banner-edit')) --}}
-                                            <th>Status</th>
-                                        {{-- @endif --}}
-                                        <!-- <th>Condition</th>
-                                            <th>Type</th> -->
-                                        {{-- @if (auth()->user()->can('banner-edit') or auth()->user()->can('banner-delete')) --}}
-                                            <th>Actions</th>
-                                        {{-- @endif --}}
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    @foreach ($banners as $item)
+                            <div class="table-responsive">
+                                <table id="datatable" class="table table-bordered dt-responsive nowrap">
+                                    <thead>
                                         <tr>
-                                            <td>{{ $loop->iteration }} </td>
-                                            <!-- <td> {{ $item->title }}</td> -->
-                                            <td> 
-                                                @if($item->photo && preg_match('/\.(mp4|mov|ogg|qt)$/i', $item->photo))
-                                                    <video src="{{ $item->photo }}" style="max-height: 90px;max-width:120px" controls></video>
-                                                @else
-                                                    <img src="{{ $item->photo }}" alt="banner image" style="max-height: 90px;max-width:120px">
-                                                @endif
-                                            </td>
+                                            <th>S.No</th>
+                                            <th>Image / Video</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
 
-                                            <!-- <td> <img src="{{ $item->mobile_photo }}"-->
-                                            <!--style="max-height: 90px;max-width:120px"></td>-->
+                                    <tbody>
+                                        @foreach ($banners as $item)
+                                            <tr>
+                                                <td>{{ $loop->iteration }} </td>
+                                                <td>
+                                                    <div class="table-thumb-wrapper">
+                                                        @if ($item->photo && preg_match('/\.(mp4|mov|ogg|qt)$/i', $item->photo))
+                                                            <video src="{{ $item->photo }}" class="table-thumbnail-video"
+                                                                controls></video>
+                                                        @else
+                                                            <img src="{{ $item->photo }}" alt="banner image"
+                                                                class="table-thumbnail">
+                                                        @endif
+                                                    </div>
+                                                </td>
 
-                                            <!--<td> {!! $item->description !!}</td>-->
-                                            {{-- @if (auth()->user()->can('Banner Edit')) --}}
-                                            {{-- @if (auth()->user()->can('banner-edit')) --}}
-                                                <td><input type="checkbox" name="toogle" value="{{ $item->id }}"
+
+                                                <td>
+                                                    <input type="checkbox" name="toogle" value="{{ $item->id }}"
                                                         data-toggle="switchbutton"
                                                         {{ $item->status == 'active' ? 'checked' : '' }}
                                                         data-onlabel="Active" data-offlabel="Inactive" data-size="sm"
-                                                        data-onstyle="success" data-offstyle="danger"></td>
-                                            {{-- @endif --}}
-                                            {{-- @endif --}}
-                                            <!-- <td>
-                                                @if ($item->condition == 'banner')
-    <span class="badge badge-success">{{ $item->condition }}</span>
-@else
-    <span class="badge badge-primary">{{ $item->condition }}</span>
-    @endif
-                                            </td>
-                                            <td>
-                                                @if ($item->type == 'promo')
-    <span class="badge badge-success">{{ $item->type }}</span>
-@else
-    <span class="badge badge-primary">{{ $item->type }}</span>
-    @endif
-                                            </td> -->
-                                            {{-- @if (auth()->user()->can('Banner Edit') or auth()->user()->can('Banner Delete')) --}}
-                                            {{-- @if (auth()->user()->can('banner-edit') or auth()->user()->can('banner-delete')) --}}
+                                                        data-onstyle="success" data-offstyle="danger">
+                                                </td>
                                                 <td>
                                                     <div class="d-flex align-items-center">
-                                                        {{-- @can('banner-edit') --}}
-                                                            <a href="{{ route('banner.edit', $item->id) }}"
-                                                                class="action-icon btn-edit-icon" data-toggle="tooltip"
-                                                                title="Edit">
-                                                                <i class="fa fa-edit"></i>
-                                                            </a>
-                                                        {{-- @endcan --}}
+                                                        <a href="{{ route('banner.edit', $item->id) }}"
+                                                            class="action-icon btn-edit-icon" data-toggle="tooltip"
+                                                            title="Edit">
+                                                            <i class="fa fa-edit"></i>
+                                                        </a>
 
-                                                        {{-- @can('banner-delete') --}}
-                                                            <form action="{{ route('banner.destroy', $item->id) }}"
-                                                                method="post" style="display:inline;">
-                                                                @csrf
-                                                                @method('delete')
-                                                                <button type="submit"
-                                                                    class="action-icon btn-delete-icon dltBtn"
-                                                                    data-id="{{ $item->id }}" data-toggle="tooltip"
-                                                                    title="Delete">
-                                                                    <i class="fa fa-trash"></i>
-                                                                </button>
-                                                            </form>
-                                                        {{-- @endcan --}}
+                                                        <form action="{{ route('banner.destroy', $item->id) }}"
+                                                            method="post" style="display:inline;">
+                                                            @csrf
+                                                            @method('delete')
+                                                            <button type="submit"
+                                                                class="action-icon btn-delete-icon dltBtn"
+                                                                data-id="{{ $item->id }}" data-toggle="tooltip"
+                                                                title="Delete">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </form>
                                                     </div>
                                                 </td>
-                                            {{-- @endif --}}
-                                            {{-- @endif --}}
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div> <!-- end col -->
             </div> <!-- end row -->
         </div><!-- container fluid -->
     </div> <!-- Page content Wrapper -->
-    </div> <!-- content -->
-    </div>
 @endsection
 
 @section('scripts')

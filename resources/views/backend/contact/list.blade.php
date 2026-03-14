@@ -5,19 +5,15 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="float-right page-breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#">Enquiry List</a></li>
-                        </ol>
-                    </div>
+                    
                     <h5 class="page-title">Enquiry List</h5>
                 </div>
             </div>
 
             <!-- end row -->
-            <div class="card m-b-30 card-body">
+            {{-- <div class="card m-b-30 card-body">
                 <h4 class="card-title font-20 mt-0">Enquiry List</h4>
-            </div>
+            </div> --}}
 
             <div class="row">
                 <div class="col-lg-12">
@@ -25,9 +21,7 @@
                 </div>
 
                 <div class="col-12">
-                    <div>
-                        <h4> Total Enquiry List : {{ \App\Models\Contactform::count() }}</h4>
-                    </div>
+                   
 
                     <div class="card m-b-30">
                         <div class="card-body">

@@ -19,9 +19,17 @@
             </div>
             <!-- end row -->
             <div class="card m-b-30 card-body">
-                <h4 class="card-title font-20 mt-0">Sub category</h4>
-                <a href="{{ url('category') }}" id="add-btn" style="color: #ffffff;"><i class="fa fa-angle-left"
-                        aria-hidden="true"></i> Back</a>
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h4 class="card-title font-20 mt-0 mb-1">Sub category</h4>
+                        <p class="text-muted mb-0">Total Sub categories: <span class="font-weight-bold text-primary">{{ count($subcategories) }}</span></p>
+                    </div>
+                    <div>
+                        <a href="{{ url('category') }}" class="btn btn-primary ripple px-4">
+                            <i class="fa fa-angle-left"></i> Back
+                        </a>
+                    </div>
+                </div>
             </div>
             <div class="row">
 
@@ -51,7 +59,7 @@
                                 <tbody>
                                     @foreach ($subcategories as $key => $item)
                                         @php
-                                            $subcategories = DB::table('categories')
+                                            $check_sub = DB::table('categories')
                                                 ->where('parent_id', '!=', null)
                                                 ->where('parent_id', $item->id)
                                                 ->orderBy('id', 'DESC')
@@ -80,7 +88,7 @@
                                                         @can('category-edit')
                                                             <a class="dropdown-item"
                                                                 href="{{ url('subcategory_edit' . '/' . $item->id) }}">Edit</a>
-                                                            @if (!empty($subcategories->parent_id))
+                                                            @if (!empty($check_sub->parent_id))
                                                             @endif
                                                         @endcan
                                                         <!-- <form action="{{ url('subcategory_delete' . '/' . $item->id) }}" method="post">

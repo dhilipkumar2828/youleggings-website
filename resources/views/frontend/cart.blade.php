@@ -153,7 +153,7 @@
 
 @section('content')
   <section class="section page-view cart-page" style="display: block; background: #fdfbfb;">
-    <div class="container" style="padding: 160px 0 100px;">
+    <div class="container" style="padding: 50px 0 50px;">
       
       <!-- Stepper -->
       <div class="checkout-stepper">
@@ -222,10 +222,6 @@
             <div class="summary-row">
               <span>Subtotal</span>
               <strong id="cartSubtotalValue">INR 0</strong>
-            </div>
-            <div class="summary-row">
-              <span>Shipping</span>
-              <strong id="cartShippingValue">INR 0</strong>
             </div>
             <div class="summary-row" style="color: #ec407a; display: none; font-weight: 600;" id="discountRow">
               <span>Coupon</span>
@@ -304,8 +300,7 @@
 
         const shipping = subtotal > 1499 ? 0 : 99;
         document.getElementById('cartSubtotalValue').innerText = 'INR ' + subtotal.toLocaleString();
-        document.getElementById('cartShippingValue').innerText = (shipping === 0 ? 'FREE' : 'INR ' + shipping);
-        document.getElementById('cartTotalValue').innerText = 'INR ' + (subtotal + shipping).toLocaleString();
+        document.getElementById('cartTotalValue').innerText = 'INR ' + subtotal.toLocaleString();
         
         if (typeof lucide !== 'undefined') lucide.createIcons();
     }
@@ -450,10 +445,8 @@
             document.getElementById('discountRow').style.display = 'none';
         }
 
-        const shipping = subtotal > 1499 ? 0 : 99;
         document.getElementById('cartSubtotalValue').innerText = 'INR ' + subtotal.toLocaleString();
-        document.getElementById('cartShippingValue').innerText = (shipping === 0 ? 'FREE' : 'INR ' + shipping);
-        document.getElementById('cartTotalValue').innerText = 'INR ' + (subtotal + shipping - discount).toLocaleString();
+        document.getElementById('cartTotalValue').innerText = 'INR ' + (subtotal - discount).toLocaleString();
         
         if (typeof lucide !== 'undefined') lucide.createIcons();
     };

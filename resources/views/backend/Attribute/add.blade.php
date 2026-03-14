@@ -186,11 +186,11 @@
                     <div id="attribute" class="card-body"
                         data-mfield-options='{"section": ".group","btnAdd":"#btnAdd-1","btnRemove":".btnRemove"}'>
                         
-                        <div class="col-md-12 mb-4">
+                        {{-- <div class="col-md-12 mb-4">
                             <button type="button" id="btnAdd-1" class="btn btn-primary ripple px-4">
                                 <i class="fa fa-plus-circle mr-2"></i> Add More Attributes
                             </button>
-                        </div>
+                        </div> --}}
 
                         <!-- Attribute Row Template -->
                         <div class="container-fluid row group mb-4 align-items-end animate__animated animate__fadeIn">

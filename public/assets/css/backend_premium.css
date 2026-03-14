@@ -364,6 +364,12 @@ input[type="submit"].btn-primary {
     padding: 10px 15px;
     background: #f9f9f9;
     transition: all 0.3s;
+    line-height: 1.5;
+}
+
+select.form-control {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 .form-control:focus {
@@ -391,6 +397,56 @@ input[type="submit"].btn-primary {
 /* Force striping off or make it very subtle/white */
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: rgba(233, 30, 99, 0.02) !important; /* Ultra light pink */
+}
+
+/* Premium Status Toggle Group */
+.premium-switch-group {
+    display: inline-flex;
+    background: #f1f5f9;
+    padding: 4px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.premium-switch-group input[type="radio"] {
+    display: none;
+}
+
+.premium-switch-group label {
+    margin-bottom: 0;
+    padding: 8px 22px;
+    cursor: pointer;
+    border-radius: 9px;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+}
+
+.premium-switch-group input[type="radio"]:checked + label {
+    background: #ffffff;
+    color: #1e293b;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Active State */
+.premium-switch-group input[value="active"]:checked + label,
+.premium-switch-group input[value="1"]:checked + label {
+    background: #10b981 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35) !important;
+}
+
+/* Inactive State */
+.premium-switch-group input[value="inactive"]:checked + label,
+.premium-switch-group input[value="0"]:checked + label {
+    background: #ef4444 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35) !important;
 }
 
 /* FORCE override any purple */
@@ -430,6 +486,86 @@ input[type="submit"].btn-primary {
     padding: 15px !important;
     border-bottom: 1px solid #f0f0f0;
     color: #444; /* Darker text */
+}
+
+/* Table Thumbnails */
+.table-thumb-wrapper {
+    width: 100px;
+    height: 65px;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.15);
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.table-thumbnail, .table-thumbnail-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.table-thumb-wrapper:hover .table-thumbnail {
+    transform: scale(1.1);
+}
+
+
+
+/* DataTables Spacing */
+.dataTables_wrapper {
+    padding: 10px !important;
+}
+
+.dataTables_length, 
+.dataTables_filter {
+    margin-top: 35px !important; /* Increased space above search/count */
+    margin-bottom: 25px !important;
+}
+
+.dataTables_info,
+.dataTables_paginate {
+    margin-top: 35px !important; /* Space above info and pagination */
+}
+
+/* Global Right Align for Save, Update & Cancel buttons */
+.card-body form .d-flex,
+.card-body .d-flex:last-child:not(.align-items-center),
+form .row.mt-4 .col-12 {
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    width: 100%;
+    gap: 12px;
+}
+
+form .btn, 
+form button {
+    margin-left: 0 !important; /* Let gap handle it */
+}
+
+/* Spacing Above Headers & Back Buttons */
+.page-title {
+    margin-top: 20px !important;
+    margin-bottom: 25px !important;
+}
+
+.card.m-b-30.card-body {
+    margin-top: 25px !important;
+    padding: 25px !important;
+}
+
+#add-btn {
+    margin-top: 15px !important;
+    display: inline-block !important;
+}
+
+h4.card-title {
+    margin-top: 10px !important;
+    margin-bottom: 25px !important;
 }
 
 /* FOOTER - PINK COLORED AS REQUESTED */

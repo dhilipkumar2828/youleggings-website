@@ -229,7 +229,15 @@ class IndexController extends Controller
 
     public function checkout()
     {
-        return view('frontend.checkout');
+        $addresses = [];
+        if (\Auth::check()) {
+            $addresses = \DB::table('shipping_address')
+                ->where('customer_id', \Auth::id())
+                ->select('sfirst_name', 'slast_name', 'semail', 'sphone_number', 'saddress', 'scity', 'sstate', 'spincode')
+                ->distinct()
+                ->get();
+        }
+        return view('frontend.checkout', compact('addresses'));
     }
 
     public function checkout_store(Request $request)
@@ -259,7 +267,24 @@ class IndexController extends Controller
         foreach ($cartItems as $item) {
             $subTotal += ($item['price'] * $item['qty']);
         }
-        $shipping = $subTotal > 1499 ? 0 : 99;
+        // Calculate shipping dynamically
+        $shipping = 0;
+        $state = strtolower($request->state);
+        $shipping_data = DB::table('shippingcharges')
+            ->where('from', '<=', $subTotal)
+            ->where('to', '>=', $subTotal)
+            ->first();
+
+        if ($shipping_data) {
+            $tn_states = ['tamil nadu', 'tamilnadu', 'tn', 'pondicherry', 'puducherry', 'puducheri', 'py'];
+            if (in_array($state, $tn_states)) {
+                $shipping = $shipping_data->amount - $shipping_data->dis_amount;
+            } else {
+                $shipping = $shipping_data->amount1 - $shipping_data->dis_amount1;
+            }
+        }
+        $shipping = max(0, $shipping);
+
         $discount = $request->discount_amount ?? 0;
         $total    = ($subTotal + $shipping) - $discount;
 
@@ -285,13 +310,29 @@ class IndexController extends Controller
         ]);
 
         // Save customer info to users table address fields if logged in
-        if (\Auth::check()) {
-            \Auth::user()->update([
+        if (Auth::check()) {
+            Auth::user()->update([
                 'address'  => $request->address,
                 'city'     => $request->city,
                 'state'    => $request->state,
                 'postcode' => $request->pincode,
                 'phone'    => $request->phone,
+            ]);
+
+            // Save to shipping_address table as well
+            DB::table('shipping_address')->insert([
+                'customer_id'   => Auth::id(),
+                'order_id'      => $orderId,
+                'sfirst_name'   => $request->first_name,
+                'slast_name'    => $request->last_name,
+                'semail'        => $request->email,
+                'sphone_number' => $request->phone,
+                'saddress'      => $request->address,
+                'scity'         => $request->city,
+                'sstate'        => $request->state,
+                'spincode'      => $request->pincode,
+                'created_at'    => now(),
+                'updated_at'    => now(),
             ]);
         }
 
@@ -542,5 +583,30 @@ class IndexController extends Controller
         ]);
 
         return back()->with('success', 'Thank you for your review! It will be visible after approval.');
+    }
+
+    public function get_shipping_charge(Request $request)
+    {
+        $state = strtolower($request->state);
+        $subtotal = $request->subtotal;
+
+        $shipping_data = DB::table('shippingcharges')
+            ->where('from', '<=', $subtotal)
+            ->where('to', '>=', $subtotal)
+            ->first();
+
+        if (!$shipping_data) {
+            return response()->json(['shipping' => 0]);
+        }
+
+        $tn_states = ['tamil nadu', 'tamilnadu', 'tn', 'pondicherry', 'puducherry', 'puducheri', 'py'];
+        
+        if (in_array($state, $tn_states)) {
+            $shipping = $shipping_data->amount - $shipping_data->dis_amount;
+        } else {
+            $shipping = $shipping_data->amount1 - $shipping_data->dis_amount1;
+        }
+
+        return response()->json(['shipping' => max(0, $shipping)]);
     }
 }

@@ -14,6 +14,16 @@
                     </a>
                 </li>
 
+
+                @if (auth()->user()->can('Blog List'))
+                    <li>
+                        <a href="{{ route('blog.index') }}" class="waves-effect">
+                            <i class="dripicons-article"></i>
+                            <span> Blogs </span>
+                        </a>
+                    </li>
+                @endif
+
                 @if (auth()->user()->can('category-view') || auth()->user()->can('products-view'))
                     <li class="has_sub">
                         <a href="javascript:void(0);" class="waves-effect"><i class="dripicons-archive"></i><span>
@@ -23,6 +33,7 @@
                             @can('category-view')
                                 <li><a href="{{ route('category.index') }}"><i class="mdi mdi-view-grid"></i>Categories</a></li>
                             @endcan
+                            {{-- <li><a href="{{ route('catex`gorytag.index') }}"><i class="mdi mdi-tag-multiple"></i>Product Tags</a></li> --}}
                             @can('products-view')
                                 <li><a href="{{ route('product.index') }}"><i class="mdi mdi-package-variant"></i>Products</a></li>
                             @endcan
@@ -32,6 +43,13 @@
                             @can('tax-view')
                                 <li><a href="{{ route('tax.index') }}"><i class="mdi mdi-cash"></i>Tax Settings</a></li>
                             @endcan
+
+                            <li>
+                                <a href="{{ route('shippingchargesedit') }}" class="waves-effect">
+                                    <i class="dripicons-to-do"></i>
+                                    <span> Shipping Settings </span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endif
@@ -75,18 +93,26 @@
                     </li>
                 @endif
 
-                @if (auth()->user()->can('customer-view'))
+                @if (auth()->user()->can('customer-view') || auth()->user()->can('user-view'))
                     <li class="has_sub">
                         <a href="javascript:void(0);" class="waves-effect"><i class="dripicons-user-group"></i><span>
                                 Users </span> <span class="menu-arrow float-right"><i
                                     class="mdi mdi-chevron-right"></i></span></a>
                         <ul class="list-unstyled">
-                            {{-- @can('user-view')
-                                <li><a href="{{ url('user_view') }}"><i class="mdi mdi-account-star"></i>Staff Admin</a></li>
-                            @endcan --}}
+                            @can('user-view')
+                                <li><a href="{{ route('user.index') }}"><i class="mdi mdi-account-star"></i>Staff Admin</a></li>
+                            @endcan
                             @can('customer-view')
                                 <li><a href="{{ route('customer.list') }}"><i class="mdi mdi-account-multiple"></i>Customers</a></li>
                             @endcan
+
+                            <li>
+                                <a href="{{ route('contactlist.index') }}" class="waves-effect">
+                                    <i class="dripicons-mail"></i>
+                                    <span> Inquiries </span>
+                                </a>
+                            </li>
+
                         </ul>
                     </li>
                 @endif
@@ -98,14 +124,7 @@
                     </a>
                 </li>
 
-                @if (auth()->user()->can('Blog List'))
-                    <li>
-                        <a href="{{ route('blog.index') }}" class="waves-effect">
-                            <i class="dripicons-article"></i>
-                            <span> Blogs </span>
-                        </a>
-                    </li>
-                @endif
+              
 
                 {{-- <li class="has_sub">
                     <a href="javascript:void(0);" class="waves-effect"><i class="dripicons-document"></i><span>
@@ -124,19 +143,9 @@
                     </ul>
                 </li> --}}
 
-                <li>
-                    <a href="{{ route('contactlist.index') }}" class="waves-effect">
-                        <i class="dripicons-mail"></i>
-                        <span> Inquiries </span>
-                    </a>
-                </li>
+               
 
-                <li>
-                    <a href="{{ route('shippingchargesedit') }}" class="waves-effect">
-                        <i class="dripicons-to-do"></i>
-                        <span> Shipping Settings </span>
-                    </a>
-                </li>
+               
             </ul>
         </div>
 

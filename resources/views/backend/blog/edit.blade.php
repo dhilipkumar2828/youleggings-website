@@ -5,21 +5,14 @@
 
         <div class="container-fluid">
 
-            <div class="row">
+            <div class="row card">
 
                 <div class="col-sm-12">
 
-                    <div class="float-right page-breadcrumb">
+                    <div class="float-right page-breadcrumb mt-1">
 
-                        <ol class="breadcrumb">
-
-                            <li class="breadcrumb-item"><a href="{{ route('admin') }}">Home</a></li>
-
-                            <li class="breadcrumb-item"><a href="{{ route('about.index') }}">Blogs</a></li>
-
-                            <li class="breadcrumb-item active">Edit Blogs</li>
-
-                        </ol>
+                       <a href="{{ route('blog.index') }}" id="add-btn" style="color: #ffffff;"><i class="fa fa-angle-left"
+                        aria-hidden="true"></i> Back</a>
 
                     </div>
 
@@ -29,14 +22,7 @@
 
             </div>
 
-            <div class="card m-b-30 card-body">
-
-                <h4 class="card-title font-20 mt-0">Edit Blogs</h4>
-
-                <a href="{{ route('blog.index') }}" id="add-btn" style="color: #ffffff;"><i class="fa fa-angle-left"
-                        aria-hidden="true"></i> Back</a>
-
-            </div>
+           
 
             <div class="row">
 
@@ -66,7 +52,7 @@
 
                                 @method('patch')
 
-                                <div class="form-group row">
+                                <div class="form-group row align-items-center">
 
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Title <span
                                             style="color:red">*</span></label>
@@ -95,7 +81,7 @@
 
                                 </div>
 
-                                <div class="form-group row">
+                                <div class="form-group row align-items-center">
 
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Image <span
                                             style="color:red">*</span></label>
@@ -129,7 +115,7 @@
 
                                 </div>
 
-                                <div class="form-group row">
+                                <div class="form-group row align-items-center">
 
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Publish At <span
                                             style="color:red">*</span></label>
@@ -143,7 +129,7 @@
 
                                 </div>
 
-                                <div class="form-group row">
+                                <div class="form-group row align-items-center">
 
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Created By <span
                                             style="color:red">*</span></label>
@@ -157,28 +143,22 @@
 
                                 </div>
 
-                                <div class="form-group row">
-
+                                <div class="form-group row align-items-center">
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Status <span
                                             style="color:red">*</span></label>
-
                                     <div class="col-sm-10">
-
-                                        <select class="form-control" required name='status'
-                                            value="{{ $blogs->status }}">
-
-                                            <option value="">--Status--</option>
-
-                                            <option value="1" {{ $blogs->status == '1' ? 'selected' : '' }}>Publish
-                                            </option>
-
-                                            <option value="0" {{ $blogs->status == '0' ? 'selected' : '' }}>Draft
-                                            </option>
-
-                                        </select>
-
+                                        <div class="premium-switch-group">
+                                            <input type="radio" name="status" id="status_publish" value="1" {{ $blogs->status == '1' ? 'checked' : '' }}>
+                                            <label for="status_publish">
+                                                <i class="fa fa-check-circle"></i> Publish
+                                            </label>
+                                            
+                                            <input type="radio" name="status" id="status_draft" value="0" {{ $blogs->status == '0' ? 'checked' : '' }}>
+                                            <label for="status_draft">
+                                                <i class="fa fa-pencil-square"></i> Draft
+                                            </label>
+                                        </div>
                                     </div>
-
                                 </div>
 
                                 <div class="d-flex">

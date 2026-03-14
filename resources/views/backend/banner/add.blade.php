@@ -5,25 +5,18 @@
 
         <div class="container-fluid">
 
-            <div class="row">
+            <div class="row card m-b-30">
                 <div class="col-sm-12">
-                    <div class="float-right page-breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a>Appearence</a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('banner.index') }}">Banner</a></li>
-                            <li class="breadcrumb-item active">Create Banner</li>
-                        </ol>
+                    <div class="float-right page-breadcrumb mt-2">
+                        <a href="{{ route('banner.index') }}" class="btn btn-primary ripple px-4">
+                            <i class="fa fa-angle-left"></i> Back
+                        </a>
                     </div>
-                    <h5 class="page-title">Appearence</h5>
+                    <h5 class="page-title">Create Banner</h5>
 
                 </div>
             </div>
-            <div class="card m-b-30 card-body">
-                <h4 class="card-title font-20 mt-0">Create Banner</h4>
-                <a href="{{ route('banner.index') }}" id="add-btn" style="color: #ffffff;"><i class="fa fa-angle-left"
-                        aria-hidden="true"></i> Back</a>
-
-            </div>
+          
             <div class="row">
                 <div class="col-md-12">
 
@@ -147,26 +140,25 @@
                                                 <textarea id="elm1"name="description" value="{{ old('description') }}" placeholder="40% Off!, Free Shipping">40% Off!, Free Shipping</textarea>
                                             </div>
                                         </div> -->
-                                <div class="form-group row">
+                                <div class="form-group row align-items-center">
                                     <label for="status" class="col-sm-2 col-form-label">Status</label>
                                     <div class="col-sm-10">
-                                        <select class="form-control" name='status' required>
-                                            <option value="">--Status--</option>
-                                            <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>
-                                                Active</option>
-
-                                            <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>
-                                                Inactive</option>
-
-                                        </select>
-
+                                        <div class="premium-switch-group">
+                                            <input type="radio" name="status" id="status_active" value="active" {{ old('status') == 'active' || old('status') === null ? 'checked' : '' }}>
+                                            <label for="status_active">
+                                                <i class="fa fa-check-circle"></i> Active
+                                            </label>
+                                            
+                                            <input type="radio" name="status" id="status_inactive" value="inactive" {{ old('status') == 'inactive' ? 'checked' : '' }}>
+                                            <label for="status_inactive">
+                                                <i class="fa fa-times-circle"></i> Inactive
+                                            </label>
+                                        </div>
                                     </div>
-
                                 </div>
 
-                                <div class="d-flex">
+                                <div class="d-flex justify-content-end">
                                     <button class="btn btn-primary" type="submit">Submit</button>&nbsp;
-                                    <button class="btn btn-secondary" id="reset" type="Reset">Cancel</button>
                                 </div>
                             </form>
                         </div>

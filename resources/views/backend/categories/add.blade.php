@@ -5,23 +5,14 @@
 
         <div class="container-fluid">
 
-            <div class="row">
+            <div class="row card m-b-30">
                 <div class="col-sm-12">
                     <div class="float-right page-breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a>Catalogs</a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('category.index') }}">Category</a></li>
-                            <li class="breadcrumb-item active">Create Category</li>
-                        </ol>
+                        <a href="{{ route('category.index') }}" id="add-btn" style="color: #ffffff;"><i class="fa fa-angle-left"
+                        aria-hidden="true"></i> Back</a>
                     </div>
                     <h5 class="page-title">Catalogs</h5>
                 </div>
-            </div>
-            <div class="card m-b-30 card-body">
-                <h4 class="card-title font-20 mt-0">Create Category</h4>
-                <a href="{{ route('category.index') }}" id="add-btn" style="color: #ffffff;"><i class="fa fa-angle-left"
-                        aria-hidden="true"></i> Back</a>
-
             </div>
             <div class="row">
                 <div class="col-12">
@@ -109,8 +100,7 @@
                                     <div class="col-12 text-center">
                                         <button class="btn btn-primary btn-lg" type="submit"
                                             style="padding: 10px 40px;">Create Category</button>
-                                        <button class="btn btn-secondary btn-lg ml-2" id="reset" type="Reset"
-                                            style="padding: 10px 40px;">Cancel</button>
+                                        
                                     </div>
                                 </div>
                             </form>

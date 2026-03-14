@@ -88,11 +88,20 @@
             </div>
 
             <div class="card m-b-30 card-body">
-                <h4 class="card-title font-20 mt-0">Products</h4>
-                {{-- @can('products-add') --}}
-                    <!--<button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-primary" style="margin-top: -63px;border: 1px solid #508aeb;width: 50px;align-items: right;background-color: #508aeb;padding: 3px;border-radius: 0.2rem;align-self: flex-end; margin-right: 10px;">+ Title </button>-->
-                    <a href="{{ route('product.create') }}" id="add-btn" style="color: #ffffff;"> + ADD</a>
-                {{-- @endcan --}}
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h4 class="card-title font-20 mt-0 mb-1">Products</h4>
+                        <p class="text-muted mb-0">Total Products: <span class="font-weight-bold text-primary">{{ $totalProducts }}</span></p>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <a href="{{ route('export_file') }}" class="btn btn-primary mr-2 ripple px-4">
+                            <i class="fa fa-file-excel-o"></i> Excel Export
+                        </a>
+                        <a href="{{ route('product.create') }}" class="btn btn-primary ripple px-4">
+                            <i class="fa fa-plus"></i> ADD PRODUCT
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <div class="row">
@@ -102,118 +111,33 @@
                 @include('backend.layouts.notification')
             </div>
             <div class="row">
-                <div class="col-sm-12 col-md-6">
-                    <div id="datatable-buttons_filter" class="dataTables_filter">
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="dt-buttons btn-group" style="display:none;">
-
-                        <form action="{{ route('import_file') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <input type="file"name="file" id="file">
-                            <button class="btn btn-secondary buttons-excel buttons-html5" tabindex="0"
-                                aria-controls="datatable-buttons"><span>Import</span></button>
-                            {{-- <a class="btn btn-secondary buttons-excel buttons-html5" tabindex="0" aria-controls="datatable-buttons" href="#" style="display:none"><span>Excel</span></a>
-                    <a class="btn btn-secondary buttons-pdf buttons-html5" tabindex="0" aria-controls="datatable-buttons" href="#"><span>PDF</span></a> --}}
-                            <!-- <input tclass="btn btn-secondary buttons-excel buttons-html5" tabindex="0" aria-controls="datatable-buttons"><span>Import</span>> -->
-                            <button ype="submit"class="btn btn-secondary buttons-excel buttons-html5" tabindex="0"
-                                aria-controls="datatable-buttons"><span>Import</span></button>
-                            <!-- {{-- <a class="btn btn-secondary buttons-excel buttons-html5" tabindex="0" aria-controls="datatable-buttons" href="#"><span>Excel</span></a>
-                    <a class="btn btn-secondary buttons-pdf buttons-html5" tabindex="0" aria-controls="datatable-buttons" href="#"><span>PDF</span></a> --}} -->
-                            <a class="btn btn-secondary buttons-pdf buttons-html5"tabindex="0"
-                                aria-controls="datatable-buttons" href="{{ route('export_file') }}">Export</a>
-                        </form>
-                        <!-- <input type="text" id="search-input" class="form-control" placeholder="Search..."> -->
-
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="row">
-
                 <div class="col-12">
-                    <div>
-                        <h4>Total Products: {{ $totalProducts }}</h4>
-                    </div>
-
                     <div class="card m-b-30">
                         <div class="card-body">
-                            <div class="row mb-3 d-flex align-items-center" style="gap: 0;">
-
-                                <div class="d-flex align-items-center justify-content-end" style="flex: 0 0 auto;">
-                                    <label for="items-per-page" class="mr-2">Show</label>
-                                    <select id="items-per-page" class="form-control small-select"
-                                        onchange="changeItemsPerPage(this.value)"
-                                        style="width: auto; padding: 5px 10px; font-size: 14px; height: 35px;">
-                                        <option value="25"
-                                            {{ request()->get('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
-                                        <option value="50"
-                                            {{ request()->get('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
-                                        <option value="100"
-                                            {{ request()->get('per_page', 10) == 100 ? 'selected' : '' }}>100</option>
-                                        <option value="250"
-                                            {{ request()->get('per_page', 10) == 250 ? 'selected' : '' }}>250</option>
-                                        <option value="500"
-                                            {{ request()->get('per_page', 10) == 500 ? 'selected' : '' }}>500</option>
-                                    </select>
-                                    <label for="items-per-page" class="ml-2">Entries</label>
+                            <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+                                <div>
+                                    <button id="delete-selected" class="btn btn-danger btn-sm ripple mr-2">
+                                        <i class="fa fa-trash"></i> Delete Selected
+                                    </button>
+                                    <button id="active-selected" class="btn btn-success btn-sm ripple mr-2">
+                                        <i class="fa fa-check"></i> Bulk Active
+                                    </button>
+                                    <button id="deactive-selected" class="btn btn-warning btn-sm ripple text-white">
+                                        <i class="fa fa-times"></i> Bulk Deactive
+                                    </button>
                                 </div>
-                                <!-- Search Input -->
-
-                                <style>
-                                    /* === Desktop layout === */
-                                    .inputField {
-                                        position: absolute;
-                                        top: 88px;
-                                        right: 12%;
-                                        z-index: 10;
-                                    }
-
-                                    .backBtn {
-                                        position: absolute;
-                                        top: 88px;
-                                        right: 5%;
-                                        z-index: 10;
-                                    }
-
-                                    /* === Mobile fix === */
-                                    @media (max-width: 768px) {
-
-                                        .inputField,
-                                        .backBtn {
-                                            position: static;
-                                            /* remove absolute */
-                                            width: 100%;
-                                            text-align: center;
-                                            margin-top: 10px;
-                                            z-index: auto;
-                                        }
-
-                                        #search-input {
-                                            width: 90%;
-                                            margin: 0 auto;
-                                            display: block;
-                                            position: relative;
-                                            z-index: 9999;
-                                            /* make sure input is above other layers */
-                                        }
-
-                                        .backBtn button {
-                                            width: 90%;
-                                            margin: 10px auto;
-                                            display: block;
-                                        }
-                                    }
-                                </style>
-                                <!-- Items Per Page Dropdown -->
-
+                                <div class="d-flex align-items-center">
+                                    <label class="mb-0 mr-2">Show</label>
+                                    <select onchange="changeItemsPerPage(this.value)" class="form-control form-control-sm" style="width: 80px;">
+                                        <option value="25" {{ request()->get('per_page') == 25 ? 'selected' : '' }}>25</option>
+                                        <option value="50" {{ request()->get('per_page') == 50 ? 'selected' : '' }}>50</option>
+                                        <option value="100" {{ request()->get('per_page') == 100 ? 'selected' : '' }}>100</option>
+                                    </select>
+                                    <label class="mb-0 ml-2">Entries</label>
+                                </div>
                             </div>
-                        </div>
-                        <!--<input type="text" id="search-input" class="form-control" placeholder="Search...">-->
-                        <table id="example" class="table table-bordered dt-responsive nowrap"
-                            style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <table id="example" class="table table-bordered dt-responsive nowrap"
+                                style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>
                                 <tr>
                                     <th> <input type="checkbox" id="select-all" style="margin-right: 25px;">
@@ -375,13 +299,7 @@
                         </div>
                     </div>
                 </div>
-                <button id="delete-selected" class="btn btn-danger">Delete Selected</button>
-
-                <button id="active-selected" class="btn btn-success">Active</button>
-
-                <button id="deactive-selected" class="btn btn-danger">Deactive</button>
-
-                <div class="col-sm-6 col-md-12 m-t-30">
+            </div>
                     <div class="modal fade bs-example-modal-center1" tabindex="-1" role="dialog"
                         aria-labelledby="mySmallModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
@@ -516,16 +434,11 @@
                                     </div>
                                 </div>
                             </div><!-- /.modal-content -->
-                        </div><!-- /.modal-dialog -->
-                    </div><!-- /.modal -->
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-    </div> <!-- end col -->
-    </div> <!-- end row -->
+                    </div> <!-- /.modal-dialog -->
+                </div> <!-- /.modal -->
+            </div><!-- container fluid -->
+        </div> <!-- page-content-wrapper -->
+    </div> <!-- wrapper / main content -->
 @endsection
 @section('scripts')
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/css/bootstrap-switch-button.min.css"

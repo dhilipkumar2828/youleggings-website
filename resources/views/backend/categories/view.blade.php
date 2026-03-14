@@ -118,21 +118,21 @@
                                                                     </a>
                                                                 {{-- @endcan --}}
 
-                                                                @if ($subcat)
+                                                                {{-- @if ($subcat)
                                                                     <!-- View Subcategories -->
                                                                     <a href="{{ url('subcategory_view/' . $item->id) }}"
                                                                         class="action-icon btn-info-icon"
                                                                         data-toggle="tooltip" title="View Subcategories">
                                                                         <i class="fa fa-list"></i>
                                                                     </a>
-                                                                @endif
+                                                                @endif --}}
 
                                                                 <!-- Add SubCategory -->
-                                                                <a href="{{ url('subcategory_add/' . $item->id) }}"
+                                                                {{-- <a href="{{ url('subcategory_add/' . $item->id) }}"
                                                                     class="action-icon btn-success-icon"
                                                                     data-toggle="tooltip" title="Add Subcategory">
                                                                     <i class="fa fa-plus-square"></i>
-                                                                </a>
+                                                                </a> --}}
 
                                                                 {{-- @can('category-delete') --}}
                                                                     <!-- Delete -->

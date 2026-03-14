@@ -5,19 +5,15 @@
 
         <div class="container-fluid">
 
-            <div class="row">
+            <div class="row card" style="width: 100%;margin-left:0px">
 
                 <div class="col-sm-12">
 
-                    <div class="float-right page-breadcrumb">
+                    <div class="float-right page-breadcrumb mt-2">
 
-                        <ol class="breadcrumb">
-
-                            <li class="breadcrumb-item"><a href="{{ route('coupon.index') }}">Coupon</a></li>
-
-                            <li class="breadcrumb-item active">Coupons</li>
-
-                        </ol>
+                       <a href="{{ route('coupon.create') }}" class="btn btn-primary px-4 ripple">
+                            <i class="fa fa-plus"></i> ADD COUPON
+                        </a>
 
                     </div>
 
@@ -29,17 +25,7 @@
 
             <!-- end row -->
 
-            <div class="card m-b-30 card-body">
-
-                <h4 class="card-title font-20 mt-0">Coupons</h4>
-
-                @can('coupon-add')
-
-                    <a href="{{ route('coupon.create') }}" id="add-btn" style="color: #ffffff;"> + ADD</a>
-
-                @endcan
-
-            </div>
+            
 
             <div class="row">
 

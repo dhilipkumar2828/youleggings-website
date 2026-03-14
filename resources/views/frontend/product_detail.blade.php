@@ -91,8 +91,11 @@
 
           <div class="product-detail-actions compact-actions" style="margin-top: 20px; display: flex; gap: 15px;">
             <button id="productAddToCartBtn" type="button" class="btn" style="background: #333; color: #fff; flex: 1; padding: 18px; font-weight: 700; letter-spacing: 2px;">ADD TO CART</button>
-            <button type="button" class="btn" onclick="toggleWishlist(event, {{ $product->id }})" style="background: #fff; color: #333; border: 1px solid #333; width: 60px; display: flex; align-items: center; justify-content: center;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ec407a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            @php
+                $isInWishlist = Auth::check() && \App\Models\Wishlist::where('customer_id', Auth::id())->where('product_id', $product->id)->exists();
+            @endphp
+            <button type="button" class="btn" onclick="toggleWishlist(event, {{ $product->id }})" style="background: #fff; color: {{ $isInWishlist ? '#ec407a' : '#333' }}; border: 1px solid {{ $isInWishlist ? '#ec407a' : '#333' }}; width: 60px; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+                <i data-lucide="heart" style="width: 24px; height: 24px; fill: {{ $isInWishlist ? '#ec407a' : 'none' }};"></i>
             </button>
           </div>
 

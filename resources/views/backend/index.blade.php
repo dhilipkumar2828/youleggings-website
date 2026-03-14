@@ -31,15 +31,11 @@
                         <div class="card-body p-4">
                             <div class="d-flex align-items-start justify-content-between">
                                 <div>
-                                    <h6 class="text-uppercase text-muted font-weight-700 mb-3 spacing-1">Total Sales</h6>
+                                    <h6 class="text-uppercase text-muted font-weight-700 mb-3 spacing-1" >Total Sales</h6>
                                     <h3 class="mb-2 font-weight-700">₹
-                                        {{ number_format(\App\Models\Order::where('status', 'Delivered')->sum('total'), 2) }}
+                                        {{ number_format($totalSales, 2) }}
                                     </h3>
-                                    <div class="stat-growth success">
-                                        <i class="fa fa-arrow-up"></i>
-                                        <span>+12.5%</span>
-                                        <small class="text-muted ml-1">last 30 days</small>
-                                    </div>
+                                    
                                 </div>
                                 <div class="stat-icon-box pink">
                                     <i class="fa fa-inr h3 mb-0"></i>
@@ -57,12 +53,8 @@
                                 <div>
                                     <h6 class="text-uppercase text-muted font-weight-700 mb-3 spacing-1">Paid Orders</h6>
                                     <h3 class="mb-2 font-weight-700">
-                                        {{ \App\Models\Order::where('payment_status', 'paid')->count() }}</h3>
-                                    <div class="stat-growth primary">
-                                        <i class="fa fa-archive"></i>
-                                        <span>{{ \App\Models\Order::where('created_at', '>=', date('Y-m-d'))->count() }}</span>
-                                        <small class="text-muted ml-1">new orders today</small>
-                                    </div>
+                                        {{ $totalPaidOrders }}</h3>
+                                    
                                 </div>
                                 <div class="stat-icon-box blue">
                                     <i class="fa fa-shopping-cart h3 mb-0"></i>
@@ -80,12 +72,8 @@
                                 <div>
                                     <h6 class="text-uppercase text-muted font-weight-700 mb-3 spacing-1">Customers</h6>
                                     <h3 class="mb-2 font-weight-700">
-                                        {{ \App\Models\User::where('role', 'customer')->count() }}</h3>
-                                    <div class="stat-growth warning">
-                                        <i class="fa fa-star"></i>
-                                        <span>Active</span>
-                                        <small class="text-muted ml-1">Verified users</small>
-                                    </div>
+                                        {{ $totalCustomers }}</h3>
+                                    
                                 </div>
                                 <div class="stat-icon-box orange">
                                     <i class="fa fa-users h3 mb-0"></i>
@@ -102,12 +90,8 @@
                             <div class="d-flex align-items-start justify-content-between">
                                 <div>
                                     <h6 class="text-uppercase text-muted font-weight-700 mb-3 spacing-1">Live Products</h6>
-                                    <h3 class="mb-2 font-weight-700">{{ \App\Models\Product::count() }}</h3>
-                                    <div class="stat-growth danger">
-                                        <i class="fa fa-exclamation-circle"></i>
-                                        <span>{{ \App\Models\Product::where('stock', '<=', 5)->count() }}</span>
-                                        <small class="text-muted ml-1">low stock items</small>
-                                    </div>
+                                    <h3 class="mb-2 font-weight-700">{{ $totalProducts }}</h3>
+                                    
                                 </div>
                                 <div class="stat-icon-box teal">
                                     <i class="fa fa-tags h3 mb-0"></i>
@@ -119,7 +103,7 @@
             </div>
 
             <!-- Charts Row -->
-            <div class="row mt-4">
+            {{-- <div class="row mt-4">
                 <div class="col-xl-8">
                     <div class="card chart-card shadow-sm">
                         <div class="card-body p-4">
@@ -156,11 +140,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Recent Transactions & Quick Links -->
             <div class="row mt-4">
-                <div class="col-xl-8">
+                <div class="col-xl-12">
                     <div class="card shadow-sm border-0">
                         <div class="card-body p-4">
                             <div class="d-flex align-items-center justify-content-between mb-4">
@@ -186,9 +170,17 @@
                                                 $billing = DB::table('billing_address')
                                                     ->where('order_id', $data->id)
                                                     ->first();
-                                                $name = $billing
-                                                    ? $billing->first_name . ' ' . $billing->last_name
-                                                    : 'Guest';
+                                                
+                                                if ($billing) {
+                                                    $name = $billing->first_name . ' ' . $billing->last_name;
+                                                } elseif ($data->customer) {
+                                                    $name = $data->customer->name;
+                                                } else {
+                                                    $name = 'Guest';
+                                                }
+
+                                                $payment = $data->payment_type ?: ($data->payment_status ?: 'N/A');
+                                                $status = $data->status ?: 'Pending';
                                             @endphp
                                             <tr>
                                                 <td class="font-weight-700 text-dark">#{{ $data->order_id }}</td>
@@ -204,7 +196,7 @@
                                                     </div>
                                                 </td>
                                                 <td><span
-                                                        class="badge badge-pill bg-soft-blue text-blue px-3">{{ strtoupper($data->payment_type) }}</span>
+                                                        class="badge badge-pill bg-soft-blue text-blue px-3">{{ strtoupper($payment) }}</span>
                                                 </td>
                                                 <td class="font-weight-700 text-dark">
                                                     ₹{{ number_format($data->total, 2) }}</td>
@@ -216,10 +208,10 @@
                                                                 'Processing' => 'warning',
                                                                 'Pending' => 'secondary',
                                                                 'Cancelled' => 'danger',
-                                                            ][$data->status] ?? 'info';
+                                                            ][$status] ?? 'info';
                                                     @endphp
                                                     <span
-                                                        class="badge badge-{{ $statusClass }} py-1 px-3">{{ $data->status }}</span>
+                                                        class="badge badge-{{ $statusClass }} py-1 px-3">{{ $status }}</span>
                                                 </td>
                                                 <td class="text-right">
                                                     <a href="{{ route('view_detail', $data->id) }}"
@@ -236,7 +228,7 @@
                     </div>
                 </div>
 
-                <div class="col-xl-4">
+                {{-- <div class="col-xl-4">
                     <div class="card bg-pink-gradient text-white overflow-hidden shadow-lg border-0 rounded-16">
                         <div class="card-body p-4 position-relative">
                             <div class="position-relative z-index-1">
@@ -276,7 +268,7 @@
                         </div>
                     </div>
 
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>

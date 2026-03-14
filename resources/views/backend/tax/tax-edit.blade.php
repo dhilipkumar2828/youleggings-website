@@ -5,39 +5,24 @@
 
         <div class="container-fluid">
 
-            <div class="row">
+            <div class="row card ">
 
                 <div class="col-sm-12">
 
                     <div class="float-right page-breadcrumb">
 
-                        <ol class="breadcrumb">
-
-                            <li class="breadcrumb-item"><a>Catalogs</a></li>
-
-                            <li class="breadcrumb-item"><a href="#">Tax</a></li>
-
-                            <li class="breadcrumb-item active">Edit Tax</li>
-
-                        </ol>
+                        <a href="{{ route('tax.index') }}" id="add-btn" style="color: #ffffff;"><i class="fa fa-angle-left"
+                        aria-hidden="true"></i> Back</a>
 
                     </div>
 
-                    <h5 class="page-title">Catalogs</h5>
+                    <h5 class="page-title">Edit Tax</h5>
 
                 </div>
 
             </div>
 
-            <div class="card m-b-30 card-body">
-
-                <h4 class="card-title font-20 mt-0">Edit Tax</h4>
-
-                <a href="{{ route('tax.index') }}" id="add-btn" style="color: #ffffff;"><i class="fa fa-angle-left"
-                        aria-hidden="true"></i> Back</a>
-
-            </div>
-
+           
             <div class="row">
 
                 <div class="col-12">

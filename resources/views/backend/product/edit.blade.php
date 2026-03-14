@@ -240,43 +240,19 @@
 
     <div class="page-content-wrapper">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row card">
                 <div class="col-sm-12">
                     <div class="float-right page-breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ url('/admin') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('product.index') }}">Product</a></li>
-                            <li class="breadcrumb-item active">{{ $clone ? 'Clone' : 'Edit' }} Product</li>
-                        </ol>
-                    </div>
-                    <h5 class="page-title">Catalogs</h5>
-                </div>
-            </div>
-
-            <div class="card m-b-30 card-body">
-                <h4 class="card-title font-20 mt-0">{{ $clone ? 'Clone Product' : 'Edit Product' }}</h4>
-                <div class="d-flex justify-content-between align-items-center">
-                    <a href="{{ route('product.index') }}" id="add-btn" style="color: #ffffff;"><i
+                        <a href="{{ route('product.index') }}" id="add-btn" style="color: #ffffff;"><i
                             class="fa fa-angle-left" aria-hidden="true"></i> Back</a>
-                    <div class="btn-group">
-                        @if ($prevProduct > 0)
-                            <a href="/product/{{ $prevProduct }}/edit"
-                                class="btn btn-outline-primary btn-sm rounded-circle mr-1" title="Previous Product">
-                                <i class="fa fa-angle-left"></i>
-                            </a>
-                        @endif
-                        <span class="px-2 align-self-center text-muted font-weight-bold">ID: #{{ $product_id }}</span>
-                        @if ($nextProduct > 0)
-                            <a href="/product/{{ $nextProduct }}/edit"
-                                class="btn btn-outline-primary btn-sm rounded-circle ml-1" title="Next Product">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                        @endif
                     </div>
+                    <h5 class="page-title">{{ $clone ? 'Clone Product' : 'Edit Product' }}</h5>
                 </div>
             </div>
 
-            <div class="card m-b-30">
+            
+
+            <div class=" m-b-30">
                 <div class="card-body">
                     <div class="container-fluid">
                         <div class="row justify-content-center">
@@ -706,7 +682,7 @@
                                         </div>
                                         <input type="button" name="next" class="next2 action-button" value="Next"
                                             id="next_btn2" />
-                                        <input type="button" name="previous" class="previous action-button-previous"
+                                        <input type="button" name="previous" class="next2 action-button" 
                                             value="Previous" />
                                     </fieldset>
 
@@ -743,7 +719,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <input type="button" name="previous" class="previous action-button-previous"
+                                        <input type="button" name="previous" class="next2 action-button"
                                             value="Previous" />
                                     </fieldset>
                                     </form>

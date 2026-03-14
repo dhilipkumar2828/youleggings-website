@@ -5,21 +5,18 @@
 
         <div class="container-fluid">
 
-            <div class="row">
+            <div class="row card" style="width: 100%;margin-left:0px">
 
-                <div class="col-sm-12">
+                <div class="col-sm-12 ">
 
-                    <div class="float-right page-breadcrumb">
+                    <div class="float-right page-breadcrumb mt-1">
 
-                        <ol class="breadcrumb">
+                        <a href="{{ route('user.create') }}" id="add-btn" style="color: #ffffff;"> + ADD</a>
 
-                            <li class="breadcrumb-item"><a href="{{ route('user.index') }}">User</a></li>
-
-                        </ol>
 
                     </div>
 
-                    <h5 class="page-title">System User </h5>
+                    <h5 class="page-title">User</h5>
 
                 </div>
 
@@ -27,15 +24,7 @@
 
             <!-- end row -->
 
-            <div class="card m-b-30 card-body">
-
-                <h4 class="card-title font-20 mt-0">System User </h4>
-
-                @can('user-add')
-                    <a href="{{ route('user.create') }}" id="add-btn" style="color: #ffffff;"> + ADD</a>
-                @endcan
-
-            </div>
+           
 
             <div class="row">
 
@@ -47,11 +36,7 @@
 
                 <div class="col-12">
 
-                    <div>
-
-                        <h4> Total User : {{ \App\Models\User::where('role', '!=', 'customer')->count() }}</h4>
-
-                    </div>
+                  
 
                     <div class="card m-b-30">
 
@@ -101,7 +86,7 @@
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         @can('user-edit')
-                                                            <a href="{{ url('user_edit', $user->id) }}"
+                                                            <a href="{{ route('user.edit', $user->id) }}"
                                                                 class="action-icon btn-edit-icon" data-toggle="tooltip"
                                                                 title="Edit">
                                                                 <i class="fa fa-edit"></i>
@@ -109,7 +94,7 @@
                                                         @endcan
 
                                                         @can('user-delete')
-                                                            <form action="{{ url('user_delete', $user->id) }}" method="post"
+                                                            <form action="{{ route('user.destroy', $user->id) }}" method="post"
                                                                 style="display:inline;">
                                                                 @csrf
                                                                 @method('post')

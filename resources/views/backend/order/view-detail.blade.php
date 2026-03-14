@@ -383,7 +383,7 @@
                                                     style=" border: 1px solid #908989;padding: 8px;font-size: 14px;">
                                                     {{ $key + 1 }}</td>
                                                 <td>
-                                                    <b>{{ $product_name }}</b>
+                                                    <b>{{ $product_name[$key] ?? 'Unknown' }}</b>
                                                 </td>
                                                 <td class="text-start" width="10%"
                                                     style=" border: 1px solid #908989;padding: 8px;font-size: 14px;"> <img
@@ -433,8 +433,7 @@
                                         }
                                         ?>
                                         <?php
-
-                                        if($state->id==31 ){
+                                        if (is_object($state) && $state->id == 31) {
                                         ?>
                                         <tr>
                                             <td style=" border: 1px solid #908989;padding: 8px;font-size: 14px;"></td>
@@ -710,21 +709,4 @@
         */
     </script>
 
-    @if (count($deleted_products) > 0)
-        <script>
-            let deletedProducts = @json($deleted_products);
-            deletedProducts.forEach(product => {
-                alert(product.message);
-            });
-        </script>
-    @endif
-
-    @if (count($deactivated_products) > 0)
-        <script>
-            let deactivatedProducts = @json($deactivated_products);
-            deactivatedProducts.forEach(product => {
-                alert(product.message);
-            });
-        </script>
-    @endif
 @endsection

@@ -210,39 +210,24 @@
 
         <div class="container-fluid">
 
-            <div class="row">
+            <div class="row card">
 
                 <div class="col-sm-12">
 
                     <div class="float-right page-breadcrumb">
 
-                        <ol class="breadcrumb">
-
-                            <li class="breadcrumb-item"><a>Catalogs</a></li>
-
-                            <li class="breadcrumb-item"><a href="#">Product</a></li>
-
-                            <li class="breadcrumb-item active">Add Product</li>
-
-                        </ol>
+                        <a href="{{ route('product.index') }}" id="add-btn" style="color: #ffffff;"><i class="fa fa-angle-left"
+                        aria-hidden="true"></i> Back</a>
 
                     </div>
 
-                    <h5 class="page-title">Catalogs</h5>
+                    <h5 class="page-title">Create Product</h5>
 
                 </div>
 
             </div>
 
-            <div class="card m-b-30 card-body">
-
-                <h4 class="card-title font-20 mt-0">Create Product</h4>
-
-                <a href="{{ route('product.index') }}" id="add-btn" style="color: #ffffff;"><i class="fa fa-angle-left"
-                        aria-hidden="true"></i> Back</a>
-
-            </div>
-
+          
             <div class="row">
 
                 <div class="col-12">
@@ -262,7 +247,7 @@
                         </div>
                     @endif
 
-                    <div class="card m-b-30">
+                    <div class=" m-b-30">
 
                         <div class="card-body">
 
@@ -270,7 +255,7 @@
 
                                 <div class="row justify-content-center">
 
-                                    <div class="col-12 text-center p-0 mt-3 mb-2">
+                                    <div class="col-12 text-center p-0">
 
                                         <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
 

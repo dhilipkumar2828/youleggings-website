@@ -78,17 +78,14 @@
 
         <div class="container-fluid">
 
-            <div class="row">
+            <div class="row card" style="width: 100%;margin-left:0px">
 
                 <div class="col-sm-12">
 
-                    <div class="float-right page-breadcrumb">
+                    <div class="float-right page-breadcrumb mt-1">
 
-                        <ol class="breadcrumb">
+                                                    <a href="{{ route('blog.create') }}" id="add-btn" style="color: #ffffff;"> + ADD</a>
 
-                            <li class="breadcrumb-item"><a href="#">Blogs</a></li>
-
-                        </ol>
 
                     </div>
 
@@ -100,35 +97,7 @@
 
             <!-- end row -->
 
-            <div class="card m-b-30 card-body">
-
-                <h4 class="card-title font-20 mt-0">Blogs</h4>
-
-                <div class="container">
-
-                    <div class="row">
-
-                        <div class="col-9">
-
-                        </div>
-
-                        <div class="col-3">
-
-                            @can('Blog Create')
-                                {{-- <button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"
-                                    style="margin-top: -63px; border: 1px solid #508aeb; background-color: #508aeb; padding: 5px 15px; border-radius: 0.2rem; align-self: flex-end; margin-right: 10px; display: inline-block;">+
-                                    Title </button> --}}
-
-                                <a href="{{ route('blog.create') }}" id="add-btn" style="color: #ffffff;"> + ADD</a>
-                            @endcan
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
+         
 
             <div class="row">
 
@@ -139,12 +108,6 @@
                 </div>
 
                 <div class="col-12">
-
-                    <div>
-
-                        <h4> Total Blogs : {{ \App\Models\blog::count() }}</h4>
-
-                    </div>
 
                     <div class="card m-b-30">
 

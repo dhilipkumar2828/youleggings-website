@@ -3,25 +3,18 @@
 @section('content')
     <div class="page-content-wrapper">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row card">
                 <div class="col-sm-12">
-                    <div class="float-right page-breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('admin') }}">Home</a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('about.index') }}">Blog</a></li>
-                            <li class="breadcrumb-item active">Create Blog</li>
-                        </ol>
+                    <div class="float-right page-breadcrumb mt-1">
+                        <a href="{{ route('blog.index') }}" id="add-btn" style="color: #ffffff;">
+                    <i class="fa fa-angle-left" aria-hidden="true"></i> Back
+                </a>
                     </div>
                     <h5 class="page-title">Create Blog</h5>
                 </div>
             </div>
 
-            <div class="card m-b-30 card-body">
-                <h4 class="card-title font-20 mt-0">Create Blog</h4>
-                <a href="{{ route('blog.index') }}" id="add-btn" style="color: #ffffff;">
-                    <i class="fa fa-angle-left" aria-hidden="true"></i> Back
-                </a>
-            </div>
+    
 
             <div class="row">
                 <div class="col-12">
@@ -29,7 +22,7 @@
                         <div class="card-body">
                             <form action="{{ route('blog.store') }}" method="post">
                                 @csrf
-                                <div class="form-group row">
+                                <div class="form-group row align-items-center">
                                     <label for="title" class="col-sm-2 col-form-label">Title <span
                                             style="color:red">*</span></label>
                                     <div class="col-sm-10">
@@ -45,7 +38,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
+                                <div class="form-group row align-items-center">
                                     <label for="thumbnail" class="col-sm-2 col-form-label">Image <span
                                             style="color:red">*</span></label>
                                     <div class="col-sm-10">
@@ -67,7 +60,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
+                                <div class="form-group row align-items-center">
                                     <label for="publish_at" class="col-sm-2 col-form-label">Publish At <span
                                             style="color:red">*</span></label>
                                     <div class="col-sm-10">
@@ -76,7 +69,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
+                                <div class="form-group row align-items-center">
                                     <label for="created_by" class="col-sm-2 col-form-label">Created By <span
                                             style="color:red">*</span></label>
                                     <div class="col-sm-10">
@@ -85,23 +78,26 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
+                                <div class="form-group row align-items-center">
                                     <label for="status" class="col-sm-2 col-form-label">Status <span
                                             style="color:red">*</span></label>
                                     <div class="col-sm-10">
-                                        <select class="form-control" required id="status" name="status">
-                                            <option value="">--Status--</option>
-                                            <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Publish
-                                            </option>
-                                            <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Draft
-                                            </option>
-                                        </select>
+                                        <div class="premium-switch-group">
+                                            <input type="radio" name="status" id="status_publish" value="1" {{ old('status') == '1' || old('status') === null ? 'checked' : '' }}>
+                                            <label for="status_publish">
+                                                <i class="fa fa-check-circle"></i> Publish
+                                            </label>
+                                            
+                                            <input type="radio" name="status" id="status_draft" value="0" {{ old('status') == '0' ? 'checked' : '' }}>
+                                            <label for="status_draft">
+                                                <i class="fa fa-pencil-square"></i> Draft
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div class="d-flex mt-3">
                                     <button class="btn btn-primary" type="submit">Submit</button>&nbsp;
-                                    <button class="btn btn-secondary" id="reset" type="reset">Cancel</button>
                                 </div>
                             </form>
                         </div>

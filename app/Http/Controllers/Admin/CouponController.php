@@ -64,8 +64,9 @@ class CouponController extends Controller
             // ->whereNotIn('id', $excludedProductIds)
             ->get();
 
+        $category = \App\Models\Category::where('status', 'active')->where('parent_id', null)->get();
         // Pass the filtered products to the view
-        return view('backend.coupon.add', compact('product'));
+        return view('backend.coupon.add', compact('product', 'category'));
     }
 
        public function create123()
@@ -225,8 +226,9 @@ class CouponController extends Controller
             // ->whereNotIn('id', $excludedProductIds)
             ->get();
        // $product=Product::get();
+        $category = \App\Models\Category::where('status', 'active')->where('parent_id', null)->get();
         if($coupon){
-            return view('backend.coupon.edit',compact('coupon','product'));
+            return view('backend.coupon.edit',compact('coupon','product','category'));
         }
         else{
             return back()->with('error','Data not  found');

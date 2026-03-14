@@ -11,6 +11,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\SubcategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\CouponController;
@@ -73,6 +74,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('/account-update', [IndexController::class, 'account_update'])->name('account_update');
     Route::post('/apply-coupon', [IndexController::class, 'apply_coupon'])->name('apply_coupon');
 });
+Route::post('/get-shipping-charge', [IndexController::class, 'get_shipping_charge'])->name('get_shipping_charge');
 
 // Utility Routes
 Route::get('/clear-cache', function () {
@@ -98,6 +100,13 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function(
     Route::resource('/category', CategoryController::class);
     Route::post('category_status', [CategoryController::class, 'categoryStatus'])->name('category.status');
     Route::delete('/categories/bulk-delete', [CategoryController::class, 'bulkDelete'])->name('category.bulkDelete');
+    
+    // Subcategories
+    Route::get('/subcategory_view/{id}', [SubcategoryController::class, 'view'])->name('subcategory.view');
+    Route::get('/subcategory_add/{id}', [SubcategoryController::class, 'subadd'])->name('subcategory.create');
+    Route::get('/subcategory_edit/{id}', [SubcategoryController::class, 'edit'])->name('subcategory.edit');
+    Route::post('/subcategory_update/{id}', [SubcategoryController::class, 'update'])->name('subcategory.update');
+    Route::post('/subcategory_create', [SubcategoryController::class, 'subcategory_create'])->name('subcategory.store');
     
     Route::resource('/product', ProductController::class)->except(['show']);
     Route::any('product_status', [ProductController::class, 'productStatus'])->name('product.status');
@@ -135,6 +144,7 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function(
     Route::get('/progress', [OrderController::class, 'progress'])->name('progress');
     Route::get('/deliver', [OrderController::class, 'deliver'])->name('deliver');
     Route::post('/order_status', [OrderController::class, 'orderstatus'])->name('order.status');
+    Route::post('/reason_status', [OrderController::class, 'reasonStatus'])->name('reason.Status');
     Route::delete('/orders/bulk-delete', [OrderController::class, 'deleteOrders'])->name('delete_orders');
     Route::get('/view_detail/{id}', [OrderController::class, 'view_detail'])->name('view_detail');
     Route::get("/notifications", [OrderController::class, "notifications"])->name('admin.notifications');
@@ -202,8 +212,12 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function(
     Route::post('/delete_feedback/{id}', [TestimonialController::class, 'delete_feedback'])->name('testimonial.delete');
 
     // Category Tags (Special)
-    Route::post('categorytag/store', [CategoryTagController::class, 'store'])->name('categorytag.store');
+    Route::get('categorytag', [CategoryTagController::class, 'index'])->name('categorytag.index');
     Route::get('categorytag/create', [CategoryTagController::class, 'create'])->name('categorytag.create');
+    Route::post('categorytag/store', [CategoryTagController::class, 'store'])->name('categorytag.store');
+    Route::get('categorytag/edit/{id}', [CategoryTagController::class, 'edit'])->name('categorytag.edit');
+    Route::post('categorytag/update/{id}', [CategoryTagController::class, 'update'])->name('categorytag.update');
+    Route::post('categorytag/delete/{id}', [CategoryTagController::class, 'destroy'])->name('categorytag.destroy');
     Route::get('/get-categories/{isParent}', [CategoryTagController::class, 'getCategories']);
     Route::post('categorytag_status', [CategoryTagController::class, 'CategorytagStatus'])->name('categorytag_status');
 

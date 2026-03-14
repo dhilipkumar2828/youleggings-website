@@ -96,18 +96,31 @@
         // Initialize Parsley with custom options for better styling
         // Exclude summernote textareas and multi-step forms to prevent infinite change-event loop
         try {
-            var $forms = $('form').not('.no-parsley').not('#msform');
+            var $forms = $('form').not('.no-parsley');
             if ($forms.length > 0) {
+                // Add custom Indian phone validator to Parsley
+                window.Parsley.addValidator('phoneindia', {
+                    validateString: function(value) {
+                        return /^[6-9]\d{9}$/.test(value.replace(/\s+/g, ""));
+                    },
+                    messages: {
+                        en: 'Please enter a valid 10-digit Indian phone number.'
+                    }
+                });
+
                 $forms.parsley({
                     errorClass: 'parsley-error',
                     successClass: 'parsley-success',
-                    errorsWrapper: '<ul class="parsley-errors-list"></ul>',
+                    errorsWrapper: '<ul class="parsley-errors-list filled"></ul>',
                     errorTemplate: '<li></li>',
                     excluded: 'input[type=hidden], .summernote, [data-parsley-excluded]',
                     errorsContainer: function(ParsleyField) {
                         var $element = ParsleyField.$element;
                         if ($element.closest('.input-group').length) {
                             return $element.closest('.input-group').parent();
+                        }
+                        if ($element.is('select') && $element.hasClass('select2-hidden-accessible')) {
+                            return $element.parent();
                         }
                         return $element.parent();
                     }

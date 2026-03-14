@@ -31,7 +31,8 @@ class Admin
             return $next($request);
         }
         else{
-            return redirect()->route('login')->with('error',"You don't have access");
+            // If already logged in but not an admin, redirect to frontend instead of login to avoid loop
+            return redirect()->route('index')->with('error', "You don't have permission to access the admin area.");
         }
     }
 
