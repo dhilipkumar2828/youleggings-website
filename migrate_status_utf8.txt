@@ -1,0 +1,20 @@
+﻿
+  Migration name  Batch / Status  
+  2014_10_12_000000_create_users_table  [1] Ran  
+  2014_10_12_100000_create_password_resets_table  [1] Ran  
+  2019_08_19_000000_create_failed_jobs_table  [1] Ran  
+  2019_12_14_000001_create_personal_access_tokens_table  [1] Ran  
+  2022_10_12_084611_create_products  [1] Ran  
+  2022_10_12_085214_create_product_attributes  Pending  
+  2022_10_12_085715_create_product_variants  Pending  
+  2022_10_12_090231_create_product_images  Pending  
+  2022_10_12_090407_create_product_specifications  Pending  
+  2022_10_12_090557_create_product_inventorys  Pending  
+  2025_12_04_122725_create_product_attribute_images_table  Pending  
+  2025_12_05_052952_add_variant_id_to_product_variants_table  [7] Ran  
+  2026_03_05_114526_update_existing_tables_for_premium_theme  [9] Ran  
+  2026_03_06_034919_add_phone_to_contactform_table  [10] Ran  
+  2026_03_06_040000_update_settings_table_fields  [11] Ran  
+  2026_03_13_101821_add_colors_and_sale_price_to_product_variants_table  [12] Ran  
+  2026_03_16_070051_add_is_default_to_shipping_address  [13] Ran  
+

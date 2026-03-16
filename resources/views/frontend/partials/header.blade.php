@@ -27,7 +27,25 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
         </button>
         
-        @guest
+       
+        <div class="nav-tooltip-wrap">
+          <a href="{{ route('wishlist') }}" class="nav-icon-btn" aria-label="Wishlist">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #ec407a;"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            @php
+                $wishlistCount = Auth::check() ? \App\Models\Wishlist::where('customer_id', Auth::id())->count() : 0;
+            @endphp
+            <span id="wishlistCountBadge" class="cart-count-badge {{ $wishlistCount > 0 ? 'has-items' : '' }}" style="background: var(--primary-color, #ec407a); z-index: 5;">{{ $wishlistCount }}</span>
+          </a>
+          <span class="nav-tooltip">Wishlist</span>
+        </div>
+
+        <a href="{{ route('cart') }}" id="cartPageBtn" class="nav-icon-btn" aria-label="Cart">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+          <span id="cartCountBadge" class="cart-count-badge" aria-live="polite">0</span>
+        </a>
+
+
+         @guest
         <div class="nav-tooltip-wrap">
           <a href="{{ route('login_user') }}" class="nav-icon-btn" aria-label="Login">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
@@ -45,30 +63,16 @@
         </div>
         @endauth
 
-        <div class="nav-tooltip-wrap">
-          <a href="{{ route('wishlist') }}" class="nav-icon-btn" aria-label="Wishlist">
-            <i data-lucide="heart" style="width: 20px; height: 20px; color: #ec407a;"></i>
-            @php
-                $wishlistCount = Auth::check() ? \App\Models\Wishlist::where('customer_id', Auth::id())->count() : 0;
-            @endphp
-            <span id="wishlistCountBadge" class="cart-count-badge {{ $wishlistCount > 0 ? 'has-items' : '' }}" style="background: var(--primary-color, #ec407a); z-index: 5;">{{ $wishlistCount }}</span>
-          </a>
-          <span class="nav-tooltip">Wishlist</span>
-        </div>
-
-        <a href="{{ route('cart') }}" id="cartPageBtn" class="nav-icon-btn" aria-label="Cart">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-          <span id="cartCountBadge" class="cart-count-badge" aria-live="polite">0</span>
-        </a>
+        
       </div>
-      <div id="headerSearchBar" class="header-search" aria-hidden="true">
+      <form id="headerSearchBar" action="{{ route('shop') }}" method="GET" class="header-search" aria-hidden="true">
         <div class="header-search-row">
-          <input type="text" placeholder="Search products..." aria-label="Search products">
+          <input type="text" name="q" placeholder="Search products..." aria-label="Search products" value="{{ request('q') }}">
           <button id="searchCloseBtn" class="header-search-close" type="button" aria-label="Close Search">
             <i data-lucide="x"></i>
           </button>
         </div>
         <div id="headerSearchResults" class="header-search-results" aria-label="Search Results"></div>
-      </div>
+      </form>
     </div>
   </header>

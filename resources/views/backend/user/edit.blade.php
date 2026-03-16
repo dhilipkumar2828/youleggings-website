@@ -66,7 +66,7 @@
                                     <div class="col-sm-10">
 
                                         <input class="form-control" type="text" required placeholder="Enter User Name"
-                                            id="example-text-input" name="name" value="{{ $user->name }}">
+                                            id="example-text-input" name="name" value="{{ $user->name }}" data-parsley-alphabets-only>
 
                                     </div>
 
@@ -92,9 +92,9 @@
 
                                     <div class="col-sm-10">
 
-                                        <input class="form-control" type="number" required
+                                        <input class="form-control" type="text" required
                                             placeholder="Enter Mobile Number" id="example-text-input" name="phone"
-                                            value="{{ $user->phone }}">
+                                            value="{{ $user->phone }}" data-parsley-phoneindia data-parsley-maxlength="10" data-parsley-minlength="10">
 
                                     </div>
 

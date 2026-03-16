@@ -45,8 +45,15 @@
 
       <div class="product-detail-layout">
         <div class="product-detail-gallery">
-          <div class="product-detail-image-wrap">
+          <div class="product-detail-image-wrap" style="position: relative;">
             <img id="productDetailImage" src="{{ $defaultImage }}" alt="{{ $product->name }}">
+            
+            @php
+                $isInWishlist = Auth::check() && \App\Models\Wishlist::where('customer_id', Auth::id())->where('product_id', $product->id)->exists();
+            @endphp
+            <button type="button" class="wishlist-toggle-btn" onclick="toggleWishlist(event, {{ $product->id }})" style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.9); border: none; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: {{ $isInWishlist ? '#ec407a' : '#888' }}; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="{{ $isInWishlist ? '#ec407a' : 'none' }}" stroke="{{ $isInWishlist ? '#ec407a' : '#888' }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            </button>
           </div>
           <div class="product-thumb-row" id="productThumbRow">
             @foreach($photos as $p)
@@ -61,7 +68,7 @@
           <p class="product-detail-category">{{ $product->categories->title ?? 'Legging' }}</p>
           <h2 class="product-detail-title">{{ $product->name }}</h2>
           <p class="product-detail-meta" style="color: #6b5a63;">Sizes {{ !empty($allSizes) ? $allSizes[0] . ' - ' . end($allSizes) : '' }}</p>
-          <div class="product-detail-price" id="productDetailPrice" style="color: var(--primary-color);">INR {{ number_format($defaultVariant['price'] ?? 0) }}</div>
+          <div class="product-detail-price" id="productDetailPrice" style="color: var(--primary-color);">₹{{ number_format($defaultVariant['price'] ?? 0) }}</div>
           <p class="product-tax-line" style="color: #27ae60; font-weight: 600;">Inclusive of all taxes</p>
 
           <div class="product-detail-block compact-block">
@@ -91,12 +98,6 @@
 
           <div class="product-detail-actions compact-actions" style="margin-top: 20px; display: flex; gap: 15px;">
             <button id="productAddToCartBtn" type="button" class="btn" style="background: #333; color: #fff; flex: 1; padding: 18px; font-weight: 700; letter-spacing: 2px;">ADD TO CART</button>
-            @php
-                $isInWishlist = Auth::check() && \App\Models\Wishlist::where('customer_id', Auth::id())->where('product_id', $product->id)->exists();
-            @endphp
-            <button type="button" class="btn" onclick="toggleWishlist(event, {{ $product->id }})" style="background: #fff; color: {{ $isInWishlist ? '#ec407a' : '#333' }}; border: 1px solid {{ $isInWishlist ? '#ec407a' : '#333' }}; width: 60px; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
-                <i data-lucide="heart" style="width: 24px; height: 24px; fill: {{ $isInWishlist ? '#ec407a' : 'none' }};"></i>
-            </button>
           </div>
 
           <div class="product-service-strip compact-service-strip" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 30px;">
@@ -120,15 +121,14 @@
         </div>
       </div>
 
-      <div class="product-tab-section"
-        style="margin-top: 60px; background: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(125, 84, 101, 0.08); border: 1px solid #f0dbe4;">
-        <div class="product-tab-nav" role="tablist" style="margin-bottom: 30px; display: flex; gap: 15px; flex-wrap: wrap;">
+      <div class="product-tab-section" style="margin-top: 60px;">
+        <div class="product-tab-nav" role="tablist" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
           <button type="button" class="product-tab-btn is-active" data-tab-target="desc">DESCRIPTION</button>
           <button type="button" class="product-tab-btn" data-tab-target="specs">SPECIFICATIONS</button>
           <button type="button" class="product-tab-btn" data-tab-target="fab">FABRICATION</button>
           <button type="button" class="product-tab-btn" data-tab-target="reviews">REVIEWS</button>
         </div>
-        <div class="product-tab-panels">
+        <div class="product-tab-panels" style="background: #fff; padding: 40px; border-radius: 12px; border: 1px solid #f0dbe4; box-shadow: 0 10px 30px rgba(125, 84, 101, 0.04);">
           <div class="product-tab-panel is-active" id="desc">
             <div class="dynamic-description" style="color: #6b5a63; line-height: 1.8; font-size: 15px;">
                 {!! $product->description !!}
@@ -219,7 +219,7 @@
                   </div>
                   <div class="product-details">
                     <h3 class="product-name">{{ $rp->name }}</h3>
-                    <div class="product-price">INR {{ number_format($rp->regular_price) }}</div>
+                    <div class="product-price">₹{{ number_format($rp->regular_price) }}</div>
                   </div>
                 </a>
            @endforeach
@@ -276,7 +276,7 @@
         const variant = groupedVariants[currentSize][color];
 
         // Update Price
-        document.getElementById('productDetailPrice').innerText = 'INR ' + Number(variant.price).toLocaleString();
+        document.getElementById('productDetailPrice').innerText = '₹' + Number(variant.price).toLocaleString();
 
         // Update Gallery
         updateGallery(variant.photos);
@@ -426,8 +426,12 @@
   function toggleWishlist(event, productId) {
       event.preventDefault();
       const btn = event.currentTarget;
-      const icon = btn.querySelector('i');
-      fetch("{{ route('wishlist.add') }}", {
+      const svg = btn.querySelector('svg');
+      const isCurrentlyWishlisted = svg && (svg.getAttribute('fill') === '#ec407a' || svg.getAttribute('fill') === 'rgb(236, 64, 122)' || svg.getAttribute('fill') === 'currentColor');
+      
+      const endpoint = isCurrentlyWishlisted ? "{{ route('wishlist.remove') }}" : "{{ route('wishlist.add') }}";
+      
+      fetch(endpoint, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -435,13 +439,49 @@
           },
           body: JSON.stringify({ product_id: productId })
       })
-      .then(response => response.json())
+      .then(response => {
+          if(response.redirected) {
+              window.location.href = response.url;
+              return null;
+          }
+          return response.json().catch(() => ({ status: 'success' })); // fallback if remove returns back()
+      })
       .then(data => {
-          if(data.status === 'success' || data.status === 'info') {
-              window.location.reload();
+          if (!data) return; // redirected
+          
+          if(data.status === 'success' || data.status === 'info' || !data.status) {
+              // Update button UI
+              if(isCurrentlyWishlisted) {
+                  btn.style.color = '#888';
+                  if (svg) {
+                      svg.setAttribute('fill', 'none');
+                      svg.setAttribute('stroke', '#888');
+                  }
+                  window.showToast?.('Removed from wishlist', 'info');
+              } else {
+                  btn.style.color = '#ec407a';
+                  if (svg) {
+                      svg.setAttribute('fill', '#ec407a');
+                      svg.setAttribute('stroke', '#ec407a');
+                  }
+                  window.showToast?.('Added to wishlist', 'success');
+              }
+              
+              // Try to update badge counter in header
+              const badge = document.getElementById('wishlistCountBadge');
+              if (badge) {
+                  let count = parseInt(badge.innerText) || 0;
+                  count = isCurrentlyWishlisted ? Math.max(0, count - 1) : count + 1;
+                  badge.innerText = count;
+                  if (count > 0) {
+                      badge.classList.add('has-items');
+                  } else {
+                      badge.classList.remove('has-items');
+                  }
+              }
           } else {
               alert(data.msg);
-              if(data.msg.includes('login')) {
+              if(data.msg && data.msg.includes('login')) {
                   window.location.href = "{{ route('login_user') }}";
               }
           }

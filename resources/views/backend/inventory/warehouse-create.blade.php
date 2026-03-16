@@ -145,7 +145,7 @@
                                             <div class="col-sm-10">
 
                                                 <input class="form-control" type="text" name="phone"
-                                                    placeholder="Enter Phone Number" id="example-text-input">
+                                                    placeholder="Enter Phone Number" id="example-text-input" data-parsley-phoneindia data-parsley-maxlength="10" data-parsley-minlength="10">
 
                                             </div>
 

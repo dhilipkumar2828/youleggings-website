@@ -66,7 +66,7 @@
                                     <div class="col-sm-10">
 
                                         <input class="form-control" type="text" required placeholder="Enter User Name"
-                                            id="name" name="name" value="{{ old('name') }}">
+                                            id="name" name="name" value="{{ old('name') }}" data-parsley-alphabets-only>
 
                                         <span class="text-danger name_err"></span>
 
@@ -113,9 +113,9 @@
 
                                     <div class="col-sm-10">
 
-                                        <input class="form-control" type="number" required
+                                        <input class="form-control" type="text" required
                                             placeholder="Enter Mobile Number" id="phone" name="phone"
-                                            value="{{ old('phone') }}">
+                                            value="{{ old('phone') }}" data-parsley-phoneindia data-parsley-maxlength="10" data-parsley-minlength="10">
 
                                         <span class="text-danger phone_err"></span>
 

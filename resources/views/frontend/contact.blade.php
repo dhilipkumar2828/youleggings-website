@@ -29,13 +29,13 @@
             <li><strong>Bulk Enquiries:</strong> Retail and wholesale requests are welcome</li>
           </ul>
         </div>
-        <form class="contact-form" action="{{ route('contact.submit') }}" method="POST">
+        <form class="contact-form validate" action="{{ route('contact.submit') }}" method="POST">
           @csrf
           <span class="hero-subtitle" style="font-size: 11px; margin-bottom: 8px; display: block;">Message</span>
           <label for="contact-name">Name</label>
-          <input id="contact-name" name="name" type="text" placeholder="Your full name" required>
+          <input id="contact-name" name="name" type="text" placeholder="Your full name" required alphabetsOnly>
           <label for="contact-mobile">Mobile Number</label>
-          <input id="contact-mobile" name="phone" type="tel" placeholder="+91 98765 43210" required>
+          <input id="contact-mobile" name="phone" type="tel" placeholder="+91 98765 43210" required phoneIndia maxlength="10">
           <label for="contact-email">Email address</label>
           <input id="contact-email" name="email" type="email" placeholder="you@example.com" required>
           <label for="contact-message">Message</label>

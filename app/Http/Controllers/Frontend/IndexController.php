@@ -11,9 +11,11 @@ use App\Models\Clientfeedback;
 use App\Models\ProductReviews;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 
 class IndexController extends Controller
 {
@@ -94,6 +96,10 @@ class IndexController extends Controller
                     }
                 });
             });
+        }
+
+        if ($request->has('q') && !empty($request->q)) {
+            $query->where('name', 'LIKE', '%' . $request->q . '%');
         }
 
         if ($request->has('sort')) {
@@ -370,7 +376,9 @@ class IndexController extends Controller
             'items_count'=> count($cartItems),
         ]);
 
-        return redirect()->route('thank_you');
+        \Session::flash('order_success', true);
+
+        return redirect()->route('my_orders')->with('success', 'Order placed successfully!');
     }
 
 
@@ -390,6 +398,20 @@ class IndexController extends Controller
             ->get();
 
         return view('frontend.my_orders', compact('orders'));
+    }
+
+    public function my_addresses()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login_user');
+        }
+
+        $addresses = DB::table('shipping_address')
+            ->where('customer_id', Auth::id())
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return view('frontend.my_addresses', compact('addresses'));
     }
 
     public function my_account()
@@ -608,5 +630,69 @@ class IndexController extends Controller
         }
 
         return response()->json(['shipping' => max(0, $shipping)]);
+    }
+
+    public function address_set_default($id)
+    {
+        if (!Auth::check()) return redirect()->route('login_user');
+
+        // Reset all defaults for this user
+        \DB::table('shipping_address')
+            ->where('customer_id', Auth::id())
+            ->update(['is_default' => 0]);
+
+        // Set new default
+        \DB::table('shipping_address')
+            ->where('customer_id', Auth::id())
+            ->where('id', $id)
+            ->update(['is_default' => 1]);
+
+        return back()->with('success', 'Default address updated!');
+    }
+
+    public function address_delete($id)
+    {
+        if (!Auth::check()) return redirect()->route('login_user');
+
+        \DB::table('shipping_address')
+            ->where('customer_id', Auth::id())
+            ->where('id', $id)
+            ->delete();
+
+        return back()->with('success', 'Address deleted successfully!');
+    }
+
+    public function address_update(Request $request)
+    {
+        if (!Auth::check()) return redirect()->route('login_user');
+
+        $request->validate([
+            'address_id'    => 'required|exists:shipping_address,id',
+            'sfirst_name'   => 'required|string|max:255',
+            'slast_name'    => 'required|string|max:255',
+            'semail'        => 'required|email|max:255',
+            'sphone_number' => 'required|string|max:20',
+            'saddress'      => 'required|string',
+            'scity'         => 'required|string|max:100',
+            'sstate'        => 'required|string|max:100',
+            'spincode'      => 'required|string|max:10',
+        ]);
+
+        \DB::table('shipping_address')
+            ->where('customer_id', Auth::id())
+            ->where('id', $request->address_id)
+            ->update([
+                'sfirst_name'   => $request->sfirst_name,
+                'slast_name'    => $request->slast_name,
+                'semail'        => $request->semail,
+                'sphone_number' => $request->sphone_number,
+                'saddress'      => $request->saddress,
+                'scity'         => $request->scity,
+                'sstate'        => $request->sstate,
+                'spincode'      => $request->spincode,
+                'updated_at'    => now(),
+            ]);
+
+        return back()->with('success', 'Address updated successfully!');
     }
 }

@@ -1,4 +1,4 @@
-﻿document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     // Initialize Lucide Icons
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
@@ -45,7 +45,8 @@
     if (addToCartBtn) {
         addToCartBtn.addEventListener('click', () => {
             const productTitle = document.querySelector('.product-detail-title')?.innerText;
-            const productPrice = document.getElementById('productDetailPrice')?.innerText.replace('INR ', '').replace(',', '');
+            const priceText = document.getElementById('productDetailPrice')?.innerText || '0';
+            const productPrice = priceText.replace(/[^\d\.]/g, '');
             const productImg = document.getElementById('productDetailImage')?.src;
             const activeSize = document.querySelector('.product-size-list button.is-active')?.innerText;
             

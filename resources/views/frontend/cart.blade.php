@@ -221,16 +221,16 @@
 
             <div class="summary-row">
               <span>Subtotal</span>
-              <strong id="cartSubtotalValue">INR 0</strong>
+              <strong id="cartSubtotalValue">₹0</strong>
             </div>
             <div class="summary-row" style="color: #ec407a; display: none; font-weight: 600;" id="discountRow">
               <span>Coupon</span>
-              <strong id="cartDiscountValue">-INR 0</strong>
+              <strong id="cartDiscountValue">-₹0</strong>
             </div>
             
             <div class="summary-row total">
               <span>Total Payment</span>
-              <strong id="cartTotalValue">INR 0</strong>
+              <strong id="cartTotalValue">₹0</strong>
             </div>
             
             <p style="font-size: 12px; color: #999; margin: 20px 0; text-align: center;">
@@ -275,7 +275,9 @@
         let subtotal = 0;
 
         cart.forEach((item, index) => {
-            const itemSubtotal = item.price * item.qty;
+            const price = parseFloat(item.price) || 0;
+            const qty = parseInt(item.qty) || 1;
+            const itemSubtotal = price * qty;
             subtotal += itemSubtotal;
 
             container.innerHTML += `
@@ -285,10 +287,10 @@
                         <h4>${item.name}</h4>
                         <p>Variant: ${item.variant}</p>
                     </div>
-                    <div class="cart-price">INR ${item.price.toLocaleString()}</div>
+                    <div class="cart-price">₹${price.toLocaleString()}</div>
                     <div class="qty-control">
                         <button class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
-                        <span class="qty-val">${item.qty}</span>
+                        <span class="qty-val">${qty}</span>
                         <button class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
                     </div>
                     <div class="remove-item" onclick="removeItem(${index})">
@@ -298,9 +300,27 @@
             `;
         });
 
-        const shipping = subtotal > 1499 ? 0 : 99;
-        document.getElementById('cartSubtotalValue').innerText = 'INR ' + subtotal.toLocaleString();
-        document.getElementById('cartTotalValue').innerText = 'INR ' + subtotal.toLocaleString();
+        // Coupon display logic
+        const COUPON_KEY = 'you_applied_coupon';
+        const couponData = JSON.parse(localStorage.getItem(COUPON_KEY));
+        let discount = 0;
+        
+        if (couponData) {
+            discount = parseFloat(couponData.discount) || 0;
+            document.getElementById('couponInputGroup').style.display = 'none';
+            document.getElementById('appliedCouponInfo').style.display = 'flex';
+            document.getElementById('appliedCouponName').innerText = couponData.code;
+            
+            document.getElementById('discountRow').style.display = 'flex';
+            document.getElementById('cartDiscountValue').innerText = '-₹' + discount.toLocaleString();
+        } else {
+            document.getElementById('couponInputGroup').style.display = 'flex';
+            document.getElementById('appliedCouponInfo').style.display = 'none';
+            document.getElementById('discountRow').style.display = 'none';
+        }
+
+        document.getElementById('cartSubtotalValue').innerText = '₹' + subtotal.toLocaleString();
+        document.getElementById('cartTotalValue').innerText = '₹' + (subtotal - discount).toLocaleString();
         
         if (typeof lucide !== 'undefined') lucide.createIcons();
     }
@@ -387,70 +407,7 @@
         renderCart();
     };
 
-    const originalRenderCart = renderCart;
-    window.renderCart = function() {
-        const cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
-        const emptyState = document.getElementById('cartEmptyState');
-        const fullState = document.getElementById('cartFullState');
-        const container = document.getElementById('cartItemsList');
-
-        if (cart.length === 0) {
-            emptyState.style.display = 'block';
-            fullState.style.display = 'none';
-            return;
-        }
-
-        emptyState.style.display = 'none';
-        fullState.style.display = 'grid';
-        container.innerHTML = '';
-
-        let subtotal = 0;
-        cart.forEach((item, index) => {
-            const itemSubtotal = item.price * item.qty;
-            subtotal += itemSubtotal;
-            container.innerHTML += `
-                <div class="cart-item-row">
-                    <img src="${item.image}" class="cart-item-img">
-                    <div class="cart-item-info">
-                        <h4>${item.name}</h4>
-                        <p>Variant: ${item.variant}</p>
-                    </div>
-                    <div class="cart-price">INR ${item.price.toLocaleString()}</div>
-                    <div class="qty-control">
-                        <button class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
-                        <span class="qty-val">${item.qty}</span>
-                        <button class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
-                    </div>
-                    <div class="remove-item" onclick="removeItem(${index})">
-                        <i data-lucide="x"></i>
-                    </div>
-                </div>
-            `;
-        });
-
-        const couponData = JSON.parse(localStorage.getItem(COUPON_KEY));
-        let discount = 0;
-        
-        if (couponData) {
-            discount = parseFloat(couponData.discount) || 0;
-            document.getElementById('couponInputGroup').style.display = 'none';
-            document.getElementById('appliedCouponInfo').style.display = 'flex';
-            document.getElementById('appliedCouponName').innerText = couponData.code;
-            
-            document.getElementById('discountRow').style.display = 'flex';
-            document.getElementById('cartDiscountValue').innerText = '-INR ' + discount.toLocaleString();
-        } else {
-            document.getElementById('couponInputGroup').style.display = 'flex';
-            document.getElementById('appliedCouponInfo').style.display = 'none';
-            document.getElementById('discountRow').style.display = 'none';
-        }
-
-        document.getElementById('cartSubtotalValue').innerText = 'INR ' + subtotal.toLocaleString();
-        document.getElementById('cartTotalValue').innerText = 'INR ' + (subtotal - discount).toLocaleString();
-        
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-    };
-
+    // Initial call to render the cart
     renderCart();
 </script>
 @endsection

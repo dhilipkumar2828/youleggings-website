@@ -78,8 +78,12 @@
 
           <nav class="account-nav">
             <div class="nav-item active" data-tab="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div>
-            <div class="nav-item" data-tab="orders"><i data-lucide="shopping-bag"></i> My Orders</div>
-            <div class="nav-item" data-tab="address"><i data-lucide="map-pin"></i> Addresses</div>
+            <a href="{{ route('my_orders') }}" style="text-decoration:none;">
+              <div class="nav-item"><i data-lucide="shopping-bag"></i> My Orders</div>
+            </a>
+            <a href="{{ route('my_addresses') }}" style="text-decoration:none;">
+              <div class="nav-item"><i data-lucide="map-pin"></i> Addresses</div>
+            </a>
             <div class="nav-item" data-tab="settings"><i data-lucide="settings"></i> Profile Settings</div>
             <form action="{{ route('logout') }}" method="POST" style="margin-top: 20px;">
               @csrf
@@ -96,7 +100,7 @@
           <div id="dashboard-panel" class="tab-panel active">
             <h2 class="panel-title">Welcome back, {{ explode(' ', Auth::user()->name ?? 'Friend')[0] }}!</h2>
             <div class="stats-grid">
-              <div class="stat-box">
+              <div class="stat-box" st>
                 <span class="stat-val">{{ count($orders) }}</span>
                 <span class="stat-label">Total Orders</span>
               </div>
@@ -104,10 +108,7 @@
                 <span class="stat-val">{{ $wishlist_count ?? 0 }}</span>
                 <span class="stat-label">Wishlist</span>
               </div>
-              <div class="stat-box">
-                <span class="stat-val">0</span>
-                <span class="stat-label">Member Points</span>
-              </div>
+             
             </div>
             
             <div style="background: #fafafa; padding: 30px; border-radius: 16px;">
@@ -116,89 +117,16 @@
             </div>
           </div>
 
-          <!-- Orders -->
-          <div id="orders-panel" class="tab-panel" style="display:none;">
-            <h2 class="panel-title">Order History</h2>
-            <div style="overflow-x: auto;">
-              <table class="custom-table">
-                <thead>
-                  <tr>
-                    <th>Order #</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Total</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @forelse($orders as $order)
-                  @php
-                    $statusClass = match(strtolower($order->status)) {
-                      'pending'   => 'status-pending',
-                      'confirmed', 'processing' => 'status-shipped',
-                      'shipped'   => 'status-shipped',
-                      'delivered' => 'status-delivered',
-                      'cancelled' => 'status-cancelled',
-                      default     => 'status-pending',
-                    };
-                  @endphp
-                  <tr>
-                    <td><strong>{{ $order->order_id }}</strong></td>
-                    <td>{{ $order->created_at->format('d M Y') }}</td>
-                    <td><span class="status-badge {{ $statusClass }}">{{ $order->status }}</span></td>
-                    <td style="font-weight: 700;">₹{{ number_format($order->total, 2) }}</td>
-                    <td>
-                      <a href="{{ route('order_invoice', $order->id) }}" target="_blank" class="btn btn-sm" style="background: #fdf2f5; color: #ec407a; border: 1px solid #fdeef2; padding: 5px 12px; border-radius: 5px; font-size: 11px; font-weight: 700; text-decoration: none;">
-                        <i data-lucide="file-text" style="width:12px; height:12px; margin-right:4px; vertical-align:middle;"></i> INVOICE
-                      </a>
-                    </td>
-                  </tr>
-                  @empty
-                  <tr>
-                    <td colspan="5" style="text-align:center; color:#999; padding: 50px;">
-                      <i data-lucide="info" style="width:20px; display:inline-block; vertical-align:middle; margin-right:5px;"></i>
-                      You haven't placed any orders yet.
-                    </td>
-                  </tr>
-                  @endforelse
-                </tbody>
-              </table>
-            </div>
-          </div>
 
-          <!-- Address -->
-          <div id="address-panel" class="tab-panel" style="display:none;">
-            <h2 class="panel-title">Your Addresses</h2>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-              <div class="address-card">
-                <div class="edit-btn" onclick="document.querySelector('[data-tab=settings]').click()"><i data-lucide="edit-3"></i> EDIT</div>
-                <h4>Default Shipping Address</h4>
-                @if(Auth::user()->address)
-                  <p><strong>{{ Auth::user()->name }}</strong><br>
-                  {{ Auth::user()->address }}<br>
-                  {{ Auth::user()->city }}, {{ Auth::user()->state }} - {{ Auth::user()->postcode }}<br>
-                  India</p>
-                @else
-                  <p>No shipping address saved.</p>
-                @endif
-              </div>
-              <div class="address-card" onclick="document.querySelector('[data-tab=settings]').click()" style="border-style: dashed; display: flex; align-items: center; justify-content: center; color: #999; cursor: pointer;">
-                <div style="text-align:center;">
-                  <i data-lucide="plus" style="margin-bottom: 5px;"></i>
-                  <div style="font-weight:700; font-size: 11px; text-transform:uppercase;">Add New Address</div>
-                </div>
-              </div>
-            </div>
-          </div>
 
           <div id="settings-panel" class="tab-panel" style="display:none;">
             <h2 class="panel-title">Profile Settings</h2>
-            <form action="{{ route('account_update') }}" method="POST">
+            <form action="{{ route('account_update') }}" method="POST" class="validate">
               @csrf
               <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                 <div class="form-group">
                   <label style="display:block; font-size:12px; font-weight:700; color:#999; margin-bottom:8px; text-transform:uppercase;">Full Name</label>
-                  <input type="text" name="name" class="form-control" style="width:100%; padding:12px; border:1px solid #eee; border-radius:8px;" value="{{ Auth::user()->name ?? '' }}" required>
+                  <input type="text" name="name" class="form-control" style="width:100%; padding:12px; border:1px solid #eee; border-radius:8px;" value="{{ Auth::user()->name ?? '' }}" required alphabetsOnly>
                 </div>
                 <div class="form-group">
                   <label style="display:block; font-size:12px; font-weight:700; color:#999; margin-bottom:8px; text-transform:uppercase;">Email Address</label>
@@ -206,27 +134,7 @@
                 </div>
                 <div class="form-group">
                   <label style="display:block; font-size:12px; font-weight:700; color:#999; margin-bottom:8px; text-transform:uppercase;">Phone Number</label>
-                  <input type="text" name="phone" class="form-control" style="width:100%; padding:12px; border:1px solid #eee; border-radius:8px;" value="{{ Auth::user()->phone ?? '' }}">
-                </div>
-                <div class="form-group">
-                  <label style="display:block; font-size:12px; font-weight:700; color:#999; margin-bottom:8px; text-transform:uppercase;">Pincode</label>
-                  <input type="text" name="postcode" class="form-control" style="width:100%; padding:12px; border:1px solid #eee; border-radius:8px;" value="{{ Auth::user()->postcode ?? '' }}">
-                </div>
-                <div class="form-group" style="grid-column: span 2;">
-                  <label style="display:block; font-size:12px; font-weight:700; color:#999; margin-bottom:8px; text-transform:uppercase;">Address</label>
-                  <textarea name="address" class="form-control" style="width:100%; padding:12px; border:1px solid #eee; border-radius:8px; min-height: 80px;">{{ Auth::user()->address ?? '' }}</textarea>
-                </div>
-                <div class="form-group">
-                  <label style="display:block; font-size:12px; font-weight:700; color:#999; margin-bottom:8px; text-transform:uppercase;">City</label>
-                  <input type="text" name="city" class="form-control" style="width:100%; padding:12px; border:1px solid #eee; border-radius:8px;" value="{{ Auth::user()->city ?? '' }}">
-                </div>
-                <div class="form-group">
-                  <label style="display:block; font-size:12px; font-weight:700; color:#999; margin-bottom:8px; text-transform:uppercase;">State</label>
-                  <input type="text" name="state" class="form-control" style="width:100%; padding:12px; border:1px solid #eee; border-radius:8px;" value="{{ Auth::user()->state ?? '' }}">
-                </div>
-                <div class="form-group" style="grid-column: span 2;">
-                  <label style="display:block; font-size:12px; font-weight:700; color:#999; margin-bottom:8px; text-transform:uppercase;">New Password</label>
-                  <input type="password" name="password" class="form-control" style="width:100%; padding:12px; border:1px solid #eee; border-radius:8px;" placeholder="Leave blank to keep current">
+                  <input type="text" name="phone" class="form-control" style="width:100%; padding:12px; border:1px solid #eee; border-radius:8px;" value="{{ Auth::user()->phone ?? '' }}" phoneIndia maxlength="10">
                 </div>
               </div>
               <button type="submit" class="btn" style="margin-top:30px; background:#ec407a; color:#fff; padding: 12px 40px; border-radius:50px; border:none; font-weight:700;">Save Changes</button>
@@ -260,4 +168,4 @@
         });
     });
 </script>
-@endsection
+@endsection

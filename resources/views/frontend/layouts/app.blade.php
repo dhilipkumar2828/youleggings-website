@@ -108,12 +108,21 @@
             }
         });
 
-        // Custom validation for Indian phone numbers
+        // Custom validation for Indian phone numbers (exactly 10 digits)
         $.validator.addMethod("phoneIndia", function(phone_number, element) {
             phone_number = phone_number.replace(/\s+/g, "");
-            return this.optional(element) || phone_number.length > 9 &&
-                phone_number.match(/^[6-9]\d{9}$/);
-        }, "Please specify a valid Indian phone number");
+            return this.optional(element) || (phone_number.length === 10 && phone_number.match(/^[6-9]\d{9}$/));
+        }, "Please enter a valid 10-digit Indian phone number starting with 6-9.");
+
+        // Custom validation for Indian pincodes (exactly 6 digits)
+        $.validator.addMethod("pincodeIndia", function(pincode, element) {
+            return this.optional(element) || /^\d{6}$/.test(pincode);
+        }, "Please enter a valid 6-digit pincode.");
+
+        // Custom validation for alphabets only
+        $.validator.addMethod("alphabetsOnly", function(value, element) {
+            return this.optional(element) || /^[a-zA-Z\s]+$/.test(value);
+        }, "Only alphabets are allowed.");
     }
 
     $(document).ready(function() {

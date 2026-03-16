@@ -169,7 +169,7 @@
     overflow: hidden;
   }
   .testimonial-slider {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
     overflow: hidden;
     position: relative;
@@ -179,53 +179,66 @@
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .testimonial-slide {
-    min-width: 100%;
-    padding: 20px;
+    flex: 0 0 33.333%;
+    padding: 15px;
     box-sizing: border-box;
+  }
+  @media (max-width: 991px) {
+    .testimonial-slide { flex: 0 0 50%; }
+  }
+  @media (max-width: 767px) {
+    .testimonial-slide { flex: 0 0 100%; }
   }
   .testimonial-card {
     background: #fff;
-    padding: 60px 50px;
-    border-radius: 20px;
-    border: 1px solid #fdeef2;
-    box-shadow: 0 20px 40px rgba(193, 139, 149, 0.05);
+    padding: 40px 30px;
+    border-radius: 12px;
+    border: 1px solid rgba(236, 64, 122, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
     text-align: center;
     position: relative;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
   .quote-mark {
-    position: absolute;
-    top: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 80px;
-    color: #fdeef2;
-    z-index: 0;
+    font-size: 40px;
+    color: #ffd1dc;
     line-height: 1;
     font-family: serif;
+    margin-bottom: 10px;
   }
   .testimonial-content {
-    position: relative;
-    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
   }
   .testimonial-text {
-    font-size: 18px;
+    font-size: 15px;
     font-style: italic;
-    color: #4a4a4a;
+    color: #555;
     line-height: 1.8;
-    margin-bottom: 35px;
+    margin-bottom: 25px;
+    flex-grow: 1;
   }
   .testimonial-author {
     color: #ec407a;
     font-weight: 700;
     text-transform: uppercase;
-    font-size: 14px;
-    letter-spacing: 2px;
-    margin-bottom: 8px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+  }
+  .testimonial-client {
+    font-size: 11px;
+    color: #999;
   }
   .testimonial-stars {
     color: #ffb400;
     display: flex;
-    gap: 5px;
+    gap: 3px;
     justify-content: center;
     margin-top: 15px;
   }
@@ -372,7 +385,7 @@
               </div>
               <!-- Wishlist Button -->
               <button type="button" class="wishlist-toggle-btn" onclick="toggleWishlist(event, {{ $product->id }})" style="position: absolute; top: 25px; right: 25px; background: rgba(255,255,255,0.9); border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #888; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
               </button>
             </a>
         @empty
@@ -407,8 +420,8 @@
     <section class="section testimonials-section" id="testimonials" style="padding: 100px 0; background: #fffafc;">
       <div class="container">
         <div class="text-center" style="margin-bottom: 50px;">
-          <span class="section-subtitle" style="color: #ec407a; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; font-size: 12px; display: block; margin-bottom: 15px;">Voices of Comfort</span>
-          <h2 class="section-title" style="font-family: var(--font-serif, serif); font-size: 3rem; color: #333;">What Our Customers Say</h2>
+          <span class="section-subtitle" style="color: #ec407a; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; font-size: 12px; display: block; margin-bottom: 15px;">Testimonials</span>
+          <h2 class="section-title" style="font-family: var(--font-serif, serif); font-size: 3rem; color: #333; font-style: italic;">What Our Customers Say</h2>
         </div>
         
         <div class="testimonial-slider">
@@ -418,12 +431,15 @@
               <div class="testimonial-card">
                 <div class="quote-mark">“</div>
                 <div class="testimonial-content">
-                  <p class="testimonial-text">"{{ $test->feedback }}"</p>
-                  <h4 class="testimonial-author">{{ $test->name }}</h4>
-                  <div class="testimonial-stars">
-                    @for($i=0; $i<5; $i++)
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffb400" stroke="none"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                    @endfor
+                  <p class="testimonial-text">{{ $test->feedback }}</p>
+                  <div>
+                      <h4 class="testimonial-author">{{ $test->name }}</h4>
+                      <div class="testimonial-client">Happy Client</div>
+                      <div class="testimonial-stars">
+                        @for($i=0; $i<5; $i++)
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="#ffb400" stroke="none"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        @endfor
+                      </div>
                   </div>
                 </div>
               </div>
@@ -489,20 +505,55 @@
   const tDots = document.querySelectorAll('.t-dot');
   let tInterval;
 
+  function getVisibleTestimonials() {
+      if(window.innerWidth > 991) return 3;
+      if(window.innerWidth > 767) return 2;
+      return 1;
+  }
+
   function goToTestimonial(index) {
       if(!tInner) return;
+      
+      const visible = getVisibleTestimonials();
+      const slides = document.querySelectorAll('.testimonial-slide');
+      const totalSlides = slides.length;
+      
+      if(totalSlides <= visible) return;
+
+      // Prevent sliding past the end
+      if (index > totalSlides - visible) {
+          index = Math.max(0, totalSlides - visible);
+      }
+      if(index < 0) index = 0;
+
       currentTestimonial = index;
-      tInner.style.transform = `translateX(-${index * 100}%)`;
+      
+      // Calculate width to slide
+      const wrapWidth = tInner.parentElement.offsetWidth;
+      const slideWidth = wrapWidth / visible;
+      
+      tInner.style.transform = `translateX(-${index * slideWidth}px)`;
       
       tDots.forEach(d => d.classList.remove('active'));
-      if(tDots[index]) tDots[index].classList.add('active');
+      if(tDots[index]) {
+          tDots[index].classList.add('active');
+      } else if (tDots[tDots.length - 1] && index > 0) {
+          tDots[tDots.length - 1].classList.add('active');
+      }
       
       resetTestimonialInterval();
   }
 
   function nextTestimonial() {
-      if(!tDots || tDots.length <= 1) return;
-      let next = (currentTestimonial + 1) % tDots.length;
+      if(!tInner) return;
+      const visible = getVisibleTestimonials();
+      const totalSlides = document.querySelectorAll('.testimonial-slide').length;
+      if(totalSlides <= visible) return;
+
+      let next = currentTestimonial + 1;
+      if(next > totalSlides - visible) {
+          next = 0;
+      }
       goToTestimonial(next);
   }
 
@@ -512,6 +563,11 @@
           tInterval = setInterval(nextTestimonial, 6000);
       }
   }
+
+  // Handle window resize dynamically adjusting the slider state
+  window.addEventListener('resize', () => {
+       if(tInner) goToTestimonial(currentTestimonial);
+  });
 
   // Initialize
   if(tDots && tDots.length > 1) {

@@ -60,21 +60,22 @@
   .status-delivered { background: #e8f5e9; color: #2e7d32; }
   .status-cancelled { background: #ffebee; color: #c62828; }
 
-  .order-body {
-    padding: 20px 25px;
-  }
   .order-meta {
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-    margin-bottom: 15px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
   }
-  .order-meta-item { font-size: 14px; color: #666; }
-  .order-meta-item strong { color: #333; }
+  @media (max-width: 767px) {
+    .order-meta { grid-template-columns: 1fr 1fr; }
+  }
+  .meta-value { font-size: 15px; font-weight: 700; color: #333; margin-bottom: 5px; }
+  .meta-label { font-size: 12px; color: #888; font-weight: 600; text-transform: capitalize; }
 
   .order-items {
     display: flex;
-    gap: 10px;
+    gap: 15px;
+    margin-bottom: 25px;
     flex-wrap: wrap;
   }
   .order-item-img {
@@ -147,23 +148,23 @@
             </div>
           </div>
 
-          <div class="order-body">
+          <div class="order-body" style="padding: 25px;">
             <div class="order-meta">
               <div class="order-meta-item">
-                <strong>₹{{ number_format($order->total, 2) }}</strong><br>
-                Total Amount
+                <div class="meta-value">₹{{ number_format($order->total, 2) }}</div>
+                <div class="meta-label">Total Amount</div>
               </div>
               <div class="order-meta-item">
-                <strong>{{ strtoupper($order->payment_type) }}</strong><br>
-                Payment Method
+                <div class="meta-value">{{ strtoupper($order->payment_type) }}</div>
+                <div class="meta-label">Payment Method</div>
               </div>
               <div class="order-meta-item">
-                <strong>{{ ucfirst($order->payment_status ?? 'Pending') }}</strong><br>
-                Payment Status
+                <div class="meta-value">{{ ucfirst($order->payment_status ?? 'Pending') }}</div>
+                <div class="meta-label">Payment Status</div>
               </div>
               <div class="order-meta-item">
-                <strong>{{ $orderProducts->count() }}</strong><br>
-                Item(s)
+                <div class="meta-value">{{ $orderProducts->count() }}</div>
+                <div class="meta-label">Item(s)</div>
               </div>
             </div>
 
@@ -179,7 +180,7 @@
                 @if($imgSrc)
                   <img src="{{ image_url($imgSrc) }}" class="order-item-img" alt="{{ $itemName }}" title="{{ $itemName }} - {{ $variant }}">
                 @else
-                  <div class="order-item-img d-flex align-items-center justify-content-center" style="display:flex; align-items:center; justify-content:center; font-size:10px; color:#999; text-align:center; padding:5px;">
+                  <div class="order-item-img" style="display:flex; align-items:center; justify-content:center; font-size:10px; color:#999; text-align:center; padding:5px;">
                     {{ Str::limit($itemName, 10) }}
                   </div>
                 @endif
@@ -187,9 +188,9 @@
             </div>
 
             <div class="order-total-row">
-              <div style="font-size: 14px; color: #888;">
+              <div style="font-size: 13px; color: #888;">
                 @if($order->deliver_charge == 0)
-                  🚚 <strong style="color:#2e7d32;">Free Delivery</strong>
+                  🚚 Delivery: Free
                 @else
                   🚚 Delivery: ₹{{ $order->deliver_charge }}
                 @endif
@@ -211,4 +212,20 @@
     @endif
   </div>
 </section>
+@endsection
+
+@section('scripts')
+<script>
+    @if(session('order_success') || session('success'))
+        // Clear the cart on successful order placement
+        localStorage.removeItem('you_cart_items');
+        localStorage.removeItem('you_applied_coupon');
+        if(window.updateCartBadge) window.updateCartBadge();
+        
+        // Remove the query parameter if it exists so refresh doesn't trigger again
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.pathname);
+        }
+    @endif
+</script>
 @endsection

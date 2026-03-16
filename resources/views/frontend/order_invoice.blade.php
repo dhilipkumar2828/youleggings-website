@@ -48,8 +48,8 @@
                     <h1 class="invoice-title">INVOICE</h1>
                     <p class="mb-0">Order #{{ $order->order_id }}</p>
                     <p class="text-muted small">Date: {{ $order->created_at->format('M d, Y') }}</p>
-                    <span class="badge {{ $order->payment_status == 'paid' ? 'bg-success' : 'bg-warning text-dark' }} rounded-pill px-3 mt-2">
-                        {{ ucfirst($order->payment_status) }}
+                    <span class="badge {{ ($order->payment_status ?? 'pending') == 'paid' ? 'bg-success' : 'bg-warning text-dark' }} rounded-pill px-3 mt-2">
+                        {{ ucfirst($order->payment_status ?? 'Pending') }}
                     </span>
                 </div>
             </div>

@@ -95,7 +95,7 @@
 
                                                 <input class="form-control" type="text" required placeholder="Enter "
                                                     value="{{ $vendor->vendor_name }}" name="vendor_name"
-                                                    id="example-text-input">
+                                                    id="example-text-input" data-parsley-alphabets-only>
 
                                             </div>
 
@@ -179,7 +179,7 @@
 
                                                 <input class="form-control" type="text" required placeholder="Enter "
                                                     name="mobile_number" value="{{ $vendor->mobile_number }}"
-                                                    id="example-text-input">
+                                                    id="example-text-input" data-parsley-phoneindia data-parsley-maxlength="10" data-parsley-minlength="10">
 
                                             </div>
 
@@ -216,7 +216,7 @@
 
                                                 <input class="form-control" type="text" required placeholder="Enter "
                                                     name="pincode" value="{{ $vendor->pincode }}"
-                                                    id="example-text-input">
+                                                    id="example-text-input" data-parsley-pincodeindia data-parsley-maxlength="6" data-parsley-minlength="6">
 
                                             </div>
 

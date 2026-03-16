@@ -132,12 +132,12 @@
           <span>Cart</span>
         </div>
         <div class="step-line" style="width: 50px; height: 1px; background: #eee;"></div>
-        <div class="step-item active" style="color: #ec407a;">
+        <div class="step-item active" style="display: flex; align-items: center; gap: 10px; color: #ec407a; font-weight: 600; font-size: 14px; text-transform: uppercase;">
           <div class="step-num" style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #ec407a; background: #ec407a; color: #fff; display: flex; align-items: center; justify-content: center;">2</div>
           <span>Checkout</span>
         </div>
         <div class="step-line" style="width: 50px; height: 1px; background: #eee;"></div>
-        <div class="step-item">
+        <div class="step-item" style="display: flex; align-items: center; gap: 10px; color: #bbb; font-weight: 600; font-size: 14px; text-transform: uppercase;">
           <div class="step-num" style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #ddd; display: flex; align-items: center; justify-content: center;">3</div>
           <span>Payment</span>
         </div>
@@ -162,27 +162,39 @@
           @endif
           <div class="checkout-left">
             @if(isset($addresses) && count($addresses) > 0)
-            <div class="checkout-section">
-              <div class="section-header">
-                <i data-lucide="map-pin"></i>
-                <h3>Saved Addresses</h3>
-              </div>
-              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; margin-bottom: 10px;">
-                @foreach($addresses as $addr)
-                <div class="address-card" onclick="selectSavedAddress({{ json_encode($addr) }}, this)">
-                  <div style="font-weight: 700; margin-bottom: 5px; color: #333;">{{ $addr->sfirst_name }} {{ $addr->slast_name }}</div>
-                  <div style="font-size: 12px; color: #666; line-height: 1.6; margin-bottom: 5px;">
-                    <i data-lucide="map-pin" style="width: 12px; display: inline; vertical-align: middle;"></i> {{ $addr->saddress }}<br>
-                    {{ $addr->scity }}, {{ $addr->sstate }} - {{ $addr->spincode }}
-                  </div>
-                  <div style="font-size: 12px; color: #888;">
-                    <i data-lucide="phone" style="width: 12px; display: inline; vertical-align: middle;"></i> {{ $addr->sphone_number }}
-                  </div>
-                  <div class="check-mark" style="position: absolute; top: 12px; right: 12px; color: #ec407a; display: none;">
-                    <i data-lucide="check-circle-2" style="width: 20px; height: 20px;"></i>
-                  </div>
+            <div class="checkout-section select-address-banner" id="openAddressModalBtn" style="display: flex; align-items: center; justify-content: space-between; padding: 25px 35px; cursor: pointer;">
+              <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; margin: 0; pointer-events: none;">
+                <input type="checkbox" id="savedAddressCheckbox" style="width: 20px; height: 20px; accent-color: #ec407a;">
+                <h3 style="margin: 0; font-family: var(--font-serif, serif); font-size: 18px; font-weight: 700;">Use Saved Address</h3>
+              </label>
+              <i data-lucide="chevron-right" style="color: #ccc;"></i>
+            </div>
+
+            <!-- Address Modal overlay -->
+            <div id="addressModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 20px; text-align: left;">
+              <div style="background: #fff; padding: 30px; border-radius: 16px; width: 100%; max-width: 800px; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+                  <h3 style="font-family: var(--font-serif, serif); margin: 0; font-size: 24px; color: #333;">Select Your Address</h3>
+                  <button type="button" id="closeAddressModalBtn" style="background: #f5f5f5; border: none; cursor: pointer; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #888; transition: 0.3s;"><i data-lucide="x" style="width: 18px;"></i></button>
                 </div>
-                @endforeach
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; margin-bottom: 10px;">
+                  @foreach($addresses as $addr)
+                  <div class="address-card" onclick="selectSavedAddress({{ json_encode($addr) }}, this)" style="border: 2px solid #eee; border-radius: 12px; padding: 20px; cursor: pointer; transition: 0.3s; position: relative;">
+                    <div style="font-weight: 700; margin-bottom: 8px; color: #333; font-size: 16px;">{{ $addr->sfirst_name }} {{ $addr->slast_name }}</div>
+                    <div style="font-size: 13px; color: #666; line-height: 1.6; margin-bottom: 10px;">
+                      <i data-lucide="map-pin" style="width: 14px; display: inline; vertical-align: middle; color: #ec407a; margin-right: 4px;"></i> {{ $addr->saddress }}<br>
+                      {{ $addr->scity }}, {{ $addr->sstate }} - {{ $addr->spincode }}
+                    </div>
+                    <div style="font-size: 13px; color: #888; display: flex; align-items: center; gap: 6px;">
+                      <i data-lucide="phone" style="width: 14px; color: #ec407a;"></i> {{ $addr->sphone_number }}
+                    </div>
+                    <div class="check-mark" style="position: absolute; top: 15px; right: 15px; color: #ec407a; display: none;">
+                      <i data-lucide="check-circle-2" style="width: 22px; height: 22px;"></i>
+                    </div>
+                  </div>
+                  @endforeach
+                </div>
               </div>
             </div>
             @endif
@@ -195,19 +207,19 @@
               <div class="form-grid">
                 <div class="form-group">
                   <label>First Name</label>
-                  <input type="text" class="form-control" name="first_name" required placeholder="John">
+                  <input type="text" class="form-control" name="first_name" required alphabetsOnly placeholder="John">
                 </div>
                 <div class="form-group">
                   <label>Last Name</label>
-                  <input type="text" class="form-control" name="last_name" required placeholder="Doe">
+                  <input type="text" class="form-control" name="last_name" required alphabetsOnly placeholder="Doe">
                 </div>
                 <div class="form-group">
                   <label>Email Address</label>
-                  <input type="email" class="form-control" name="email" required placeholder="john@example.com" value="{{ Auth::user()->email ?? '' }}">
+                  <input type="email" class="form-control" name="email" required placeholder="john@example.com" value="{{ Auth::user()->email ?? '' }}" readonly style="background-color: #f5f5f5; cursor: not-allowed; opacity: 0.8;">
                 </div>
                 <div class="form-group">
                   <label>Phone Number</label>
-                  <input type="tel" class="form-control" name="phone" required placeholder="+91 000 000 00">
+                  <input type="tel" class="form-control" name="phone" required phoneIndia maxlength="10" placeholder="+91 000 000 00">
                 </div>
               </div>
             </div>
@@ -224,7 +236,7 @@
                 </div>
                 <div class="form-group">
                   <label>Town / City</label>
-                  <input type="text" class="form-control" name="city" required placeholder="Bhubaneswar">
+                  <input type="text" class="form-control" name="city" required alphabetsOnly placeholder="Bhubaneswar">
                 </div>
                 <div class="form-group">
                   <label>State</label>
@@ -270,7 +282,7 @@
                 </div>
                 <div class="form-group">
                   <label>Pincode</label>
-                  <input type="text" class="form-control" name="pincode" required placeholder="751001">
+                  <input type="text" class="form-control" name="pincode" required pincodeIndia maxlength="6" placeholder="751001">
                 </div>
                 <div class="form-group">
                     <label>Country</label>
@@ -373,14 +385,16 @@
         let subtotal = 0;
 
         cart.forEach(item => {
-            subtotal += (item.price * item.qty);
+            const price = parseFloat(item.price) || 0;
+            const qty = parseInt(item.qty) || 1;
+            subtotal += (price * qty);
             container.innerHTML += `
                 <div class="review-item">
                     <img src="${item.image}">
                     <div class="review-item-info">
                         <h4 class="review-item-name">${item.name}</h4>
-                        <p class="review-item-meta">Variant: ${item.variant} | Qty: ${item.qty}</p>
-                        <div class="review-item-price">₹${(item.price * item.qty).toLocaleString()}</div>
+                        <p class="review-item-meta">Variant: ${item.variant} | Qty: ${qty}</p>
+                        <div class="review-item-price">₹${(price * qty).toLocaleString()}</div>
                     </div>
                 </div>
             `;
@@ -406,7 +420,11 @@
         const state = stateInput.value.trim();
         const cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
         let subtotal = 0;
-        cart.forEach(item => subtotal += (item.price * item.qty));
+        cart.forEach(item => {
+            const price = parseFloat(item.price) || 0;
+            const qty = parseInt(item.qty) || 1;
+            subtotal += (price * qty);
+        });
         const discount = parseFloat(document.getElementById('hiddenDiscountAmount').value) || 0;
 
         if (!state) {
@@ -456,9 +474,40 @@
         // Trigger shipping calculation
         calculateShipping();
 
-        // Scroll to personal info briefly to show it's filled
-        // document.querySelector('.checkout-section:nth-child(2)').scrollIntoView({ behavior: 'smooth' });
+        // Check the checkbox
+        const cb = document.getElementById('savedAddressCheckbox');
+        if (cb) cb.checked = true;
+
+        // Close Modal
+        const modal = document.getElementById('addressModal');
+        if(modal) modal.style.display = 'none';
     };
+
+    // Unobtrusive Event Listeners for Address Modal
+    document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById('addressModal');
+        const openBtn = document.getElementById('openAddressModalBtn');
+        const closeBtn = document.getElementById('closeAddressModalBtn');
+
+        if (modal) {
+            // Move modal to body to avoid z-index and overflow issues
+            document.body.appendChild(modal);
+        }
+
+        if (openBtn && modal) {
+            openBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                modal.style.display = 'flex';
+            });
+        }
+        
+        if (closeBtn && modal) {
+            closeBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                modal.style.display = 'none';
+            });
+        }
+    });
 
 
     // Inject cart JSON into hidden field before form submit

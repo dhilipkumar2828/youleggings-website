@@ -198,6 +198,7 @@
 <script>
     // Clear the cart on successful order placement
     localStorage.removeItem('you_cart_items');
+    localStorage.removeItem('you_applied_coupon'); // Clear applied coupon
     if(window.updateCartBadge) window.updateCartBadge();
     if (typeof lucide !== 'undefined') lucide.createIcons();
 </script>

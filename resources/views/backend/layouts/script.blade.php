@@ -108,6 +108,26 @@
                     }
                 });
 
+                // Add custom Indian pincode validator to Parsley
+                window.Parsley.addValidator('pincodeindia', {
+                    validateString: function(value) {
+                        return /^\d{6}$/.test(value);
+                    },
+                    messages: {
+                        en: 'Please enter a valid 6-digit pincode.'
+                    }
+                });
+
+                // Add custom alphabets only validator to Parsley
+                window.Parsley.addValidator('alphabetsOnly', {
+                    validateString: function(value) {
+                        return /^[a-zA-Z\s]+$/.test(value);
+                    },
+                    messages: {
+                        en: 'Only alphabets are allowed.'
+                    }
+                });
+
                 $forms.parsley({
                     errorClass: 'parsley-error',
                     successClass: 'parsley-success',

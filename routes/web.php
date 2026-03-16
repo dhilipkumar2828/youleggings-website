@@ -70,6 +70,10 @@ Route::post('/customer-register', [IndexController::class, 'customer_register'])
 Route::group(['middleware' => 'auth'], function() {
     Route::get('/my-account', [IndexController::class, 'my_account'])->name('my_account');
     Route::get('/my-orders', [IndexController::class, 'my_orders'])->name('my_orders');
+    Route::get('/my-addresses', [IndexController::class, 'my_addresses'])->name('my_addresses');
+    Route::get('/address-set-default/{id}', [IndexController::class, 'address_set_default'])->name('address.set_default');
+    Route::post('/address-update', [IndexController::class, 'address_update'])->name('address.update');
+    Route::get('/address-delete/{id}', [IndexController::class, 'address_delete'])->name('address.delete');
     Route::get('/order-invoice/{id}', [IndexController::class, 'order_invoice'])->name('order_invoice');
     Route::post('/account-update', [IndexController::class, 'account_update'])->name('account_update');
     Route::post('/apply-coupon', [IndexController::class, 'apply_coupon'])->name('apply_coupon');
