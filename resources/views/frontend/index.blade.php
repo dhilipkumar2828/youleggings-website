@@ -326,17 +326,7 @@
               </div>
             </a>
         @empty
-            @for($i=1; $i<=3; $i++)
-            <a href="{{ route('shop') }}" class="collection-card">
-              <div class="collection-image-wrap">
-                <img src="{{ asset('frontend/images/Products/_DSC8742-Edit.jpg') }}" alt="Men's Collection">
-              </div>
-              <h3 class="collection-name">Collection {{ $i }}</h3>
-              <div class="collection-btn">
-                  Explore <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
-              </div>
-            </a>
-            @endfor
+            <p style="text-align: center; width: 100%;">No Collections Found</p>
         @endforelse
       </div>
     </div>

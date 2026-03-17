@@ -236,6 +236,16 @@
         .breadcrumb-item a {
             color: #E91E63;
         }
+
+        /* Variant Card Alignment */
+        .variant {
+            text-align: left !important;
+            width: 100%;
+        }
+        .variant .card {
+            margin-left: 0 !important;
+            margin-right: auto !important;
+        }
     </style>
 
     <div class="page-content-wrapper">
@@ -1105,21 +1115,51 @@
             let combinations = cartesian(attributeArrays);
             combinations.forEach(function(combo) {
                 let value = combo.join(',');
-                let label = combo.join(' / ');
+                // Format label as (Size) Color
+                let label = "";
+                if (combo.length >= 2) {
+                    label = `(${combo[0]}) ${combo[1]}`;
+                } else {
+                    label = combo.join(' / ');
+                }
                 let vid = Math.floor(Math.random() * 1000000);
                 renderVariantRow(vid.toString(), value, label);
             });
         });
 
+        function formatVariantLabel(label) {
+            if (!label) return '';
+            const sizes = ['3XL', 'XXL', 'XL', 'XXS', 'XS', 'S', 'M', 'L'];
+            for (const size of sizes) {
+                if (label.startsWith(size)) {
+                    const color = label.substring(size.length).trim();
+                    if (color) return `(${size}) ${color}`;
+                    return `(${size})`;
+                }
+            }
+            if (label.includes(' / ')) {
+                const parts = label.split(' / ');
+                return `(${parts[0].trim()}) ${parts[1].trim()}`;
+            }
+            if (label.includes(',')) {
+                const parts = label.split(',');
+                return `(${parts[0].trim()}) ${parts[1].trim()}`;
+            }
+            return label;
+        }
+
         function renderVariantRow(vid, value, label, existingData = null) {
             if (variant.indexOf(vid.toString()) !== -1) return;
 
-            // Strict normalization: Remove ALL whitespace, commas and lowercase for comparison
+            // Strict normalization
             let normalizedValue = value.toString().replace(/[\s,]/g, '').toLowerCase();
             if (variant_combos.indexOf(normalizedValue) !== -1) return;
 
             variant.push(vid.toString());
             variant_combos.push(normalizedValue);
+
+            // Format label for display
+            let displayLabel = formatVariantLabel(label);
 
             let sku = existingData ? existingData.sku : '';
             let photo = existingData ? existingData.photo : '';
@@ -1139,10 +1179,10 @@
             }
 
             let details = `
-        <div class="card mb-3 border" id="vchild${vid}">
-            <div class="card-header d-flex justify-content-between align-items-center bg-light">
-                <span class="font-weight-bold">Variant: ${label}</span>
-                <div>
+        <div class="card mb-3 border text-left" id="vchild${vid}" style="text-align: left;">
+            <div class="card-header d-flex justify-content-start align-items-center bg-light">
+                <span class="font-weight-bold">Variant: ${displayLabel}</span>
+                <div class="ml-auto">
                     <button type="button" class="btn btn-sm btn-outline-primary mr-2" onclick="exvariant('vo${vid}')"><i class="fa fa-expand"></i></button>
                     <button type="button" class="btn btn-sm btn-outline-danger" onclick="removevariant('${vid}')"><i class="fa fa-trash"></i></button>
                 </div>
