@@ -33,7 +33,7 @@
             </ul>
           </div>
           <div class="about-story-image">
-            <img src="{{ ($about && $about->photo) ? image_url($about->photo) : asset('frontend/images/Products/_DSC8682-Edit.jpg') }}" alt="You Leggings Our Story">
+            <img src="{{ asset('frontend/images/Products/_DSC8682-Edit.jpg') }}" alt="You Leggings Our Story">
           </div>
         </div>
       </div>

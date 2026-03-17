@@ -37,6 +37,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.querySelector('.nav-links');
+
+    if (mobileMenuBtn && navLinks) {
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isActive = navLinks.classList.toggle('active');
+            document.body.classList.toggle('menu-open', isActive);
+            
+            // Fix: Target both i and svg as Lucide replaces the element
+            const menuIcon = mobileMenuBtn.querySelector('i, svg');
+            if (isActive) {
+                menuIcon?.setAttribute('data-lucide', 'x');
+            } else {
+                menuIcon?.setAttribute('data-lucide', 'menu');
+            }
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (navLinks.classList.contains('active') && !navLinks.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                navLinks.classList.remove('active');
+                document.body.classList.remove('menu-open');
+                const menuIcon = mobileMenuBtn.querySelector('i');
+                menuIcon?.setAttribute('data-lucide', 'menu');
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        });
+    }
+
+
     // Cart Navigation Update
     const CART_STORAGE_KEY = 'you_cart_items';
     

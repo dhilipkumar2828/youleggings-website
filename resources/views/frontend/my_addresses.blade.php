@@ -43,7 +43,15 @@
   .modal-content .form-control { border: 1px solid #f0f0f0; padding: 10px 15px; height: auto; font-size: 14px; color: #222; background: #fafafa; border-radius: 10px !important; transition: all 0.2s; box-shadow: none; font-weight: 500; width: 100%; }
   .modal-content .form-control:focus { background: #fff; border-color: #ec407a; box-shadow: 0 0 0 3px rgba(236, 64, 122, 0.1); outline: none; }
   .modal-content textarea.form-control { min-height: 70px; resize: vertical; }
+  @media (max-width: 768px) {
+    .addresses-wrapper { padding: 120px 0 60px; }
+    .page-header h1 { font-size: 28px; }
+    .modal-content { padding: 25px; }
+    .modal-content .col-6, .modal-content .col-4 { width: 100%; }
+    .address-grid { grid-template-columns: 1fr; }
+  }
 </style>
+
 @endsection
 
 @section('content')

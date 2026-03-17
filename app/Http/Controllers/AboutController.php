@@ -185,7 +185,7 @@ class AboutController extends Controller
                 'title'=>'string|required',
                 'sub_title'=>'string|nullable',
                 'description'=>'string|nullable',
-                'photo'=>'string',
+                'photo'=>'string|nullable',
                 'promise_title'=>'string|nullable',
                 'promise_desc'=>'string|nullable',
                 'why_choose_1_title'=>'string|nullable', 'why_choose_1_desc'=>'string|nullable',

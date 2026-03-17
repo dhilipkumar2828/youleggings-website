@@ -39,8 +39,7 @@
 
                                 <!-- image upload custom -->
                                 <div class="form-group row">
-                                    <label for="thumbnail" class="col-sm-3 col-form-label">Category Image <span
-                                            style="color:red">*</span></label>
+                                    <label for="thumbnail" class="col-sm-3 col-form-label">Category Image</label>
                                     <div class="col-sm-9">
                                         <div class="input-group d-flex align-items-center"
                                             style="border: 1px dashed #ced4da; border-radius: 25px; padding: 5px; background: #fff; height: 50px;">
@@ -51,7 +50,7 @@
                                                     <i class="fa fa-picture-o"></i> Choose
                                                 </a>
                                             </span>
-                                            <input id="thumbnail" required class="form-control" type="text"
+                                            <input id="thumbnail" class="form-control" type="text"
                                                 value="" name="photo"
                                                 style="border: none !important; box-shadow: none !important; background: transparent !important; margin-left: 10px; height: 100% !important; padding: 0;"
                                                 placeholder="Select an image...">

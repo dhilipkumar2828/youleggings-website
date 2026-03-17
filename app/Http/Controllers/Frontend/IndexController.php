@@ -234,7 +234,7 @@ class IndexController extends Controller
                 }
             }
 
-            $photos = array_filter(explode(',', $variant->photo));
+            $photos = !empty($variant->photo) ? array_filter(preg_split('/[\s,;]+/', $variant->photo)) : [];
             $firstPhoto = !empty($photos) ? image_url($photos[0]) : null;
 
             $grouped_variants[$foundSize][$foundColor] = [

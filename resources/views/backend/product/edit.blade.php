@@ -150,7 +150,38 @@
 
         .action-button-previous:hover,
         .action-button-previous:focus {
-            box-shadow: 0 0 0 2px white, 0 0 0 3px #616161;
+            background: #424242;
+            transform: translateY(-2px);
+        }
+
+        /* Wizard Footer Layout */
+        .wizard-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            width: 100%;
+        }
+
+        .next2 {
+            width: auto !important;
+            min-width: 130px;
+            background: var(--primary-color, #E91E63) !important;
+            color: #fff !important;
+            font-weight: bold;
+            border: none !important;
+            border-radius: 50px !important;
+            cursor: pointer;
+            padding: 12px 25px !important;
+            margin: 0 !important;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+        }
+
+        .next2:hover {
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4) !important;
             transform: translateY(-2px);
         }
 
@@ -618,12 +649,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <input type="button" name="next" class="next1 action-button old_product1"
-                                            value="Next" />
-                                        <input style="display:none;" type="submit" name="next"
-                                            class="next action-button newbutton2" value="Update" id="submit_btn" />
-                                        <input type="button" name="next" class="next action-button product1"
-                                            value="Next" style="display:none;" />
+                                         <div class="wizard-footer" style="justify-content: flex-end;">
+                                             <input type="button" name="next" class="next1 action-button old_product1"
+                                                 value="Next" />
+                                             <input style="display:none;" type="submit" name="next"
+                                                 class="next action-button newbutton2" value="Update" id="submit_btn" />
+                                             <input type="button" name="next" class="next action-button product1"
+                                                 value="Next" style="display:none;" />
+                                         </div>
                                     </fieldset>
 
                                     <!-- product variant -->
@@ -690,10 +723,13 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <input type="button" name="next" class="next2 action-button" value="Next"
-                                            id="next_btn2" />
-                                        <input type="button" name="previous" class="next2 action-button" 
-                                            value="Previous" />
+                                         <div class="wizard-footer">
+                                             <input type="button" name="previous" class="previous action-button-previous" 
+                                                 value="Previous" />
+                                             <input type="button" name="next" class="next2 variant-next-trigger" value="Next"
+                                                 id="next_btn2" />
+                                             <input type="button" name="next" class="next action-button product2" value="Next" style="display:none;" />
+                                         </div>
                                     </fieldset>
 
                                     <!-- finish -->
@@ -723,14 +759,16 @@
                                                 <div class="row justify-content-center mt-4">
                                                     <div class="col-md-6">
                                                         <button type="submit"
-                                                            class="btn btn-primary btn-lg btn-block action-button"
+                                                            class="btn btn-primary btn-lg btn-block"
                                                             style="width: 100%;">Update Product</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <input type="button" name="previous" class="next2 action-button"
-                                            value="Previous" />
+                                         <div class="wizard-footer">
+                                             <input type="button" name="previous" class="previous action-button-previous"
+                                                 value="Previous" />
+                                         </div>
                                     </fieldset>
                                     </form>
                                 </div>
@@ -756,16 +794,18 @@
         // ============================================================
         function adminImageUrl(path) {
             if (!path) return '';
-            // Strip http://127.0.0.1:PORT/public/ or http://localhost:PORT/public/
-            path = path.replace(/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?\/public\//, '');
-            // Strip other known prefixes
-            path = path.replace(/^public\/uploads\//, '')
-                       .replace(/^public\/storage\//, '')
-                       .replace(/^public\//, '')
-                       .replace(/^storage\//, '')
-                       .replace(/^uploads\//, '');
-            path = path.replace(/^\/+/, '');
-            return window.location.origin + '/uploads/' + path;
+            path = path.trim();
+            if (path.startsWith('http')) {
+                // Remove redundant public/ index if it exists in a full URL incorrectly
+                return path.replace('/public/public/', '/public/');
+            }
+            
+            // Clean common prefixes
+            let cleanPath = path.replace(/^(public\/|uploads\/|photos\/|storage\/)+/g, '');
+            
+            // Try different possible locations
+            if (cleanPath.startsWith('Products/')) return window.location.origin + '/uploads/' + cleanPath;
+            return window.location.origin + '/uploads/photos/' + cleanPath;
         }
 
         // ============================================================
@@ -1395,13 +1435,38 @@
         }
 
         $('.next1').off('click').on('click', selectvalidation);
-        $('.next2').off('click').on('click', selectvalidation1);
+        $('.variant-next-trigger').off('click').on('click', selectvalidation1);
+
+        // Update thumbnails when variant images change
+        $(document).on('change', 'input[name="photo[]"], #thumbnail', function() {
+            var isMain = $(this).attr('id') === 'thumbnail';
+            var vid = isMain ? '' : $(this).attr('id').replace('thumbnail', '');
+            var val = $(this).val();
+            var holder = $('#holder' + vid);
+            holder.empty();
+            if (val) {
+                val.split(',').forEach(function(p) {
+                    var imgPath = p.trim();
+                    if (imgPath) {
+                        holder.append(`<img src="${adminImageUrl(imgPath)}" style="max-height: 80px; margin: 10px 10px 0 0; border-radius: 8px; border: 2px solid #eee; padding: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">`);
+                    }
+                });
+            }
+        });
+
+        // Trigger change on all image inputs to show thumbnails on load
+        $(document).ready(function() {
+            setTimeout(function() {
+                $('input[name="photo[]"]').trigger('change');
+                $('#thumbnail').trigger('change');
+            }, 1000);
+        });
 
         // ============================================================
         // Wizard Navigation Script
         // ============================================================
         $(document).on('click', '.action-button', function() {
-            var current_fs = $(this).parent();
+            var current_fs = $(this).closest('fieldset');
             var next_fs = current_fs.next();
 
             // Add active class to progress bar
@@ -1429,7 +1494,7 @@
         });
 
         $(document).on('click', '.action-button-previous', function() {
-            var current_fs = $(this).parent();
+            var current_fs = $(this).closest('fieldset');
             var previous_fs = current_fs.prev();
 
             // Remove active class from progress bar

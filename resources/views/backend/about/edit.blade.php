@@ -76,8 +76,9 @@
                                         <input class="form-control" required type="text" placeholder="Enter Title"
                                     <!-- <img src="assets/images/image.png" class="admin-image"> -->
 
+                                 <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Photo</label>
                                     <div class="col-sm-10">
-
                                         <div class="input-group d-flex align-items-center"
                                             style="border: 1px dashed #ced4da; border-radius: 8px; padding: 0 5px; background: #fff; height: 45px;">
                                             <span class="input-group-btn" style="margin-right:0;">
@@ -90,17 +91,14 @@
                                             <input id="thumbnail" required class="form-control" type="text"
                                                 value="{{ $aboutus->photo }}" name="photo"
                                                 style="border: none !important; box-shadow: none !important; background: transparent !important; margin-left: 10px; height: 100% !important; padding: 0;"
-                                                placeholder="Select an image...">
+                                                placeholder="Select image...">
                                         </div>
-
-                                        <div id="holder" style="margin-top:15px;max-height:100px;"><img
-                                                src="{{ $aboutus->photo }}"
-                                                alt="promo image"style="max-height: 90px;max-width:120px">
-
+                                        <div id="holder" style="margin-top:15px;max-height:100px;">
+                                            @if($aboutus->photo)
+                                            <img src="{{ $aboutus->photo }}" alt="promo image" style="max-height: 90px;max-width:120px">
+                                            @endif
                                         </div>
-
                                     </div>
-
                                 </div>
 
                                 <div class="d-flex">
@@ -133,6 +131,7 @@
 
     <script>
         $('#lfm').filemanager('image');
+        $('#lfm2').filemanager('image');
     </script>
 
     <script>

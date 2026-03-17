@@ -104,14 +104,122 @@
   }
   .hero-dot.active { background: #333; transform: scale(1.2); }
 
-  /* Premium Grid Fixes */
-  .premium-grid {
-    display: grid;
-    /* auto-fill prevents single items from expanding to full screen */
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 40px 30px;
-    justify-content: center;
+  @media (max-width: 768px) {
+    .hero-slider-container {
+      height: 450px;
+    }
+    .hero-image, .hero-video {
+      object-position: center center;
+    }
+    .hero-content {
+      text-align: center;
+      padding-left: 0;
+      margin: 0 auto;
+    }
+    .hero-content-wrapper {
+      justify-content: center;
+    }
+    .hero-title {
+      font-size: 2.2rem !important;
+      margin-bottom: 20px !important;
+    }
+    .hero-subtitle {
+      font-size: 11px !important;
+      letter-spacing: 2px !important;
+      margin-bottom: 10px !important;
+    }
   }
+
+  .hero-btn {
+    padding: 16px 35px;
+    background: #333;
+    color: #fff;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: 4px;
+    font-size: 13px;
+    display: inline-block;
+    transition: 0.3s;
+  }
+  .hero-btn:hover {
+    background: #ec407a;
+    color: #fff;
+    transform: translateY(-3px);
+  }
+
+  /* Premium Grid Fixes */
+
+/* Featured Products Slider (Ultra-Strict Mobile Fix) */
+.featured-slider-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+@media (max-width: 900px) {
+    .featured-slider-grid {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scroll-snap-type: x mandatory !important;
+        -webkit-overflow-scrolling: touch !important;
+        gap: 0 !important;
+        margin: 0 -15px !important;
+        padding: 10px 0 20px 0 !important;
+        width: auto !important;
+        list-style: none !important;
+    }
+
+    .featured-slider-grid::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .featured-slider-grid .product-card {
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        scroll-snap-align: center !important;
+        margin: 0 !important;
+        padding: 0 15px !important;
+        display: block !important;
+        box-sizing: border-box !important;
+    }
+
+    .slider-nav-btns {
+        display: flex !important;
+        margin-top: 15px;
+        justify-content: center;
+        gap: 20px;
+    }
+}
+
+.slider-nav-btns {
+    display: none;
+}
+
+.nav-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: 0.3s;
+    color: #333;
+}
+
+.nav-btn:hover {
+    background: #ec407a;
+    color: #fff;
+}
   
   /* Curated Collections */
   .premium-grid {
@@ -250,7 +358,126 @@
     background: #f0f0f0; cursor: pointer; transition: 0.3s;
   }
   .t-dot.active { background: #ec407a; transform: scale(1.3); }
+
+  /* Split Banner Base Styles */
+  .split-banner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 600px;
+    background: #fff;
+    overflow: hidden;
+  }
+  .split-content {
+    background: #fbf9fa;
+    padding: 10% 12%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+  .split-subtitle {
+    color: var(--primary-color, #c18b95);
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+  .split-title {
+    font-family: var(--font-serif, serif);
+    font-size: 3.5rem;
+    line-height: 1.1;
+    margin-bottom: 25px;
+    color: #333;
+    font-style: italic;
+  }
+  .split-desc {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #666;
+    margin-bottom: 40px;
+    max-width: 450px;
+  }
+  .split-btn {
+    padding: 16px 40px;
+    background: #333;
+    color: #fff;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: none;
+    display: inline-block;
+    transition: 0.3s;
+  }
+  .split-btn:hover {
+    background: #ec407a;
+    color: #fff;
+  }
+  .split-image {
+    background-image: url('{{ asset('frontend/images/Products/_DSC8723-Edit.jpg') }}');
+    background-size: cover;
+    background-position: center;
+    transition: transform 1.5s ease;
+  }
+  .split-image:hover {
+    transform: scale(1.05);
+  }
+
+  /* Split Banner Responsive */
+  @media (max-width: 768px) {
+    .split-banner {
+      grid-template-columns: 1fr !important;
+      min-height: auto !important;
+    }
+    .split-content {
+      padding: 60px 25px !important;
+      text-align: center;
+      order: 2;
+    }
+    .split-image {
+      min-height: 380px !important;
+      order: 1;
+    }
+    .split-title {
+      font-size: 2rem !important;
+      margin-bottom: 20px !important;
+    }
+    .split-desc {
+      margin: 0 auto 30px !important;
+      max-width: 100% !important;
+    }
+  }
+
+
+  /* Testimonials Section Heading */
+  @media (max-width: 768px) {
+    .testimonials-section {
+      padding: 60px 0 !important;
+    }
+    .testimonials-section .section-title {
+      font-size: 2.22rem !important;
+      line-height: 1.2 !important;
+    }
+    .testimonials-section .section-subtitle {
+       letter-spacing: 2px !important;
+       margin-bottom: 10px !important;
+    }
+  }
+
+  /* Collection Grid Fix */
+  @media (max-width: 576px) {
+    .collection-image-wrap {
+      height: 280px;
+    }
+    .home-categories-section .premium-grid {
+       grid-template-columns: 1fr !important;
+       padding: 0 10px;
+    }
+  }
 </style>
+
+
+
 @endsection
 
 @section('content')
@@ -273,7 +500,7 @@
                     <div class="hero-content">
                         <span class="hero-subtitle">{{ $banner->subtitle ?? 'Premium Selection' }}</span>
                         <h1 class="hero-title">{!! nl2br(e($banner->title)) !!}</h1>
-                        <a href="{{ $banner->link ?: route('shop') }}" class="btn hero-btn" style="padding: 16px 35px; background: #333; color: #fff; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-radius: 0; font-size: 13px;">Explore Collection</a>
+                        <a href="{{ $banner->link ?: route('shop') }}" class="btn hero-btn">Explore Collection</a>
                     </div>
                 </div>
             </div>
@@ -298,7 +525,7 @@
                 <div class="hero-content">
                     <span class="hero-subtitle">Premium Collection 2026</span>
                     <h1 class="hero-title">Experience <br>True Comfort</h1>
-                    <a href="{{ route('shop') }}" class="btn hero-btn" style="padding: 16px 35px; background: #333; color: #fff; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-radius: 0; font-size: 13px;">Shop The Collection</a>
+                    <a href="{{ route('shop') }}" class="btn hero-btn">Shop The Collection</a>
                 </div>
             </div>
         </div>
@@ -318,7 +545,7 @@
         @forelse($categories as $category)
             <a href="{{ route('shop', ['category[]' => $category->id]) }}" class="collection-card">
               <div class="collection-image-wrap">
-                <img src="{{ $category->photo ? image_url($category->photo) : asset('frontend/images/Products/_DSC8742-Edit.jpg') }}" alt="{{ $category->title }}">
+                <img src="{{ $category->photo ? image_url($category->photo) : '' }}" alt="{{ $category->title }}">
               </div>
               <h3 class="collection-name">{{ $category->title }}</h3>
               <div class="collection-btn">
@@ -341,11 +568,11 @@
         <div class="divider" style="width: 60px; height: 2px; background: var(--primary-color, #c18b95); margin: 0 auto;"></div>
       </div>
 
-      <div class="premium-grid">
+      <div class="featured-slider-grid" id="featured-slider">
         @forelse($featured_products as $product)
             @php
                 $photo = $product->productvariant->first()->photo ?? '';
-                $photos = $photo ? explode(',', $photo) : [asset('frontend/images/Products/_DSC8742-Edit.jpg')];
+                $photos = $photo ? explode(',', $photo) : [''];
             @endphp
             <a href="{{ route('product_detail', $product->slug) }}" class="product-card" style="background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); text-align: center; display: block; text-decoration: none; transition: 0.3s; border: 1px solid transparent;">
               <div class="product-image" style="height: 320px; border-radius: 8px; overflow: hidden; margin-bottom: 20px;">
@@ -360,7 +587,7 @@
                     $discount = $product->discount ?? 0;
                     $sellingPrice = $regularPrice;
                     if($discount > 0) {
-                        if($product->discount_type == 'percent') {
+                        if($product->discount_type == 'percent' || $product->discount_type == 'percentage') {
                             $sellingPrice = $regularPrice - ($regularPrice * $discount / 100);
                         } else {
                             $sellingPrice = $regularPrice - $discount;
@@ -369,7 +596,7 @@
                   @endphp
                   <span class="selling-price" style="font-size: 22px; font-weight: 700; color: #ec407a;">₹ {{ number_format($sellingPrice) }}</span>
                   @if($discount > 0)
-                    <span class="regular-price" style="font-size: 15px; text-decoration: line-through; color: #bbbbbb; font-weight: 400;">₹ {{ number_format($regularPrice, 2) }}</span>
+                    <span class="regular-price" style="font-size: 15px; text-decoration: line-through; color: #bbbbbb; font-weight: 400;">₹ {{ number_format($regularPrice) }}</span>
                   @endif
                 </div>
               </div>
@@ -382,6 +609,16 @@
             <p class="text-center" style="width: 100%; padding: 40px; color: #888;">Discoveries coming soon...</p>
         @endforelse
       </div>
+
+      <!-- Navigation Arrows for Mobile Slider -->
+      <div class="slider-nav-btns">
+        <button class="nav-btn prev" onclick="slideFeatured(-1)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <button class="nav-btn next" onclick="slideFeatured(1)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
       
       <div class="text-center" style="margin-top: 60px;">
         <a href="{{ route('shop') }}" class="btn" style="padding: 15px 40px; background: #222; color: #fff; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; border-radius: 4px;">View All Products</a>
@@ -390,18 +627,18 @@
   </section>
 
   <!-- Split Banner Section (Editorial Style) -->
-  <section class="split-banner" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); height: auto; min-height: 600px; background: #fff; overflow: hidden;">
-    <div class="split-content" style="background: #fbf9fa; padding: 12%; display: flex; flex-direction: column; justify-content: center; position: relative;">
-      <span class="section-subtitle" style="color: var(--primary-color, #c18b95); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size: 12px; margin-bottom: 20px;">Limited Edition</span>
-      <h2 class="split-title" style="font-family: var(--font-serif, serif); font-size: 3.5rem; line-height: 1.1; margin-bottom: 25px; color: #333; font-style: italic;">The Art of <br>Comfort</h2>
-      <p class="split-desc" style="font-size: 15px; line-height: 1.8; color: #666; margin-bottom: 40px; max-width: 400px;">
+  <section class="split-banner">
+    <div class="split-content">
+      <span class="section-subtitle split-subtitle">Limited Edition</span>
+      <h2 class="split-title">The Art of <br>Comfort</h2>
+      <p class="split-desc">
         Discover a collection of premium leggings that feel like a second skin. Meticulously crafted for movement and designed for the modern woman.
       </p>
       <div>
-        <a href="{{ route('shop') }}" class="btn" style="padding: 15px 35px; background: #333; color: #fff; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; border: none;">Explore Collection</a>
+        <a href="{{ route('shop') }}" class="btn split-btn">Explore Collection</a>
       </div>
     </div>
-    <div class="split-image" style="background-image: url('{{ asset('frontend/images/Products/_DSC8723-Edit.jpg') }}'); background-size: cover; background-position: center; min-height: 400px; transition: transform 1.5s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"></div>
+    <div class="split-image"></div>
   </section>
 
   <!-- Testimonials Section -->
@@ -606,5 +843,14 @@
       })
       .catch(error => console.error('Error:', error));
   }
+    function slideFeatured(direction) {
+        const slider = document.getElementById('featured-slider');
+        if (!slider) return;
+        const cardWidth = slider.querySelector('.product-card').offsetWidth;
+        slider.scrollBy({
+            left: direction * cardWidth,
+            behavior: 'smooth'
+        });
+    }
 </script>
 @endsection

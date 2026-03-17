@@ -256,7 +256,7 @@
                                                     {{ $billing_address->first_name . $billing_address->last_name }}<br>
                                                     Phone: {{ $billing_address->phone_number }}<br>
                                                     Address: {{ $billing_address->address }}<br>
-                                                    State: {{ $state->state }}<br>
+                                                    State: {{ is_object($state) ? $state->state : ($state ?: 'N/A') }}<br>
                                                     City: {{ $billing_address->city }}<br>
                                                     Zip: {{ $billing_address->pincode }}<br>
                                                 @endif
@@ -271,7 +271,7 @@
                                                     {{ $shipping_address->sfirst_name . $shipping_address->slast_name }}<br>
                                                     Phone: {{ $shipping_address->sphone_number }}<br>
                                                     Address: {{ $shipping_address->saddress }}<br>
-                                                    State: {{ $state->state }}<br>
+                                                    State: {{ is_object($state) ? $state->state : ($state ?: 'N/A') }}<br>
                                                     City: {{ $shipping_address->scity }}<br>
                                                     Zip: {{ $shipping_address->spincode }}<br>
                                                 @endif

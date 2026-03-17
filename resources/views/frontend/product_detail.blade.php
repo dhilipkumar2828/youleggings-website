@@ -436,13 +436,13 @@
     function getImageUrl(path) {
         if (!path) return '';
 
-        // 1. Handle nested URLs
+        // 1. Handle nested / absolute URLs
         if (path.includes('http', 8)) {
-            path = path.substring(path.indexOf('http', 8));
+            path = path.substring(path.lastIndexOf('http'));
         }
 
         // 2. Remove ANY full URL prefixes for our known local/demo domains
-        path = path.replace(/^https?:\/\/(you\.oceansoftwares\.in|127\.0\.0\.1|localhost)(:\d+)?(\/demo)?(\/public)?\//, '');
+        path = path.replace(/^https?:\/\/(you\.oceansoftwares\.in|127\.0\.0\.1|localhost|youleggings\.com)(:\d+)?(\/demo)?(\/public)?\//, '');
 
         // 3. Remove common relative prefixes to get just the filename
         path = path.replace(/^(public\/|uploads\/|photos\/|storage\/)+/g, '');
@@ -450,10 +450,18 @@
         // 4. If it's still a full URL, it's external
         if (path.startsWith('http')) return path;
 
-        // 5. Rebuild with origin. Try to guess the folder.
-        // We'll use a relative path from the domain root or try to preserve context.
-        // Most reliable for this project's structure:
-        return window.location.origin + '/demo/public/uploads/photos/' + path;
+        // 5. Build relative to origin. 
+        // Try to guess if it's in Products/ or photos/
+        let prefix = '/uploads/photos/';
+        if (path.startsWith('Products/')) prefix = '/uploads/';
+        
+        // Handle potential demo/public prefixes if present in current URL
+        let baseUrl = window.location.origin;
+        if (window.location.pathname.includes('/demo/public/')) {
+            baseUrl += '/demo/public';
+        }
+        
+        return baseUrl + prefix + path;
     }
 
     // Dynamic Tab Logic

@@ -13,6 +13,10 @@
         <img src="{{ asset('frontend/images/logo-new.png') }}" alt="You Leggings Logo">
       </a>
 
+      <button id="mobileMenuBtn" class="mobile-menu-btn" type="button" aria-label="Toggle Menu">
+        <i data-lucide="menu"></i>
+      </button>
+
       <nav class="nav-links">
         <a href="{{ route('index') }}" class="{{ request()->routeIs('index') ? 'active' : '' }}">Home</a>
         <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'active' : '' }}">About Us</a>
@@ -63,9 +67,9 @@
         </div>
         @endauth
 
-        
       </div>
       <form id="headerSearchBar" action="{{ route('shop') }}" method="GET" class="header-search" aria-hidden="true">
+
         <div class="header-search-row">
           <input type="text" name="q" placeholder="Search products..." aria-label="Search products" value="{{ request('q') }}">
           <button id="searchCloseBtn" class="header-search-close" type="button" aria-label="Close Search">
