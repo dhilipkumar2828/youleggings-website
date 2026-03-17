@@ -39,8 +39,24 @@
               'Nude' => '#d3bfa9',
               'Beige' => '#f5f5dc',
               'Purple' => '#8e44ad',
-              'Grey' => '#7f8c8d'
+              'Grey' => '#7f8c8d',
+              'Skyblue' => '#87CEEB',
+              'Sky Blue' => '#87CEEB',
+              'Maroon' => '#800000',
+              'Navy' => '#000080'
           ];
+
+          // Dynamic Colors from Admin (Attribute type: Color Mapping)
+          // Admin can add values like "Skyblue:#87CEEB" or "Orange:#ffA500"
+          $dynamicColors = \App\Models\Attribute::where('attribute_type', 'Color Mapping')->first();
+          if ($dynamicColors && is_array($dynamicColors->value)) {
+              foreach($dynamicColors->value as $cv) {
+                  if (strpos($cv, ':') !== false) {
+                      $parts = explode(':', $cv);
+                      $colorHexMap[trim($parts[0])] = trim($parts[1]);
+                  }
+              }
+          }
       @endphp
 
       <div class="product-detail-layout">
@@ -87,7 +103,7 @@
             <div class="product-color-list" id="productColorList">
                 @foreach($availableColors as $color)
                     <div class="product-color {{ $color == $defaultColor ? 'is-active' : '' }}"
-                         style="--swatch: {{ $colorHexMap[$color] ?? '#ccc' }};"
+                         style="--swatch: {{ $colorHexMap[$color] ?? $color }};"
                          title="{{ $color }}"
                          data-color="{{ $color }}"
                          onclick="selectColor('{{ $color }}')">
@@ -103,19 +119,19 @@
           <div class="product-service-strip compact-service-strip" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 30px;">
              <div style="text-align: center; border: 1px solid #f0dbe4; border-radius: 12px; padding: 15px 5px;">
                 <i data-lucide="truck" style="width: 20px; color: var(--primary-color); margin-bottom: 8px;"></i>
-                <h4 style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">Free Shipping</h4>
+                <h4 style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Free Shipping</h4>
              </div>
              <div style="text-align: center; border: 1px solid #f0dbe4; border-radius: 12px; padding: 15px 5px;">
                 <i data-lucide="shield-check" style="width: 20px; color: var(--primary-color); margin-bottom: 8px;"></i>
-                <h4 style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">Quality Mark</h4>
+                <h4 style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Quality Mark</h4>
              </div>
              <div style="text-align: center; border: 1px solid #f0dbe4; border-radius: 12px; padding: 15px 5px;">
                 <i data-lucide="lock" style="width: 20px; color: var(--primary-color); margin-bottom: 8px;"></i>
-                <h4 style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">Secure Pay</h4>
+                <h4 style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Secure Pay</h4>
              </div>
              <div style="text-align: center; border: 1px solid #f0dbe4; border-radius: 12px; padding: 15px 5px;">
                 <i data-lucide="refresh-cw" style="width: 20px; color: var(--primary-color); margin-bottom: 8px;"></i>
-                <h4 style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">Easy Return</h4>
+                <h4 style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Easy Return</h4>
              </div>
           </div>
         </div>
@@ -247,20 +263,25 @@
         // Update Colors for this size
         const colors = Object.keys(groupedVariants[size]);
         const colorList = document.getElementById('productColorList');
-        colorList.innerHTML = '';
+        if (colorList) {
+            colorList.innerHTML = '';
+            colors.forEach(color => {
+                const colorDiv = document.createElement('div');
+                // Use a temporary highlight if it's the one we'll select
+                const isActive = (color === currentColor);
+                colorDiv.className = 'product-color' + (isActive ? ' is-active' : '');
+                colorDiv.style.cssText = `--swatch: ${colorHexMap[color] || color}`;
+                colorDiv.title = color;
+                colorDiv.setAttribute('data-color', color);
+                colorDiv.onclick = () => selectColor(color);
+                colorList.appendChild(colorDiv);
+            });
+        }
 
-        colors.forEach(color => {
-            const colorDiv = document.createElement('div');
-            colorDiv.className = 'product-color' + (color === colors[0] ? ' is-active' : '');
-            colorDiv.style.cssText = `--swatch: ${colorHexMap[color] || '#ccc'}`;
-            colorDiv.title = color;
-            colorDiv.setAttribute('data-color', color);
-            colorDiv.onclick = () => selectColor(color);
-            colorList.appendChild(colorDiv);
-        });
-
-        // Auto select first color
-        if (colors.length > 0) {
+        // Retain current color if available in the new size, otherwise fallback to first available color
+        if (colors.includes(currentColor)) {
+            selectColor(currentColor);
+        } else if (colors.length > 0) {
             selectColor(colors[0]);
         }
     }
