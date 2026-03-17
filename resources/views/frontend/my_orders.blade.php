@@ -144,7 +144,7 @@
               <a href="{{ route('order_invoice', $order->id) }}" target="_blank" style="font-size: 11px; font-weight: 700; color: #ec407a; border: 1px solid #fdeef2; padding: 5px 15px; border-radius: 5px; text-decoration: none; background: #fffafb;">
                 <i class="fas fa-file-invoice" style="margin-right:5px;"></i> INVOICE
               </a>
-              <span class="status-badge {{ $statusClass }}">{{ $order->status }}</span>
+              {{-- <span class="status-badge {{ $statusClass }}">{{ $order->status }}</span> --}}
             </div>
           </div>
 
@@ -155,16 +155,23 @@
                 <div class="meta-label">Total Amount</div>
               </div>
               <div class="order-meta-item">
-                <div class="meta-value">{{ strtoupper($order->payment_type) }}</div>
+                <div class="meta-value">{{ !empty($order->payment_type) ? strtoupper($order->payment_type) : 'COD' }}</div>
                 <div class="meta-label">Payment Method</div>
               </div>
               <div class="order-meta-item">
-                <div class="meta-value">{{ ucfirst($order->payment_status ?? 'Pending') }}</div>
+                @php
+                  $pStatus = trim($order->payment_status);
+                  if(empty($pStatus)) $pStatus = 'Pending';
+                  $pStatusClass = strtolower($pStatus) == 'completed' || strtolower($pStatus) == 'paid' ? 'status-delivered' : 'status-pending';
+                @endphp
+                <div class="meta-value">
+                  <span class="status-badge {{ $pStatusClass }}" style="padding: 2px 10px; font-size: 10px;">{{ ucfirst($pStatus) }}</span>
+                </div>
                 <div class="meta-label">Payment Status</div>
               </div>
               <div class="order-meta-item">
-                <div class="meta-value">{{ $orderProducts->count() }}</div>
-                <div class="meta-label">Item(s)</div>
+                <div class="meta-value">{{ count($orderProducts) }}</div>
+                <div class="meta-label">Item(S)</div>
               </div>
             </div>
 
@@ -176,12 +183,15 @@
                   $imgSrc = $option['image'] ?? '';
                   $itemName = $option['name'] ?? 'Product';
                   $variant = $option['variant'] ?? '';
+                  
+                  // Clean image URL if it's absolute but on local/demo domain
+                  $displayImg = image_url($imgSrc);
                 @endphp
                 @if($imgSrc)
-                  <img src="{{ image_url($imgSrc) }}" class="order-item-img" alt="{{ $itemName }}" title="{{ $itemName }} - {{ $variant }}">
+                  <img src="{{ $displayImg }}" class="order-item-img" alt="{{ $itemName }}" title="{{ $itemName }} - {{ $variant }}" onerror="this.src='{{ asset('frontend/images/logo-new.png') }}'; this.style.opacity='0.5';">
                 @else
-                  <div class="order-item-img" style="display:flex; align-items:center; justify-content:center; font-size:10px; color:#999; text-align:center; padding:5px;">
-                    {{ Str::limit($itemName, 10) }}
+                  <div class="order-item-img" style="display:flex; align-items:center; justify-content:center; font-size:10px; color:#999; text-align:center; padding:5px; background:#f9f9f9;">
+                    <i class="fas fa-box-open" style="font-size: 20px; color: #eee;"></i>
                   </div>
                 @endif
               @endforeach

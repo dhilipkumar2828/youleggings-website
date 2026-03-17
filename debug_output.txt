@@ -1,0 +1,44 @@
+--- ORDER_PRODUCTS TABLE COLUMNS ---
+Array
+(
+    [0] => id
+    [1] => order_id
+    [2] => product_id
+    [3] => quantity
+    [4] => cancellation_fee
+    [5] => status
+    [6] => option
+    [7] => amount
+    [8] => tax_rate
+    [9] => total_tax
+    [10] => created_at
+    [11] => updated_at
+)
+
+--- SAMPLE ORDER_PRODUCT ---
+stdClass Object
+(
+    [id] => 11
+    [order_id] => 11
+    [product_id] => 0
+    [quantity] => 1
+    [cancellation_fee] => 0.00
+    [status] => active
+    [option] => {"name":"sdfedssgrefhrt","variant":"S","image":"http:\/\/127.0.0.1:8001\/uploads\/photos\/65\/21117710-2.jpg"}
+    [amount] => 122.00
+    [tax_rate] => 0.00
+    [total_tax] => 0.00
+    [created_at] => 2026-03-16 09:12:34
+    [updated_at] => 2026-03-16 09:12:34
+)
+
+--- LAST 5 ORDERS ---
+ID: 11 | OrderID: YL9820DD91 | Type:  | Status: 
+ID: 10 | OrderID: YLC16C62D4 | Type:  | Status: 
+ID: 9 | OrderID: YLA90D1FA1 | Type:  | Status: 
+ID: 8 | OrderID: YLBA65A81F | Type:  | Status: 
+ID: 7 | OrderID: YLFFB983BE | Type:  | Status: 
+
+--- ORDER PRODUCTS FOR LAST ORDER ---
+Items Count for Order 11: 1
+  - Product ID: 0 | Amount: 122.00 | Option: {"name":"sdfedssgrefhrt","variant":"S","image":"http:\/\/127.0.0.1:8001\/uploads\/photos\/65\/21117710-2.jpg"}

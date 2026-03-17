@@ -614,6 +614,16 @@ if ($searchTerm) {
 
         $productvariant=ProductVariant::where('product_id',$id)->orderBy('id','ASC')->get();
 
+        foreach($productvariant as $variant) {
+            if (!empty($variant->photo)) {
+                $photo = $variant->photo;
+                $lastHttpPos = strrpos($photo, 'http');
+                if ($lastHttpPos !== false && $lastHttpPos > 8) {
+                    $variant->photo = substr($photo, $lastHttpPos);
+                }
+            }
+        }
+
         // $check_variant=DB::table('product_variant')->where('product_id',$id)->where('arrtibute_name',"")->where('variant_id',0)->first();
 
         // if($check_variant->arrtibute_name == ""){
@@ -647,6 +657,16 @@ if ($searchTerm) {
         $productattribute=ProductAttribute::where('product_id',$id)->orderBy('id','ASC')->get();
 
         $productvariant=ProductVariant::where('product_id',$id)->orderBy('id','ASC')->get();
+        // Clean photo URLs for admin preview
+        foreach($productvariant as $variant) {
+            if (!empty($variant->photo)) {
+                $photo = $variant->photo;
+                $lastHttpPos = strrpos($photo, 'http');
+                if ($lastHttpPos !== false && $lastHttpPos > 8) {
+                    $variant->photo = substr($photo, $lastHttpPos);
+                }
+            }
+        }
 
         if($Product){
 

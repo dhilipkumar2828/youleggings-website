@@ -11,9 +11,10 @@ if (!function_exists('image_url')) {
         
         $originalPath = $path;
 
-        // 1. Handle nested/double URLs
-        if (preg_match('#https?://#', substr($path, 8))) {
-            $path = substr($path, strpos($path, 'http', 8));
+        // 1. Handle nested/double URLs (e.g. domain.com/uploads/http://domain.com/...)
+        $lastHttpPos = strrpos($path, 'http');
+        if ($lastHttpPos !== false && $lastHttpPos > 8) {
+            $path = substr($path, $lastHttpPos);
         }
 
         // 2. Remove ANY full URL prefixes for known local/demo domains to make it relative

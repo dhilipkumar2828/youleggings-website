@@ -53,6 +53,8 @@
                     @foreach($wishlist as $item)
                         @php
                             $product = $item->wishlist1;
+                            if (!$product) continue;
+                            
                             $photo = $product->productvariant->first()->photo ?? '';
                             $photos = $photo ? explode(',', $photo) : [asset('frontend/images/Products/_DSC8742-Edit.jpg')];
                         @endphp

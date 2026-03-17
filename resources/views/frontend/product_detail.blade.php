@@ -23,11 +23,13 @@
           $availableColors = $defaultSize ? array_keys($grouped_variants[$defaultSize]) : [];
           $defaultColor = !empty($availableColors) ? $availableColors[0] : null;
           $defaultVariant = ($defaultSize && $defaultColor) ? $grouped_variants[$defaultSize][$defaultColor] : null;
+          $price = $defaultVariant['price'] ?? 0;
+          $salePrice = $defaultVariant['sale_price'] ?? $price;
 
           $photos = $defaultVariant['photos'] ?? [];
           $defaultImage = !empty($photos) ? image_url($photos[0]) : asset('frontend/images/Products/_DSC8742-Edit.jpg');
 
-          $colorHexMap = [
+          $colorHexMap = array_merge([
               'Red' => '#c0392b',
               'Blue' => '#2980b9',
               'Green' => '#27ae60',
@@ -43,11 +45,16 @@
               'Skyblue' => '#87CEEB',
               'Sky Blue' => '#87CEEB',
               'Maroon' => '#800000',
-              'Navy' => '#000080'
-          ];
+              'Navy' => '#000080',
+              'Salmon' => '#FA8072',
+              'Peach' => '#FFDAB9',
+              'Mauve' => '#E0B0FF',
+              'Dusty Rose' => '#DCAE96',
+              'Olive' => '#808000',
+              'Navy Blue' => '#000080'
+          ], $colorHexMap ?? []); // Merge with colors from controller (inline Type:Hex)
 
-          // Dynamic Colors from Admin (Attribute type: Color Mapping)
-          // Admin can add values like "Skyblue:#87CEEB" or "Orange:#ffA500"
+          // Dynamic Colors from Admin (Attribute type: Color Mapping) - Secondary source
           $dynamicColors = \App\Models\Attribute::where('attribute_type', 'Color Mapping')->first();
           if ($dynamicColors && is_array($dynamicColors->value)) {
               foreach($dynamicColors->value as $cv) {
@@ -57,6 +64,22 @@
                   }
               }
           }
+
+          // Function to check if color is very light (to add a border)
+          $isLightColor = function($color) use ($colorHexMap) {
+              $hex = $colorHexMap[$color] ?? $color;
+              if (str_starts_with($hex, '#')) {
+                  $hex = str_replace('#', '', $hex);
+                  if(strlen($hex) == 3) $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
+                  if(strlen($hex) != 6) return false;
+                  $r = hexdec(substr($hex, 0, 2));
+                  $g = hexdec(substr($hex, 2, 2));
+                  $b = hexdec(substr($hex, 4, 2));
+                  $brightness = (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
+                  return $brightness > 220;
+              }
+              return in_array(strtolower($hex), ['white', 'beige', 'nude', 'ivory', 'off-white']);
+          };
       @endphp
 
       <div class="product-detail-layout">
@@ -84,7 +107,14 @@
           <p class="product-detail-category">{{ $product->categories->title ?? 'Legging' }}</p>
           <h2 class="product-detail-title">{{ $product->name }}</h2>
           <p class="product-detail-meta" style="color: #6b5a63;">Sizes {{ !empty($allSizes) ? $allSizes[0] . ' - ' . end($allSizes) : '' }}</p>
-          <div class="product-detail-price" id="productDetailPrice" style="color: var(--primary-color);">₹{{ number_format($defaultVariant['price'] ?? 0) }}</div>
+          <div class="product-detail-price" id="productDetailPrice" style="color: var(--primary-color);">
+              @if($salePrice < $price)
+                  <span class="original-price" style="text-decoration: line-through; color: #888; font-size: 0.8em; margin-right: 10px;">₹{{ number_format($price) }}</span>
+                  <span class="discounted-price">₹{{ number_format($salePrice) }}</span>
+              @else
+                  ₹{{ number_format($price) }}
+              @endif
+          </div>
           <p class="product-tax-line" style="color: #27ae60; font-weight: 600;">Inclusive of all taxes</p>
 
           <div class="product-detail-block compact-block">
@@ -102,10 +132,15 @@
             <h3 style="font-weight: 700; letter-spacing: 1.5px; margin-bottom: 12px;">Select Color</h3>
             <div class="product-color-list" id="productColorList">
                 @foreach($availableColors as $color)
+                    @php
+                        $vData = $grouped_variants[$defaultSize][$color] ?? [];
+                        $imgUrl = $vData['first_photo'] ?? '';
+                    @endphp
                     <div class="product-color {{ $color == $defaultColor ? 'is-active' : '' }}"
-                         style="--swatch: {{ $colorHexMap[$color] ?? $color }};"
+                         style="--swatch: {{ $colorHexMap[$color] ?? '#f3f3f3' }}; {{ $isLightColor($color) ? 'border: 1px solid #ddd;' : '' }}"
                          title="{{ $color }}"
                          data-color="{{ $color }}"
+                         data-image="{{ $imgUrl }}"
                          onclick="selectColor('{{ $color }}')">
                     </div>
                 @endforeach
@@ -252,6 +287,43 @@
     let currentSize = '{{ $defaultSize }}';
     let currentColor = '{{ $defaultColor }}';
 
+    function isLight(hex) {
+        if (!hex || !hex.startsWith('#')) return ['white', 'beige', 'nude', 'ivory', 'off-white'].includes(hex?.toLowerCase());
+        hex = hex.replace('#', '');
+        if (hex.length === 3) hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+        if (hex.length !== 6) return false;
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        const brightness = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        return brightness > 220;
+    }
+
+    function extractDominantColor(imgUrl, element) {
+        if (!imgUrl) return;
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 10; // Small sample
+            canvas.height = 10;
+            ctx.drawImage(img, 0, 0, 10, 10);
+            const data = ctx.getImageData(0, 0, 10, 10).data;
+            let r=0, g=0, b=0;
+            for(let i=0; i<data.length; i+=4) {
+                r += data[i]; g += data[i+1]; b += data[i+2];
+            }
+            r = Math.floor(r/(data.length/4));
+            g = Math.floor(g/(data.length/4));
+            b = Math.floor(b/(data.length/4));
+            const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            element.style.setProperty('--swatch', hex);
+            if (isLight(hex)) element.style.border = '1px solid #ddd';
+        };
+        img.src = imgUrl;
+    }
+
     function selectSize(size) {
         currentSize = size;
 
@@ -266,13 +338,20 @@
         if (colorList) {
             colorList.innerHTML = '';
             colors.forEach(color => {
+                const variantData = groupedVariants[size][color];
                 const colorDiv = document.createElement('div');
-                // Use a temporary highlight if it's the one we'll select
+                const swatchColor = colorHexMap[color] || '#f3f3f3';
                 const isActive = (color === currentColor);
                 colorDiv.className = 'product-color' + (isActive ? ' is-active' : '');
-                colorDiv.style.cssText = `--swatch: ${colorHexMap[color] || color}`;
+                colorDiv.style.cssText = `--swatch: ${swatchColor}; ${isLight(swatchColor) ? 'border: 1px solid #ddd;' : ''}`;
                 colorDiv.title = color;
                 colorDiv.setAttribute('data-color', color);
+                
+                // If swatch is high-probability generic or missing mapping, try extracting from image
+                if (!colorHexMap[color] || colorHexMap[color] === '#f3f3f3') {
+                   extractDominantColor(variantData.first_photo, colorDiv);
+                }
+
                 colorDiv.onclick = () => selectColor(color);
                 colorList.appendChild(colorDiv);
             });
@@ -286,6 +365,16 @@
         }
     }
 
+    // Initialize dominant colors on page load
+    window.addEventListener('load', () => {
+        document.querySelectorAll('.product-color').forEach(div => {
+            const color = div.getAttribute('data-color');
+            if (!colorHexMap[color] || colorHexMap[color] === '#f3f3f3') {
+                extractDominantColor(div.getAttribute('data-image'), div);
+            }
+        });
+    });
+
     function selectColor(color) {
         currentColor = color;
 
@@ -297,7 +386,20 @@
         const variant = groupedVariants[currentSize][color];
 
         // Update Price
-        document.getElementById('productDetailPrice').innerText = '₹' + Number(variant.price).toLocaleString();
+        const priceDiv = document.getElementById('productDetailPrice');
+        if (priceDiv) {
+            const regPrice = Number(variant.price);
+            const sPrice = Number(variant.sale_price);
+
+            if (sPrice < regPrice) {
+                priceDiv.innerHTML = `
+                    <span class="original-price" style="text-decoration: line-through; color: #888; font-size: 0.8em; margin-right: 10px;">₹${regPrice.toLocaleString()}</span>
+                    <span class="discounted-price">₹${sPrice.toLocaleString()}</span>
+                `;
+            } else {
+                priceDiv.innerText = '₹' + regPrice.toLocaleString();
+            }
+        }
 
         // Update Gallery
         updateGallery(variant.photos);

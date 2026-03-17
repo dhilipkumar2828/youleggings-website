@@ -385,7 +385,12 @@
         let subtotal = 0;
 
         cart.forEach(item => {
-            const price = parseFloat(item.price) || 0;
+            let price = parseFloat(item.price) || 0;
+            if (price > 10000 && price.toString().endsWith('495')) {
+                price = 495; // Fix any previously saved corrupted cart prices
+                item.price = 495;
+                localStorage.setItem(CART_KEY, JSON.stringify(cart));
+            }
             const qty = parseInt(item.qty) || 1;
             subtotal += (price * qty);
             container.innerHTML += `

@@ -45,7 +45,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (addToCartBtn) {
         addToCartBtn.addEventListener('click', () => {
             const productTitle = document.querySelector('.product-detail-title')?.innerText;
-            const priceText = document.getElementById('productDetailPrice')?.innerText || '0';
+            const priceContainer = document.getElementById('productDetailPrice');
+            const discountedPriceEl = priceContainer ? priceContainer.querySelector('.discounted-price') : null;
+            let priceText = '0';
+            if (discountedPriceEl) {
+                // Get the explicit discounted price text
+                priceText = discountedPriceEl.innerText.trim();
+            } else if (priceContainer) {
+                // If it's a mix like "500 495" or "500\n495", grab the last part
+                const pieces = priceContainer.innerText.trim().split(/\s+/);
+                priceText = pieces[pieces.length - 1];
+            }
+            
             const productPrice = priceText.replace(/[^\d\.]/g, '');
             const productImg = document.getElementById('productDetailImage')?.src;
             const activeSize = document.querySelector('.product-size-list button.is-active')?.innerText;

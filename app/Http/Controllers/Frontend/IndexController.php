@@ -36,7 +36,13 @@ class IndexController extends Controller
         if(!Auth::check()) {
             return redirect()->route('login_user')->with('error', 'Please login to view your wishlist');
         }
-        $wishlist = Wishlist::where('customer_id', Auth::id())->with('wishlist1')->get();
+        $wishlist = Wishlist::where('customer_id', Auth::id())
+            ->with('wishlist1')
+            ->get()
+            ->filter(function($item) {
+                return $item->wishlist1 !== null;
+            });
+            
         return view('frontend.wishlist', compact('wishlist'));
     }
 
@@ -61,7 +67,14 @@ class IndexController extends Controller
 
     public function wishlist_remove(Request $request)
     {
+        if(!Auth::check()) {
+            return response()->json(['status' => 'error', 'msg' => 'Please login first']);
+        }
         Wishlist::where('customer_id', Auth::id())->where('product_id', $request->product_id)->delete();
+        
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json(['status' => 'success', 'msg' => 'Removed from wishlist']);
+        }
         return back()->with('success', 'Removed from wishlist');
     }
 
@@ -132,54 +145,109 @@ class IndexController extends Controller
             ->take(4)
             ->get();
 
-        // Fetch all possible sizes and colors to aid parsing
-        $all_sizes = \App\Models\Attribute::where('attribute_type', 'Size')->first()->value ?? [];
-        $all_colors = \App\Models\Attribute::where('attribute_type', 'Color')->first()->value ?? [];
+        // Fetch all possible sizes and colors from ALL attribute rows
+        $all_sizes = \App\Models\Attribute::where('attribute_type', 'Size')->get()->pluck('value')->flatten()->filter()->unique()->toArray();
+        $all_colors = \App\Models\Attribute::where('attribute_type', 'Color')->get()->pluck('value')->flatten()->filter()->unique()->toArray();
 
         $grouped_variants = [];
-        foreach ($product->productvariant as $variant) {
-            $foundSize = '';
-            $foundColor = '';
-            
-            // Try to separate size and color from $variant->variants e.g. "SRed"
-            foreach ($all_sizes as $size) {
-                if (str_starts_with($variant->variants, $size)) {
-                    $foundSize = $size;
-                    $colorPart = substr($variant->variants, strlen($size));
-                    // Check if the color part matches any color in our list
-                    foreach($all_colors as $color) {
-                        if (strtolower($colorPart) == strtolower($color)) {
-                            $foundColor = $color;
-                            break;
-                        }
-                    }
-                    if ($foundColor) break;
-                }
-            }
+        $colorHexMap = []; 
 
-            // Fallback if parsing failed
-            if (!$foundSize || !$foundColor) {
-               // If combined string fails, check if we can find color from the end
-               foreach($all_colors as $color) {
-                   if (str_ends_with($variant->variants, $color)) {
-                       $foundColor = $color;
-                       $foundSize = substr($variant->variants, 0, -strlen($color));
-                       break;
-                   }
-               }
-            }
-
-            if ($foundSize && $foundColor) {
-                $grouped_variants[$foundSize][$foundColor] = [
-                    'id' => $variant->id,
-                    'price' => $variant->regular_price,
-                    'sku' => $variant->sku,
-                    'photos' => array_filter(explode(',', $variant->photo))
-                ];
+        // Pre-parse colors to build a hex map
+        foreach ($all_colors as $c) {
+            $c = trim($c);
+            if (strpos($c, ':') !== false) {
+                $parts = explode(':', $c);
+                $colorHexMap[trim($parts[0])] = trim($parts[1]);
             }
         }
 
-        return view('frontend.product_detail', compact('product', 'related_products', 'grouped_variants'));
+        // Sort sizes by length descending
+        usort($all_sizes, function($a, $b) {
+            return strlen($b) - strlen($a);
+        });
+
+        foreach ($product->productvariant as $variant) {
+            $rawVariant = trim($variant->variants);
+            if (empty($rawVariant)) continue;
+
+            $foundSize = '';
+            $foundColor = '';
+            
+            // 1. Find Size
+            foreach ($all_sizes as $size) {
+                // Check if starts with size (case insensitive, ignoring spaces/commas)
+                $pattern = '/^' . preg_quote($size, '/') . '[\s,_\-\/]*/i';
+                if (preg_match($pattern, $rawVariant)) {
+                    $foundSize = $size;
+                    $remaining = trim(preg_replace($pattern, '', $rawVariant));
+                    
+                    if ($remaining) {
+                        // 2. Identify Color from known list if it exists inside the remaining string
+                        foreach($all_colors as $color) {
+                            $cleanColorName = strpos($color, ':') !== false ? explode(':', $color)[0] : $color;
+                            $cleanColorName = trim($cleanColorName);
+                            if (stripos($remaining, $cleanColorName) !== false) {
+                                $foundColor = $cleanColorName;
+                                break;
+                            }
+                        }
+                        // If no known color, use the whole remaining part
+                        if (!$foundColor) $foundColor = $remaining;
+                    }
+                    break;
+                }
+            }
+
+            // 2. Fallback: Identify color from the known list anywhere in the string
+            if (!$foundColor) {
+                foreach($all_colors as $color) {
+                    $cleanColorName = strpos($color, ':') !== false ? explode(':', $color)[0] : $color;
+                    $cleanColorName = trim($cleanColorName);
+                    if (stripos($rawVariant, $cleanColorName) !== false) {
+                        $foundColor = $cleanColorName;
+                        // Best guess for size is what's left
+                        if (!$foundSize) {
+                            $foundSize = trim(str_ireplace($cleanColorName, '', $rawVariant));
+                            $foundSize = trim(str_replace([',', '/', '-', '_', '(', ')'], ' ', $foundSize));
+                        }
+                        break;
+                    }
+                }
+            }
+
+            // 3. Last resort fallbacks
+            if (!$foundSize) $foundSize = 'Standard';
+            if (!$foundColor) $foundColor = $rawVariant;
+
+            // Clean up the names for display
+            $foundColor = trim(str_replace(['(', ')', '_', '-'], ' ', $foundColor));
+            $foundColor = ucwords(strtolower($foundColor));
+
+            $regularPrice = $variant->regular_price;
+            $salePrice = $regularPrice;
+
+            if ($product->discount > 0) {
+                if ($product->discount_type == 'fixed') {
+                    $salePrice = max(0, $regularPrice - $product->discount);
+                } elseif ($product->discount_type == 'percentage') {
+                    $salePrice = max(0, $regularPrice - ($regularPrice * ($product->discount / 100)));
+                }
+            }
+
+            $photos = array_filter(explode(',', $variant->photo));
+            $firstPhoto = !empty($photos) ? image_url($photos[0]) : null;
+
+            $grouped_variants[$foundSize][$foundColor] = [
+                'id' => $variant->id,
+                'price' => $regularPrice,
+                'sale_price' => $salePrice,
+                'sku' => $variant->sku,
+                'photos' => $photos,
+                'first_photo' => $firstPhoto
+            ];
+        }
+
+        return view('frontend.product_detail', compact('product', 'related_products', 'grouped_variants', 'colorHexMap'));
     }
 
     public function about()
@@ -310,8 +378,8 @@ class IndexController extends Controller
             'discound_amount'=> $discount,
             'tax_rate'       => 0,
             'gst'            => 0,
-            'payment_type'   => $request->payment_method,
-            'payment_status' => ($request->payment_method === 'cod') ? 'pending' : 'pending',
+            'payment_type'   => $request->payment_method ?? 'cod',
+            'payment_status' => (strtolower($request->payment_method) == 'cod') ? 'Unpaid' : 'Pending',
             'status'         => 'Pending',
         ]);
 
@@ -660,6 +728,44 @@ class IndexController extends Controller
             ->delete();
 
         return back()->with('success', 'Address deleted successfully!');
+    }
+
+    public function address_store(Request $request)
+    {
+        if (!Auth::check()) return redirect()->route('login_user');
+
+        $request->validate([
+            'sfirst_name'   => 'required|string|max:255',
+            'slast_name'    => 'required|string|max:255',
+            'semail'        => 'required|email|max:255',
+            'sphone_number' => 'required|string|max:20',
+            'saddress'      => 'required|string',
+            'scity'         => 'required|string|max:100',
+            'sstate'        => 'required|string|max:100',
+            'spincode'      => 'required|string|max:10',
+        ]);
+
+        // Unset old defaults
+        \DB::table('shipping_address')
+            ->where('customer_id', Auth::id())
+            ->update(['is_default' => 0]);
+
+        \DB::table('shipping_address')->insert([
+            'customer_id'   => Auth::id(),
+            'sfirst_name'   => $request->sfirst_name,
+            'slast_name'    => $request->slast_name,
+            'semail'        => $request->semail,
+            'sphone_number' => $request->sphone_number,
+            'saddress'      => $request->saddress,
+            'scity'         => $request->scity,
+            'sstate'        => $request->sstate,
+            'spincode'      => $request->spincode,
+            'is_default'    => 1,
+            'created_at'    => now(),
+            'updated_at'    => now(),
+        ]);
+
+        return back()->with('success', 'New address added successfully!');
     }
 
     public function address_update(Request $request)

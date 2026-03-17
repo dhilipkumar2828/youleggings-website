@@ -5,16 +5,16 @@
 @section('styles')
 <style>
   .addresses-wrapper { padding: 160px 0 100px; background: #fdfbfb; min-height: 100vh; }
-  .page-header { margin-bottom: 40px; }
-  .page-header h1 { font-family: var(--font-serif, serif); font-size: 36px; color: #222; }
-  .page-header p { color: #888; }
+  .page-header { margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+  .page-header h1 { font-family: var(--font-serif, serif); font-size: 36px; color: #222; margin-bottom: 5px; }
+  .page-header p { color: #888; margin-bottom: 0; }
   .address-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; }
   .address-card { background: #fff; border-radius: 16px; border: 1px solid #f0f0f0; padding: 30px; position: relative; box-shadow: 0 5px 20px rgba(0,0,0,0.03); transition: 0.3s; }
   .address-card:hover { box-shadow: 0 10px 35px rgba(0,0,0,0.07); transform: translateY(-2px); }
   .address-card h4 { font-family: var(--font-serif, serif); font-size: 20px; margin-bottom: 15px; color: #222; }
   .address-card p { font-size: 14px; color: #666; line-height: 1.8; margin-bottom: 20px; }
   .address-card .meta { font-size: 13px; color: #999; display: flex; align-items: center; gap: 8px; }
-  .btn-add { background: #ec407a; color: #fff; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 30px; border: none; transition: 0.3s; }
+  .btn-add { background: #ec407a; color: #fff; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; margin: 0; border: none; transition: 0.3s; }
   .btn-add:hover { background: #d81b60; color: #fff; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(236, 64, 122, 0.3); }
   .empty-state { text-align: center; padding: 80px 20px; background: #fff; border-radius: 16px; border: 1px solid #f0f0f0; }
 
@@ -61,9 +61,9 @@
         <h1>My Addresses</h1>
         <p>Manage your saved shipping addresses for faster checkout</p>
       </div>
-      <a href="{{ route('checkout') }}" class="btn-add">
-        <i class="fas fa-plus"></i> Use at Checkout
-      </a>
+      <button onclick="openAddModal()" class="btn-add">
+        <i class="fas fa-plus"></i> Add New Address
+      </button>
     </div>
 
     @if(count($addresses) > 0)
@@ -104,13 +104,77 @@
         <div style="font-size: 60px; margin-bottom: 20px;">🏠</div>
         <h3 style="font-family: var(--font-serif, serif); font-size: 28px; margin-bottom: 10px;">No Addresses Saved</h3>
         <p style="color: #888; margin-bottom: 30px;">You haven't saved any addresses yet. They will be saved automatically when you place an order.</p>
-        <a href="{{ route('shop') }}" style="background: #ec407a; color: #fff; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-block;">
-          Start Shopping
-        </a>
+        <button onclick="openAddModal()" style="background: #ec407a; color: #fff; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-block; border: none;">
+          Add New Address
+        </button>
       </div>
     @endif
   </div>
 </section>
+
+<!-- Add Modal -->
+<div class="modal-overlay" id="addModal">
+    <div class="modal-content">
+        <h2 style="font-family: var(--font-serif, serif); margin-bottom: 30px;">Add New Address</h2>
+        <form action="{{ route('address.store') }}" method="POST" class="validate">
+            @csrf
+            <div class="row g-3">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        <input type="text" name="sfirst_name" class="form-control" required alphabetsOnly>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" name="slast_name" class="form-control" required alphabetsOnly>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" name="semail" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="text" name="sphone_number" class="form-control" required phoneIndia maxlength="10">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label class="form-label">Complete Address</label>
+                        <textarea name="saddress" class="form-control" required></textarea>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label class="form-label">City</label>
+                        <input type="text" name="scity" class="form-control" required alphabetsOnly>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label class="form-label">State</label>
+                        <input type="text" name="sstate" class="form-control" required alphabetsOnly>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label class="form-label">Pincode</label>
+                        <input type="text" name="spincode" class="form-control" required pincodeIndia maxlength="6">
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5 d-flex gap-3">
+                <button type="submit" class="btn" style="background:#ec407a; color:#fff; padding: 14px 45px; border-radius:50px; border:none; font-weight:700; font-size:14px; transition:0.3s;">Save Address</button>
+                <button type="button" onclick="closeAddModal()" class="btn" style="background:#f5f5f5; color:#666; padding: 14px 35px; border-radius:50px; border:none; font-weight:700; font-size:14px; transition:0.3s;">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <!-- Edit Modal -->
 <div class="modal-overlay" id="editModal">
@@ -178,6 +242,13 @@
 </div>
 
 <script>
+function openAddModal() {
+    document.getElementById('addModal').style.display = 'flex';
+}
+function closeAddModal() {
+    document.getElementById('addModal').style.display = 'none';
+}
+
 function openEditModal(addr) {
     document.getElementById('edit_id').value = addr.id;
     document.getElementById('edit_first').value = addr.sfirst_name;
@@ -197,9 +268,13 @@ function closeEditModal() {
 
 // Close on click outside
 window.onclick = function(event) {
-    const modal = document.getElementById('editModal');
-    if (event.target == modal) {
+    const editModal = document.getElementById('editModal');
+    const addModal = document.getElementById('addModal');
+    if (event.target == editModal) {
         closeEditModal();
+    }
+    if (event.target == addModal) {
+        closeAddModal();
     }
 }
 </script>
