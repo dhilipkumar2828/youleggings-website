@@ -13,7 +13,7 @@
       </div>
     </div>
 
-    <div class="container page-body">
+    <div class="container page-body" style="display:flex;flex-direction:column;align-items:center;">
       <div class="about-hero">
         <span class="section-subtitle">Our Story</span>
         <h2 class="section-title">{{ $about->description ?? 'Built on TANTEX Legacy, Designed for Every Woman' }}</h2>

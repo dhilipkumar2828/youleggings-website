@@ -21,10 +21,12 @@
   /* New Styles */
   .default-badge { position: absolute; top: 20px; right: 20px; background: #e8f5e9; color: #2e7d32; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.5px; }
   .address-actions { display: flex; gap: 10px; margin-top: 25px; border-top: 1px solid #f8f8f8; padding-top: 20px; }
-  .action-btn { font-size: 12px; font-weight: 700; color: #999; cursor: pointer; display: flex; align-items: center; gap: 5px; text-decoration: none; transition: 0.2s; background: none; border: none; padding: 0; }
+  .action-btn { font-size: 12px; font-weight: 700; color: #999; cursor: pointer; display: flex; align-items: center; gap: 6px; text-decoration: none; transition: 0.2s; background: none; border: none; padding: 0; }
+  .action-btn svg { width: 14px; height: 14px; stroke-width: 2.5px; }
   .action-btn:hover { color: #ec407a; }
   .action-btn.delete:hover { color: #ff5e5e; }
   .action-btn.default-btn:hover { color: #4caf50; }
+  .btn-add svg { width: 18px; height: 18px; stroke-width: 2.5px; }
 
   /* Modal */
   .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(5px); }
@@ -74,7 +76,7 @@
             <p style="color: #888; font-size: 14px;">Manage your saved shipping addresses for faster checkout</p>
           </div>
           <button onclick="openAddModal()" class="btn-add">
-            <i class="fas fa-plus"></i> Add New Address
+            <i data-lucide="plus"></i> Add New Address
           </button>
         </div>
 
@@ -92,21 +94,25 @@
                   India
                 </p>
                 <div class="meta">
-                  <i class="fas fa-phone-alt" style="color:#ec407a;"></i> {{ $addr->sphone_number }}
+                  <i data-lucide="phone" style="width: 14px; height: 14px; color:#ec407a; margin-right: 5px;"></i> {{ $addr->sphone_number }}
                 </div>
                 
-                <div class="address-actions">
-                  <button class="action-btn" onclick="openEditModal({{ json_encode($addr) }})">
-                    <i class="fas fa-edit"></i> EDIT
-                  </button>
-                  @if(!$addr->is_default)
+               <div class="address-actions">
+                <button class="action-btn" onclick="openEditModal({{ json_encode($addr) }})">
+                    <i data-lucide="edit-3"></i> EDIT
+                </button>
+
+                @if(!$addr->is_default)
                     <a href="{{ route('address.set_default', $addr->id) }}" class="action-btn default-btn">
-                      <i class="fas fa-check-circle"></i> SET AS DEFAULT
+                    <i data-lucide="star"></i> SET AS DEFAULT
                     </a>
-                  @endif
-                  <a href="{{ route('address.delete', $addr->id) }}" class="action-btn delete" onclick="return confirm('Are you sure you want to delete this address?')">
-                    <i class="fas fa-trash"></i> DELETE
-                  </a>
+                @endif
+
+                <a href="{{ route('address.delete', $addr->id) }}" 
+                    class="action-btn delete" 
+                    onclick="return confirm('Are you sure you want to delete this address?')">
+                    <i data-lucide="trash-2"></i> DELETE
+                </a>
                 </div>
               </div>
             @endforeach
@@ -183,7 +189,7 @@
                 </div>
             </div>
             <div class="mt-5 d-flex gap-3">
-                <button type="submit" class="btn" style="background:#ec407a; color:#fff; padding: 14px 45px; border-radius:50px; border:none; font-weight:700; font-size:14px; transition:0.3s;">Save Address</button>
+                <button type="submit" class="btn" style="background:#ec407a; color:#fff; padding: 14px 45px; border-radius:50px; border:none; font-weight:700; font-size:14px; transition:0.3s;">Save</button>
                 <button type="button" onclick="closeAddModal()" class="btn" style="background:#f5f5f5; color:#666; padding: 14px 35px; border-radius:50px; border:none; font-weight:700; font-size:14px; transition:0.3s;">Cancel</button>
             </div>
         </form>
@@ -248,7 +254,7 @@
                 </div>
             </div>
             <div class="mt-5 d-flex gap-3">
-                <button type="submit" class="btn" style="background:#ec407a; color:#fff; padding: 14px 45px; border-radius:50px; border:none; font-weight:700; font-size:14px; transition:0.3s;">Save Changes</button>
+                <button type="submit" class="btn" style="background:#ec407a; color:#fff; padding: 14px 45px; border-radius:50px; border:none; font-weight:700; font-size:14px; transition:0.3s;">Save</button>
                 <button type="button" onclick="closeEditModal()" class="btn" style="background:#f5f5f5; color:#666; padding: 14px 35px; border-radius:50px; border:none; font-weight:700; font-size:14px; transition:0.3s;">Cancel</button>
             </div>
         </form>

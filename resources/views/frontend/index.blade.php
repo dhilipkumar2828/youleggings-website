@@ -192,7 +192,9 @@
     .slider-nav-btns {
         display: flex !important;
         margin-top: 15px;
-        justify-content: center;
+        justify-content: space-between;
+        position: relative;
+        bottom: 320px;
         gap: 20px;
     }
 }
@@ -221,7 +223,7 @@
     color: #fff;
 }
   
-  /* Curated Collections */
+  /* Curated Collections Slider */
   .premium-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -239,125 +241,143 @@
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0,0,0,0.03);
   }
-  .collection-card:hover {
-    transform: translateY(-8px);
-  }
+  .collection-card:hover { transform: translateY(-8px); }
   .collection-image-wrap {
-    height: 380px; /* Decreased height */
+    height: 380px;
     margin-bottom: 20px;
     position: relative;
     background: #f4f4f4;
   }
-  .collection-image-wrap img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transition: transform 0.8s ease;
+  .collection-image-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s ease; }
+  .collection-name { font-size: 22px; font-family: var(--font-serif, serif); color: #222; margin-bottom: 8px; font-weight: 600; }
+  .collection-btn { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #ec407a; display: inline-flex; align-items: center; gap: 6px; }
+
+  .collections-nav-btns { display: none; }
+
+  @media (max-width: 900px) {
+    .collections-carousel-wrap { overflow: hidden; position: relative; width: 100%; }
+    .premium-grid {
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      gap: 20px !important;
+      padding: 10px 0;
+      width: 100%;
+    }
+    .collection-card {
+      flex: 0 0 calc(50% - 10px);
+      min-width: 0;
+    }
+    .collections-nav-btns {
+      display: flex;
+      justify-content: space-between;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+      pointer-events: none;
+      z-index: 10;
+      padding: 0 5px;
+    }
+    .collections-nav-btns button {
+      pointer-events: auto;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      font-size: 16px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      color: #333;
+    }
+    .collections-nav-btns button:disabled { opacity: 0; cursor: default; }
   }
-  .collection-name {
-    font-size: 22px;
-    font-family: var(--font-serif, serif);
-    color: #222;
-    margin-bottom: 8px;
-    font-weight: 600;
-  }
-  .collection-btn {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: #ec407a;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+  
+  @media (max-width: 600px) {
+    .collection-card { flex: 0 0 100%; }
+    .collection-image-wrap { height: 320px; }
   }
 
-  /* Testimonial Section */
+  /* Testimonials Improvements */
   .testimonials-section {
-    position: relative;
-    overflow: hidden;
+    padding: 100px 0;
+    background: #fdf7f9;
   }
-  .testimonial-slider {
-    max-width: 1200px;
-    margin: 0 auto;
+  .testimonials-carousel-wrap {
     overflow: hidden;
     position: relative;
+    padding: 10px 0 40px;
   }
-  .testimonial-inner {
+  .testimonials-carousel {
     display: flex;
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .testimonial-slide {
-    flex: 0 0 33.333%;
-    padding: 15px;
-    box-sizing: border-box;
-  }
-  @media (max-width: 991px) {
-    .testimonial-slide { flex: 0 0 50%; }
-  }
-  @media (max-width: 767px) {
-    .testimonial-slide { flex: 0 0 100%; }
+    gap: 30px;
   }
   .testimonial-card {
+    flex: 0 0 calc(33.333% - 20px);
     background: #fff;
     padding: 40px 30px;
-    border-radius: 12px;
-    border: 1px solid rgba(236, 64, 122, 0.1);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.02);
+    border: 1px solid #f9f9f9;
     text-align: center;
     position: relative;
-    height: 100%;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
+    min-height: 280px;
   }
-  .quote-mark {
-    font-size: 40px;
+  @media (max-width: 991px) {
+    .testimonial-card { flex: 0 0 calc(50% - 15px); }
+  }
+  @media (max-width: 767px) {
+    .testimonial-card { flex: 0 0 100%; }
+    .testimonials-carousel { gap: 0; }
+  }
+  .quote-icon {
+    font-size: 60px;
     color: #ffd1dc;
     line-height: 1;
     font-family: serif;
-    margin-bottom: 10px;
-  }
-  .testimonial-content {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+    margin-bottom: -10px;
+    opacity: 0.6;
   }
   .testimonial-text {
-    font-size: 15px;
+    font-size: 16px;
     font-style: italic;
     color: #555;
     line-height: 1.8;
     margin-bottom: 25px;
-    flex-grow: 1;
   }
-  .testimonial-author {
-    color: #ec407a;
+  .client-name {
+    color: #333;
     font-weight: 700;
     text-transform: uppercase;
-    font-size: 13px;
+    font-size: 14px;
     letter-spacing: 1px;
     margin-bottom: 5px;
   }
-  .testimonial-client {
-    font-size: 11px;
-    color: #999;
+  .testimonial-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #eee;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    padding: 0;
   }
-  .testimonial-stars {
-    color: #ffb400;
-    display: flex;
-    gap: 3px;
-    justify-content: center;
-    margin-top: 15px;
+  .testimonial-dot.is-active {
+    background: #ec407a;
+    width: 10px;
+    border-radius: 10px;
   }
-  .t-dots {
-    display: flex; justify-content: center; gap: 12px; margin-top: 40px;
-  }
-  .t-dot {
-    width: 10px; height: 10px; border-radius: 50%;
-    background: #f0f0f0; cursor: pointer; transition: 0.3s;
-  }
-  .t-dot.active { background: #ec407a; transform: scale(1.3); }
 
   /* Split Banner Base Styles */
   .split-banner {
@@ -532,7 +552,6 @@
     @endif
   </section>
 
-  <!-- Collections Section -->
   <section class="section home-categories-section" id="collections" style="padding: 80px 0; background: #fff;">
     <div class="container">
       <div class="text-center section-header" style="margin-bottom: 50px;">
@@ -541,20 +560,27 @@
         <div class="header-divider" style="width: 60px; height: 2px; background: var(--primary-color, #c18b95); margin: 0 auto;"></div>
       </div>
 
-      <div class="premium-grid">
-        @forelse($categories as $category)
-            <a href="{{ route('shop', ['category[]' => $category->id]) }}" class="collection-card">
-              <div class="collection-image-wrap">
-                <img src="{{ $category->photo ? image_url($category->photo) : '' }}" alt="{{ $category->title }}">
-              </div>
-              <h3 class="collection-name">{{ $category->title }}</h3>
-              <div class="collection-btn">
-                  Explore <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </div>
-            </a>
-        @empty
-            <p style="text-align: center; width: 100%;">No Collections Found</p>
-        @endforelse
+      <div class="collections-carousel-wrap">
+        <div class="premium-grid" id="collectionsCarousel">
+          @forelse($categories as $category)
+              <a href="{{ route('shop', ['category[]' => $category->id]) }}" class="collection-card">
+                <div class="collection-image-wrap">
+                  <img src="{{ $category->photo ? image_url($category->photo) : '' }}" alt="{{ $category->title }}">
+                </div>
+                <h3 class="collection-name">{{ $category->title }}</h3>
+                <div class="collection-btn">
+                    Explore <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </div>
+              </a>
+          @empty
+              <p style="text-align: center; width: 100%;">No Collections Found</p>
+          @endforelse
+        </div>
+
+        <div class="collections-nav-btns">
+            <button onclick="slideColCarousel(-1)" class="prev-col-btn"><i data-lucide="chevron-left"></i></button>
+            <button onclick="slideColCarousel(1)" class="next-col-btn"><i data-lucide="chevron-right"></i></button>
+        </div>
       </div>
     </div>
   </section>
@@ -641,50 +667,57 @@
     <div class="split-image"></div>
   </section>
 
-  <!-- Testimonials Section -->
-  <!-- Testimonials Section -->
-  @if(isset($testimonials) && count($testimonials) > 0)
-    <section class="section testimonials-section" id="testimonials" style="padding: 100px 0; background: #fffafc;">
+    <section class="section testimonials-section" id="testimonials">
       <div class="container">
-        <div class="text-center" style="margin-bottom: 50px;">
+        <div class="text-center" style="margin-bottom: 40px;">
           <span class="section-subtitle" style="color: #ec407a; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; font-size: 12px; display: block; margin-bottom: 15px;">Testimonials</span>
           <h2 class="section-title" style="font-family: var(--font-serif, serif); font-size: 3rem; color: #333; font-style: italic;">What Our Customers Say</h2>
         </div>
-        
-        <div class="testimonial-slider">
-          <div class="testimonial-inner" id="t-inner">
-            @foreach($testimonials as $test)
-            <div class="testimonial-slide">
-              <div class="testimonial-card">
-                <div class="quote-mark">“</div>
-                <div class="testimonial-content">
+
+        <div class="testimonials-carousel-wrap">
+          <div class="testimonials-carousel" id="testimonialsCarousel">
+            @if(isset($testimonials) && count($testimonials) > 0)
+                @foreach($testimonials as $test)
+                <div class="testimonial-card">
+                  <div class="quote-icon">“</div>
                   <p class="testimonial-text">{{ $test->feedback }}</p>
-                  <div>
-                      <h4 class="testimonial-author">{{ $test->name }}</h4>
-                      <div class="testimonial-client">Happy Client</div>
-                      <div class="testimonial-stars">
-                        @for($i=0; $i<5; $i++)
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="#ffb400" stroke="none"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                        @endfor
-                      </div>
-                  </div>
+                  <div class="client-name">{{ $test->name }}</div>
+                  <div style="font-size: 12px; color: #999; margin-top: 5px;">Happy Client</div>
+                  <div style="color: #f59e0b; margin-top: 10px;">★★★★★</div>
                 </div>
-              </div>
-            </div>
-            @endforeach
+                @endforeach
+            @else
+                {{-- Fallback static testimonials if database is empty --}}
+                <div class="testimonial-card">
+                  <div class="quote-icon">“</div>
+                  <p class="testimonial-text">Very good fabric and reasonable price. I am very satisfied to purchase.</p>
+                  <div class="client-name">Jeyanthi RK</div>
+                  <div style="font-size: 12px; color: #999; margin-top: 5px;">Happy Client</div>
+                  <div style="color: #f59e0b; margin-top: 10px;">★★★★★</div>
+                </div>
+                <div class="testimonial-card">
+                  <div class="quote-icon">“</div>
+                  <p class="testimonial-text">Very reasonable price, nice collections also. Jeni sister also very patience with the customers.</p>
+                  <div class="client-name">CSJ Deepa</div>
+                  <div style="font-size: 12px; color: #999; margin-top: 5px;">Happy Client</div>
+                  <div style="color: #f59e0b; margin-top: 10px;">★★★★★</div>
+                </div>
+                <div class="testimonial-card">
+                  <div class="quote-icon">“</div>
+                  <p class="testimonial-text">Absolutely amazing fit and the material is super soft. Will definitely buy again!</p>
+                  <div class="client-name">Priya S.</div>
+                  <div style="font-size: 12px; color: #999; margin-top: 5px;">Happy Client</div>
+                  <div style="color: #f59e0b; margin-top: 10px;">★★★★★</div>
+                </div>
+            @endif
+          </div>
+
+          <div class="testimonial-dots" id="testimonialDots" style="display: flex; justify-content: center; gap: 10px; margin-top: 30px;">
+            {{-- Dots will be generated via JS to be dynamic based on screen size --}}
           </div>
         </div>
-
-        @if(count($testimonials) > 1)
-        <div class="t-dots">
-          @foreach($testimonials as $index => $test)
-            <div class="t-dot {{ $index === 0 ? 'active' : '' }}" onclick="goToTestimonial({{ $index }})"></div>
-          @endforeach
-        </div>
-        @endif
       </div>
     </section>
-  @endif
 
 @endsection
 
@@ -726,80 +759,87 @@
       resetHeroInterval();
   }
 
-  // -- Testimonial Slider Logic --
-  let currentTestimonial = 0;
-  const tInner = document.getElementById('t-inner');
-  const tDots = document.querySelectorAll('.t-dot');
-  let tInterval;
+  // -- Improved Testimonial Carousel Logic (Fixed Page-Based) --
+  let currentTestIndex = 0;
+  const tCarousel = document.getElementById('testimonialsCarousel');
+  const tDotsContainer = document.getElementById('testimonialDots');
+  let tAutoPlay;
 
-  function getVisibleTestimonials() {
+  function initTestimonials() {
+    if(!tCarousel) return;
+    const cards = tCarousel.querySelectorAll('.testimonial-card');
+    const totalCards = cards.length;
+    if(totalCards === 0) return;
+
+    // Calculate how many cards to show
+    const getVisible = () => {
       if(window.innerWidth > 991) return 3;
       if(window.innerWidth > 767) return 2;
       return 1;
-  }
+    };
 
-  function goToTestimonial(index) {
-      if(!tInner) return;
+    const renderDots = () => {
+      const visible = getVisible();
+      const dotCount = Math.max(1, totalCards - visible + 1);
+      tDotsContainer.innerHTML = '';
       
-      const visible = getVisibleTestimonials();
-      const slides = document.querySelectorAll('.testimonial-slide');
-      const totalSlides = slides.length;
-      
-      if(totalSlides <= visible) return;
-
-      // Prevent sliding past the end
-      if (index > totalSlides - visible) {
-          index = Math.max(0, totalSlides - visible);
+      for(let i=0; i < dotCount; i++) {
+        const dot = document.createElement('button');
+        dot.className = `testimonial-dot ${i === currentTestIndex ? 'is-active' : ''}`;
+        dot.onclick = () => goToTestimonialPage(i);
+        tDotsContainer.appendChild(dot);
       }
-      if(index < 0) index = 0;
+    };
 
-      currentTestimonial = index;
+    window.goToTestimonialPage = (index) => {
+      const visible = getVisible();
+      const dotCount = Math.max(1, totalCards - visible + 1);
       
-      // Calculate width to slide
-      const wrapWidth = tInner.parentElement.offsetWidth;
-      const slideWidth = wrapWidth / visible;
+      if(index >= dotCount) index = 0;
+      if(index < 0) index = dotCount - 1;
       
-      tInner.style.transform = `translateX(-${index * slideWidth}px)`;
+      currentTestIndex = index;
       
-      tDots.forEach(d => d.classList.remove('active'));
-      if(tDots[index]) {
-          tDots[index].classList.add('active');
-      } else if (tDots[tDots.length - 1] && index > 0) {
-          tDots[tDots.length - 1].classList.add('active');
-      }
+      const gap = window.innerWidth > 767 ? 30 : 0;
+      const cardWidth = cards[0].offsetWidth + gap;
       
-      resetTestimonialInterval();
+      tCarousel.style.transform = `translateX(-${index * cardWidth}px)`;
+      
+      // Update dots
+      const dots = tDotsContainer.querySelectorAll('.testimonial-dot');
+      dots.forEach((d, i) => {
+        d.classList.toggle('is-active', i === index);
+      });
+
+      startTAutoPlay();
+    };
+
+    const startTAutoPlay = () => {
+      clearInterval(tAutoPlay);
+      tAutoPlay = setInterval(() => {
+        const visible = getVisible();
+        const dotCount = Math.max(1, totalCards - visible + 1);
+        goToTestimonialPage((currentTestIndex + 1) % dotCount);
+      }, 5000);
+    };
+
+    renderDots();
+    startTAutoPlay();
+    
+    // Handle resize
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        currentTestIndex = 0;
+        renderDots();
+        goToTestimonialPage(0);
+      }, 250);
+    });
   }
 
-  function nextTestimonial() {
-      if(!tInner) return;
-      const visible = getVisibleTestimonials();
-      const totalSlides = document.querySelectorAll('.testimonial-slide').length;
-      if(totalSlides <= visible) return;
-
-      let next = currentTestimonial + 1;
-      if(next > totalSlides - visible) {
-          next = 0;
-      }
-      goToTestimonial(next);
-  }
-
-  function resetTestimonialInterval() {
-      clearInterval(tInterval);
-      if(tDots && tDots.length > 1) {
-          tInterval = setInterval(nextTestimonial, 6000);
-      }
-  }
-
-  // Handle window resize dynamically adjusting the slider state
-  window.addEventListener('resize', () => {
-       if(tInner) goToTestimonial(currentTestimonial);
-  });
-
-  // Initialize
-  if(tDots && tDots.length > 1) {
-      resetTestimonialInterval();
-  }
+  // Initialize on load
+  document.addEventListener('DOMContentLoaded', initTestimonials);
 
   // Add subtle hover effect for product images via JS (fallback)
   document.querySelectorAll('.product-card').forEach(card => {
@@ -852,5 +892,38 @@
             behavior: 'smooth'
         });
     }
+  // -- Collections Carousel Logic --
+  let colIndex = 0;
+  function slideColCarousel(direction) {
+    const carousel = document.getElementById('collectionsCarousel');
+    if(!carousel) return;
+    const cards = carousel.querySelectorAll('.collection-card');
+    const total = cards.length;
+    
+    const getVisible = () => {
+      if(window.innerWidth > 900) return total; // Grid mode
+      if(window.innerWidth > 600) return 2;
+      return 1;
+    };
+    
+    const visible = getVisible();
+    if(total <= visible) return;
+
+    colIndex += direction;
+    
+    // Limits
+    if(colIndex > total - visible) colIndex = 0;
+    if(colIndex < 0) colIndex = Math.max(0, total - visible);
+    
+    const gap = 20;
+    const cardWidth = cards[0].offsetWidth + gap;
+    
+    carousel.style.transform = `translateX(-${colIndex * cardWidth}px)`;
+  }
+
+  // Add Lucide refresh if needed
+  if(window.lucide) {
+    lucide.createIcons();
+  }
 </script>
 @endsection

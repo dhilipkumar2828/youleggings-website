@@ -1,7 +1,8 @@
 <style>
   .account-container { padding-top: 160px; padding-bottom: 100px; background: #fdfbfb; }
   .account-card { background: #fff; border-radius: 20px; box-shadow: 0 10px 50px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; overflow: hidden; display: flex; min-height: 600px; }
-  @media (max-width: 991px) { .account-card { flex-direction: column; } }
+  @media (max-width: 991px) { .account-card { flex-direction: column; }
+ .account-container { padding-top: 70px; padding-bottom: 100px; background: #fdfbfb; } }
 
   .account-sidebar { width: 280px; background: #fafafa; padding: 40px 20px; border-right: 1px solid #f0f0f0; }
   @media (max-width: 991px) { .account-sidebar { width: 100%; border-right: none; border-bottom: 1px solid #f0f0f0; padding: 20px; } }

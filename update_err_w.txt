@@ -1,0 +1,69 @@
+﻿composer : Loading composer 
+repositories with package 
+information
+At line:1 char:1
++ composer update -W 2>&1 | 
+Out-File -FilePath 
+update_err_w.txt -Encodi ...
++ ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (Loading  
+   compose...age informati   
+ on:String) [], RemoteExc    
+eption
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+Updating dependencies
+Your requirements could not 
+be resolved to an 
+installable set of packages.
+
+  Problem 1
+    - Root composer.json 
+requires laravel/framework 
+^8.65 -> satisfiable by 
+laravel/framework[8.x-dev].
+    - Root composer.json 
+requires 
+unisharp/laravel-filemanager 
+^2.5 -> satisfiable by unisha
+rp/laravel-filemanager[v2.9.1
+, ..., v2.12.1].
+    - laravel/framework 
+8.x-dev requires 
+league/flysystem ^1.1 -> 
+satisfiable by 
+league/flysystem[1.1.4, ..., 
+1.x-dev].
+    - unisharp/laravel-filema
+nager[v2.9.1, ..., v2.10.1] 
+require league/flysystem 
+>=2.0.0 -> satisfiable by 
+league/flysystem[2.1.1, ..., 
+2.x-dev, 3.0.0, ..., 
+3.x-dev, 4.x-dev].
+    - unisharp/laravel-filema
+nager[v2.11.0, ..., v2.12.1] 
+require intervention/image 
+>=3.11.3 -> found interventio
+n/image[dev-develop, 3.11.3, 
+..., 3.11.7, 4.0.0-alpha.1, 
+..., 4.0.0-beta.5] but it 
+conflicts with your root 
+composer.json require (^2.7).
+    - You can only install 
+one version of a package, so 
+only one of these can be 
+installed: 
+league/flysystem[1.1.4, ..., 
+1.x-dev, 2.1.1, ..., 
+2.x-dev, 3.0.0, ..., 
+3.x-dev, 4.x-dev].
+
+Use the option 
+--with-all-dependencies (-W) 
+to allow upgrades, 
+downgrades and removals for 
+packages currently locked to 
+specific versions.

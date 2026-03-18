@@ -44,7 +44,10 @@
     align-items: flex-start;
   }
   @media (max-width: 991px) {
-    .cart-grid { grid-template-columns: 1fr; }
+    .cart-grid { grid-template-columns: 1fr;
+   justify-content: center;
+  align-items: center;
+justify-items: center; }
   }
 
   .cart-card {
@@ -148,6 +151,10 @@
       text-align: center;
       padding: 100px 20px;
   }
+  @media (max-width: 500px) {
+ .cart-item-info h4 { font-family: var(--font-serif, serif); font-size: 14px; margin-bottom: 5px; color: #333; }
+ .step-text { font-size: 10px; }
+  }
 </style>
 @endsection
 
@@ -159,17 +166,17 @@
       <div class="checkout-stepper">
         <div class="step-item active">
           <div class="step-num">1</div>
-          <span>Shopping Cart</span>
+          <span class="step-text">Shopping Cart</span>
         </div>
         <div class="step-line"></div>
         <div class="step-item">
           <div class="step-num">2</div>
-          <span>Checkout</span>
+          <span class="step-text">Checkout</span>
         </div>
         <div class="step-line"></div>
         <div class="step-item">
           <div class="step-num">3</div>
-          <span>Order Complete</span>
+          <span class="step-text">Order Complete</span>
         </div>
       </div>
 
@@ -182,7 +189,7 @@
         <a href="{{ route('shop') }}" class="btn" style="background: #333; color: #fff; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: 600;">Explore Collections</a>
       </div>
 
-      <div id="cartFullState" class="cart-grid" style="display: none;">
+      <div id="cartFullState" class="cart-grid" style="display: none;justify-items: center;">
         <div class="cart-items-section">
           <div class="cart-card">
             <h3 style="font-family: var(--font-serif, serif); font-size: 24px; margin-bottom: 25px; border-bottom: 1px solid #f0f0f0; padding-bottom: 15px;">Your Items</h3>
@@ -293,8 +300,9 @@
                     <div class="cart-item-info">
                         <h4>${item.name}</h4>
                         <p>Variant: ${item.variant}</p>
+                         <div class="cart-price">₹${price.toLocaleString()}</div>
                     </div>
-                    <div class="cart-price">₹${price.toLocaleString()}</div>
+                   
                     <div class="qty-control">
                         <button class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
                         <span class="qty-val">${qty}</span>

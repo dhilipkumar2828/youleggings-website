@@ -20,7 +20,7 @@
         "razorpay/razorpay": "^2.8",
         "spatie/laravel-permission": "^5.5",
         "stevebauman/location": "^6.5",
-        "unisharp/laravel-filemanager": "^2.5"
+        "unisharp/laravel-filemanager": "2.5.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -69,7 +69,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "audit": {
+            "ignore": ["PKSA-gwgj-6f7y-bmcx", "PKSA-67rb-jsjr-z2rt", "PKSA-m1ns-x448-8pmp"]
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true

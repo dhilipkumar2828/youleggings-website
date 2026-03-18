@@ -25,7 +25,7 @@
             <li><a href="{{ route('about') }}">About Us</a></li>
             <li><a href="{{ route('shop') }}">Shop Selection</a></li>
             <li><a href="{{ route('shop', ['new-arrivals' => 1]) }}">New Arrivals</a></li>
-            <li><a href="{{ route('blog') }}">Style Journal</a></li>
+            <li><a href="{{ route('blog') }}">Blog</a></li>
           </ul>
         </div>
 
@@ -45,7 +45,7 @@
           <h4 class="footer-title">Contact Us</h4>
           <div class="footer-contact">
             <div class="contact-item">
-              <i data-lucide="map-pin"></i>
+              <i data-lucide="map"></i>
               <span>{{ $settings->address ?? '5/4, Surya Nagar, 2nd Street, Bridgeway Colony Extn, Tirupur - 641607' }}</span>
             </div>
             <div class="contact-item">
@@ -65,12 +65,7 @@
           &copy; {{ date('Y') }} You Leggings. All rights reserved.
         </div>
         <div class="footer-bottom-right">
-          <span class="designed-by">Designed with Love</span>
-          <div class="payment-icons">
-             <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" style="height: 18px;">
-             <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" style="height: 14px;">
-             <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" style="height: 18px;">
-          </div>
+          <span class="designed-by">Developed & Maintained by <a href="https://oceansoftwares.com" target="_blank" style="color: inherit; font-weight: 600;">Ocean Softwares.</a></span>
         </div>
       </div>
     </div>

@@ -1,0 +1,43 @@
+﻿composer : Loading composer 
+repositories with package 
+information
+At line:1 char:1
++ composer update 2>&1 | 
+Out-File -FilePath 
+update_err_3.txt -Encoding  
+...
++ ~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (Loading  
+   compose...age informati   
+ on:String) [], RemoteExc    
+eption
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+Updating dependencies
+Your requirements could not 
+be resolved to an 
+installable set of packages.
+
+  Problem 1
+    - Root composer.json 
+requires 
+unisharp/laravel-filemanager 
+2.5.1 (exact version match: 
+2.5.1 or 2.5.1.0), found unis
+harp/laravel-filemanager[v2.5
+.1] but these were not 
+loaded, because they are 
+affected by security 
+advisories. To ignore the 
+advisories, add 
+("PKSA-gwgj-6f7y-bmcx", 
+"PKSA-67rb-jsjr-z2rt", 
+"PKSA-m1ns-x448-8pmp") to 
+the audit "ignore" config. 
+To turn the feature off 
+entirely, you can set 
+"block-insecure" to false in 
+your "audit" config.
+

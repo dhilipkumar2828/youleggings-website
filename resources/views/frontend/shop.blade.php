@@ -59,7 +59,21 @@
       </div>
       <div class="shop-layout" @if(request('new-arrivals')) style="display: block;" @endif>
         @if(!request('new-arrivals'))
-        <aside class="shop-filters">
+        <div class="shop-filter-overlay" id="shopFilterOverlay" onclick="toggleShopFilters()" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 10004;"></div>
+        
+        <div class="mobile-filter-bar" style="display: none; margin-bottom: 20px;">
+          <button type="button" class="btn filter-toggle-btn" onclick="toggleShopFilters()">
+            <i data-lucide="filter" style="width: 18px; margin-right: 8px;"></i> FILTER
+          </button>
+        </div>
+
+        <aside class="shop-filters" id="shopFilters">
+          <div class="filter-header" style="display: none; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #f0dbe4; padding-bottom: 15px;">
+            <h3 style="margin: 0; font-size: 20px; letter-spacing: 1px;">Filters</h3>
+            <button type="button" onclick="toggleShopFilters()" style="background: none; border: none; cursor: pointer; color: #333;">
+              <i data-lucide="x" style="width: 24px;"></i>
+            </button>
+          </div>
           <form action="{{ route('shop') }}" method="GET" id="shopFilterForm">
               <div class="filter-group">
                 <h3>Price Filter</h3>
@@ -72,13 +86,14 @@
                 <ul class="filter-list">
                   @foreach($categories as $cat)
                     <li>
-                        <label>
-                            <input type="checkbox" name="category[]" value="{{ $cat->id }}" 
-                            {{ in_array($cat->id, (array)request('category', [])) ? 'checked' : '' }} 
-                            onchange="this.form.submit()"> 
-                            {{ strtoupper($cat->title) }}
-                        </label>
-                    </li>
+    <label>
+        <input type="checkbox" name="category[]" value="{{ $cat->id }}" 
+        {{ in_array($cat->id, (array)request('category', [])) ? 'checked' : '' }} 
+        onchange="this.form.submit()"> 
+        
+        {{ ucwords(strtolower($cat->title)) }}
+    </label>
+</li>
                   @endforeach
                 </ul>
               </div>
@@ -203,6 +218,16 @@
           }
       })
       .catch(error => console.error('Error:', error));
+  }
+
+  // Shop Filter Modal Logic
+  function toggleShopFilters() {
+      const filters = document.getElementById('shopFilters');
+      const overlay = document.getElementById('shopFilterOverlay');
+      filters.classList.toggle('active');
+      const isActive = filters.classList.contains('active');
+      overlay.style.display = isActive ? 'block' : 'none';
+      document.body.classList.toggle('filter-open', isActive);
   }
 </script>
 @endsection
