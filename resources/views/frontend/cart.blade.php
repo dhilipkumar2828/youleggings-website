@@ -42,6 +42,8 @@
     grid-template-columns: 1fr 380px;
     gap: 40px;
     align-items: flex-start;
+   max-width: 1400px;
+   margin: 0 auto;
   }
   @media (max-width: 991px) {
     .cart-grid { grid-template-columns: 1fr;
@@ -56,6 +58,7 @@ justify-items: center; }
     box-shadow: 0 10px 40px rgba(0,0,0,0.03);
     padding: 30px;
     border: 1px solid #f0f0f0;
+   width: auto;
   }
 
   .cart-item-row {
@@ -190,7 +193,7 @@ justify-items: center; }
       </div>
 
       <div id="cartFullState" class="cart-grid" style="display: none;justify-items: center;">
-        <div class="cart-items-section">
+        <div class="cart-items-section" style="width: 100%;">
           <div class="cart-card">
             <h3 style="font-family: var(--font-serif, serif); font-size: 24px; margin-bottom: 25px; border-bottom: 1px solid #f0f0f0; padding-bottom: 15px;">Your Items</h3>
             <div id="cartItemsList">
