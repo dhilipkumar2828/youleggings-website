@@ -223,7 +223,7 @@
     color: #fff;
 }
   
-  /* Curated Collections Slider */
+  /* Curated Collections Slider - FIXED FOR MOBILE */
   .premium-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -254,53 +254,61 @@
 
   .collections-nav-btns { display: none; }
 
+  /* MOBILE FIX: Show all 9 cards in vertical grid */
   @media (max-width: 900px) {
-    .collections-carousel-wrap { overflow: hidden; position: relative; width: 100%; }
+    .collections-carousel-wrap { overflow: visible; position: relative; width: 100%; }
     .premium-grid {
-      display: flex !important;
-      flex-wrap: nowrap !important;
-      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      display: grid !important;
+      grid-template-columns: repeat(3, 1fr) !important;
+      flex-wrap: wrap !important;
+      overflow-x: visible !important;
+      overflow-y: visible !important;
+      scroll-snap-type: none !important;
+      -webkit-overflow-scrolling: auto !important;
       gap: 20px !important;
-      padding: 10px 0;
-      width: 100%;
+      padding: 10px 0 !important;
+      width: 100% !important;
+      margin: 0 !important;
+    }
+    .premium-grid::-webkit-scrollbar {
+      display: auto !important;
     }
     .collection-card {
-      flex: 0 0 calc(50% - 10px);
-      min-width: 0;
+      flex: none !important;
+      min-width: auto !important;
+      max-width: 100% !important;
+      scroll-snap-align: none !important;
+      margin: 0 !important;
+      box-sizing: border-box !important;
     }
     .collections-nav-btns {
-      display: flex;
-      justify-content: space-between;
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      transform: translateY(-50%);
-      pointer-events: none;
-      z-index: 10;
-      padding: 0 5px;
+      display: none !important;
     }
-    .collections-nav-btns button {
-      pointer-events: auto;
-      background: #fff;
-      border: 1px solid #eee;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      font-size: 16px;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      color: #333;
+  }
+
+  /* Tablet: 2 columns */
+  @media (max-width: 768px) {
+    .premium-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
     }
-    .collections-nav-btns button:disabled { opacity: 0; cursor: default; }
+    .collection-image-wrap { 
+      height: 300px; 
+    }
   }
   
+  /* Small mobile: 1 column */
   @media (max-width: 600px) {
-    .collection-card { flex: 0 0 100%; }
-    .collection-image-wrap { height: 320px; }
+    .collection-card { 
+      flex: 0 0 100% !important; 
+      min-width: 100% !important;
+      max-width: 100% !important;
+      scroll-snap-align: none !important;
+    }
+    .collection-image-wrap { height: 280px; }
+    .premium-grid {
+      grid-template-columns: 1fr !important;
+      padding: 0 10px;
+    }
   }
 
   /* Testimonials Improvements */
@@ -578,8 +586,8 @@
         </div>
 
         <div class="collections-nav-btns">
-            <button onclick="slideColCarousel(-1)" class="prev-col-btn"><i data-lucide="chevron-left"></i></button>
-            <button onclick="slideColCarousel(1)" class="next-col-btn"><i data-lucide="chevron-right"></i></button>
+            <button onclick="slideColCarousel(-1)" class="prev-col-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+            <button onclick="slideColCarousel(1)" class="next-col-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
         </div>
       </div>
     </div>
@@ -679,7 +687,7 @@
             @if(isset($testimonials) && count($testimonials) > 0)
                 @foreach($testimonials as $test)
                 <div class="testimonial-card">
-                  <div class="quote-icon">“</div>
+                  <div class="quote-icon">"</div>
                   <p class="testimonial-text">{{ $test->feedback }}</p>
                   <div class="client-name">{{ $test->name }}</div>
                   <div style="font-size: 12px; color: #999; margin-top: 5px;">Happy Client</div>
@@ -689,21 +697,21 @@
             @else
                 {{-- Fallback static testimonials if database is empty --}}
                 <div class="testimonial-card">
-                  <div class="quote-icon">“</div>
+                  <div class="quote-icon">"</div>
                   <p class="testimonial-text">Very good fabric and reasonable price. I am very satisfied to purchase.</p>
                   <div class="client-name">Jeyanthi RK</div>
                   <div style="font-size: 12px; color: #999; margin-top: 5px;">Happy Client</div>
                   <div style="color: #f59e0b; margin-top: 10px;">★★★★★</div>
                 </div>
                 <div class="testimonial-card">
-                  <div class="quote-icon">“</div>
+                  <div class="quote-icon">"</div>
                   <p class="testimonial-text">Very reasonable price, nice collections also. Jeni sister also very patience with the customers.</p>
                   <div class="client-name">CSJ Deepa</div>
                   <div style="font-size: 12px; color: #999; margin-top: 5px;">Happy Client</div>
                   <div style="color: #f59e0b; margin-top: 10px;">★★★★★</div>
                 </div>
                 <div class="testimonial-card">
-                  <div class="quote-icon">“</div>
+                  <div class="quote-icon">"</div>
                   <p class="testimonial-text">Absolutely amazing fit and the material is super soft. Will definitely buy again!</p>
                   <div class="client-name">Priya S.</div>
                   <div style="font-size: 12px; color: #999; margin-top: 5px;">Happy Client</div>
@@ -893,33 +901,53 @@
         });
     }
   // -- Collections Carousel Logic --
-  let colIndex = 0;
   function slideColCarousel(direction) {
     const carousel = document.getElementById('collectionsCarousel');
     if(!carousel) return;
-    const cards = carousel.querySelectorAll('.collection-card');
-    const total = cards.length;
     
-    const getVisible = () => {
-      if(window.innerWidth > 900) return total; // Grid mode
-      if(window.innerWidth > 600) return 2;
-      return 1;
-    };
+    // Only scroll if we are in mobile view (below 900px)
+    if (window.innerWidth > 900) return;
     
-    const visible = getVisible();
-    if(total <= visible) return;
-
-    colIndex += direction;
+    const firstCard = carousel.querySelector('.collection-card');
+    if (!firstCard) return;
     
-    // Limits
-    if(colIndex > total - visible) colIndex = 0;
-    if(colIndex < 0) colIndex = Math.max(0, total - visible);
+    const gap = 20; 
+    const cardWidth = firstCard.offsetWidth + gap;
     
-    const gap = 20;
-    const cardWidth = cards[0].offsetWidth + gap;
-    
-    carousel.style.transform = `translateX(-${colIndex * cardWidth}px)`;
+    carousel.scrollBy({
+        left: direction * cardWidth,
+        behavior: 'smooth'
+    });
   }
+
+  // Update button visibility based on scroll position
+  function updateCarouselBtns() {
+    const carousel = document.getElementById('collectionsCarousel');
+    const prevBtn = document.querySelector('.prev-col-btn');
+    const nextBtn = document.querySelector('.next-col-btn');
+    
+    if(!carousel || !prevBtn || !nextBtn) return;
+    
+    const scrollLeft = carousel.scrollLeft;
+    const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+    
+    // Hide prev if at start
+    prevBtn.style.opacity = scrollLeft <= 10 ? '0' : '1';
+    prevBtn.style.pointerEvents = scrollLeft <= 10 ? 'none' : 'auto';
+    
+    // Hide next if at end (no more cards)
+    nextBtn.style.opacity = scrollLeft >= maxScroll - 10 ? '0' : '1';
+    nextBtn.style.pointerEvents = scrollLeft >= maxScroll - 10 ? 'none' : 'auto';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const carousel = document.getElementById('collectionsCarousel');
+    if(carousel) {
+      carousel.addEventListener('scroll', updateCarouselBtns);
+      // Initial check
+      setTimeout(updateCarouselBtns, 500); 
+    }
+  });
 
   // Add Lucide refresh if needed
   if(window.lucide) {
