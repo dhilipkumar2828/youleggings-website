@@ -62,35 +62,52 @@ justify-items: center; }
   }
 
   .cart-item-row {
-    display: grid;
-    grid-template-columns: 100px 1fr 120px 120px 40px;
+    display: flex;
     align-items: center;
-    padding: 20px 0;
-    border-bottom: 1px solid #f8f8f8;
+    gap: 20px;
+    padding: 25px 0;
+    border-bottom: 1px solid #f5f5f5;
+    position: relative;
   }
   .cart-item-row:last-child { border-bottom: none; }
 
+  .cart-item-main {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+  }
+
   .cart-item-img {
-    width: 80px;
-    height: 100px;
+    width: 90px;
+    height: 110px;
     object-fit: cover;
     border-radius: 12px;
     background: #fdf7fa;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
   }
-  .cart-item-info h4 { font-family: var(--font-serif, serif); font-size: 18px; margin-bottom: 5px; color: #333; }
-  .cart-item-info p { font-size: 13px; color: #888; margin: 0; }
+  .cart-item-info h4 { font-family: var(--font-serif, serif); font-size: 19px; margin-bottom: 5px; color: #222; font-weight: 600; }
+  .cart-item-info p { font-size: 12px; color: #888; margin: 2px 0; letter-spacing: 0.5px; }
+
+  .cart-item-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+  }
 
   .qty-control {
     display: flex;
     align-items: center;
     background: #fdf7fa;
     border-radius: 50px;
-    padding: 5px;
+    padding: 4px;
     width: fit-content;
+    border: 1px solid #fdeef3;
   }
   .qty-btn {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     border: none;
     background: #fff;
@@ -99,13 +116,59 @@ justify-items: center; }
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .qty-btn:hover { background: #ec407a; color: #fff; }
-  .qty-val { width: 40px; text-align: center; font-weight: 700; font-size: 14px; }
+  .qty-val { width: 35px; text-align: center; font-weight: 700; font-size: 14px; color: #333; }
 
-  .cart-price { font-weight: 700; color: #333; font-size: 16px; }
-  .remove-item { color: #ff5e5e; cursor: pointer; transition: 0.3s; padding: 5px; }
-  .remove-item:hover { color: #d11a2a; transform: scale(1.1); }
+  .cart-price { font-weight: 800; color: #333; font-size: 17px; margin-top: 8px; }
+  .remove-item { 
+    color: #ff5e5e; 
+    cursor: pointer; 
+    transition: 0.3s; 
+    padding: 8px;
+    background: #fffafa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .remove-item:hover { color: #fff; background: #ff5e5e; transform: scale(1.1); }
+
+  /* Responsive Fixes for 800px down to 350px */
+  @media (max-width: 800px) {
+    .cart-item-row {
+      flex-wrap: wrap;
+      padding: 20px 0;
+    }
+    .cart-item-right {
+      width: 100%;
+      margin-left: 0;
+      /* justify-content: space-between;
+      margin-top: 15px;
+      padding-top: 15px; */
+      border-top: 1px solid #f9f9f9;
+      gap: 10px;
+    }
+    .cart-item-info h4 { font-size: 16px; }
+  }
+
+  @media (max-width: 480px) {
+    .cart-item-row {
+      gap: 15px;
+    }
+    .cart-item-img {
+      width: 70px;
+      height: 90px;
+    }
+    .cart-item-info h4 { font-size: 15px; }
+    .cart-price { font-size: 15px; }
+    .qty-control { padding: 3px; }
+    .qty-btn { width: 24px; height: 24px; }
+    .qty-val { width: 30px; font-size: 13px; }
+  }
 
   /* Summary Sidebar */
   .summary-card {
@@ -299,20 +362,24 @@ justify-items: center; }
 
             container.innerHTML += `
                 <div class="cart-item-row">
-                    <img src="${item.image}" class="cart-item-img">
-                    <div class="cart-item-info">
-                        <h4>${item.name}</h4>
-                        <p>Variant: ${item.variant}</p>
-                         <div class="cart-price">₹${price.toLocaleString()}</div>
+                    <div class="cart-item-main">
+                        <img src="${item.image}" class="cart-item-img">
+                        <div class="cart-item-info">
+                            <h4>${item.name}</h4>
+                            <p>Variant: ${item.variant}</p>
+                            <div class="cart-price">₹${price.toLocaleString()}</div>
+                        </div>
                     </div>
                    
-                    <div class="qty-control">
-                        <button class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
-                        <span class="qty-val">${qty}</span>
-                        <button class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
-                    </div>
-                    <div class="remove-item" onclick="removeItem(${index})">
-                        <i data-lucide="x"></i>
+                    <div class="cart-item-right">
+                        <div class="qty-control">
+                            <button class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
+                            <span class="qty-val">${qty}</span>
+                            <button class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
+                        </div>
+                        <div class="remove-item" onclick="removeItem(${index})">
+                            <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                        </div>
                     </div>
                 </div>
             `;
