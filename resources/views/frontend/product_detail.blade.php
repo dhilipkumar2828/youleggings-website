@@ -148,7 +148,10 @@
           </div>
 
           <div class="product-detail-actions compact-actions" style="margin-top: 20px; display: flex; gap: 15px;">
-            <button id="productAddToCartBtn" type="button" class="btn" style="background: #333; color: #fff; flex: 1; padding: 18px; font-weight: 700; letter-spacing: 2px;">ADD TO CART</button>
+            <button id="productAddToCartBtn" type="button" class="btn" 
+                    data-product-id="{{ $product->id }}" 
+                    data-variant-id="{{ $defaultVariant['id'] ?? '' }}"
+                    style="background: #333; color: #fff; flex: 1; padding: 18px; font-weight: 700; letter-spacing: 2px;">ADD TO CART</button>
           </div>
 
           <div class="product-service-strip compact-service-strip" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 30px;">
@@ -375,34 +378,14 @@
         });
     });
 
-    function selectColor(color) {
-        currentColor = color;
-
-        // Update Color UI
-        document.querySelectorAll('#productColorList .product-color').forEach(div => {
-            div.classList.toggle('is-active', div.getAttribute('data-color') === color);
-        });
-
-        const variant = groupedVariants[currentSize][color];
-
-        // Update Price
-        const priceDiv = document.getElementById('productDetailPrice');
-        if (priceDiv) {
-            const regPrice = Number(variant.price);
-            const sPrice = Number(variant.sale_price);
-
-            if (sPrice < regPrice) {
-                priceDiv.innerHTML = `
-                    <span class="original-price" style="text-decoration: line-through; color: #888; font-size: 0.8em; margin-right: 10px;">₹${regPrice.toLocaleString()}</span>
-                    <span class="discounted-price">₹${sPrice.toLocaleString()}</span>
-                `;
-            } else {
-                priceDiv.innerText = '₹' + regPrice.toLocaleString();
-            }
-        }
-
         // Update Gallery
         updateGallery(variant.photos);
+
+        // Update Add to Cart Button with variant ID
+        const cartBtn = document.getElementById('productAddToCartBtn');
+        if (cartBtn) {
+            cartBtn.setAttribute('data-variant-id', variant.id);
+        }
     }
 
     function updateGallery(photos) {

@@ -37,11 +37,11 @@ class IndexController extends Controller
             return redirect()->route('login_user')->with('error', 'Please login to view your wishlist');
         }
         $wishlist = Wishlist::where('customer_id', Auth::id())
+            ->whereHas('wishlist1', function($q) {
+                $q->where('status', 'active');
+            })
             ->with('wishlist1')
-            ->get()
-            ->filter(function($item) {
-                return $item->wishlist1 !== null;
-            });
+            ->get();
             
         return view('frontend.wishlist', compact('wishlist'));
     }
@@ -421,6 +421,7 @@ class IndexController extends Controller
                     'name'    => $item['name']    ?? '',
                     'variant' => $item['variant'] ?? '',
                     'image'   => $item['image']   ?? '',
+                    'variant_id' => $item['variant_id'] ?? null,
                 ]),
                 'status'     => 'active',
                 'tax_rate'   => 0,
@@ -429,7 +430,39 @@ class IndexController extends Controller
 
             // Reduce stock
             if (!empty($item['product_id'])) {
-                \App\Models\Product::where('id', $item['product_id'])->decrement('stock', $item['qty']);
+                $pid = $item['product_id'];
+                $vid = $item['variant_id'] ?? null;
+                $qty = $item['qty'];
+
+                // 1. Update Product total stock
+                \App\Models\Product::where('id', $pid)->decrement('stock', $qty);
+
+                // 2. Update Variant stock
+                if ($vid) {
+                    $variant = \App\Models\ProductVariant::find($vid);
+                    if ($variant) {
+                        $variant->decrement('in_stock', $qty);
+                        
+                        // 3. Update Inventory table
+                        $inv = \App\Models\Inventory::where('prod_variant_id', $vid)->first();
+                        if ($inv) {
+                            $inv->decrement('in_stock', $qty);
+                            $inv->increment('sold', $qty);
+                        }
+
+                        // 4. Log the stock change
+                        \DB::table('stock_log')->insert([
+                            'product_id' => $pid,
+                            'v_id' => $vid,
+                            'size' => $variant->variants,
+                            'opr' => 'MINUS',
+                            'qty' => $qty,
+                            'closure_qty' => $variant->in_stock,
+                            'remarks' => 'Order ' . $orderId,
+                            'created_at' => now(),
+                        ]);
+                    }
+                }
             }
         }
 
@@ -493,7 +526,11 @@ class IndexController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
         
-        $wishlist_count = \App\Models\Wishlist::where('customer_id', $user->id)->count();
+        $wishlist_count = \App\Models\Wishlist::where('customer_id', $user->id)
+            ->whereHas('wishlist1', function($q) {
+                $q->where('status', 'active');
+            })
+            ->count();
         
         return view('frontend.my_account', compact('orders', 'wishlist_count'));
     }
@@ -534,7 +571,7 @@ class IndexController extends Controller
             'city'     => 'nullable|string',
             'state'    => 'nullable|string',
             'postcode' => 'nullable|string',
-            'password' => 'nullable|string|min:6',
+            'password' => 'nullable|string|min:6|confirmed',
         ]);
 
         $data = [

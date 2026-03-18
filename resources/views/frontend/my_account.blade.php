@@ -4,23 +4,10 @@
 
 @section('styles')
 <style>
+<style>
   .account-container { padding-top: 160px; padding-bottom: 100px; background: #fdfbfb; }
   .account-card { background: #fff; border-radius: 20px; box-shadow: 0 10px 50px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; overflow: hidden; display: flex; min-height: 600px; }
   @media (max-width: 991px) { .account-card { flex-direction: column; } }
-
-  .account-sidebar { width: 280px; background: #fafafa; padding: 40px 20px; border-right: 1px solid #f0f0f0; }
-  @media (max-width: 991px) { .account-sidebar { width: 100%; border-right: none; border-bottom: 1px solid #f0f0f0; padding: 20px; } }
-
-  .profile_brief { text-align: center; margin-bottom: 40px; }
-  .profile_avatar { width: 80px; height: 80px; background: #ec407a; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; margin: 0 auto 15px; box-shadow: 0 10px 20px rgba(236, 64, 122, 0.2); }
-  .profile_name { font-family: var(--font-serif, serif); font-size: 20px; margin: 0; }
-  .profile_email { font-size: 13px; color: #999; }
-
-  .account-nav { display: grid; gap: 8px; }
-  .nav-item { padding: 14px 20px; border-radius: 12px; display: flex; align-items: center; gap: 12px; color: #666; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.3s; }
-  .nav-item:hover { background: #fff; color: #ec407a; }
-  .nav-item.active { background: #fff; color: #ec407a; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
-  .nav-item i { width: 18px; }
 
   .account-main { flex: 1; padding: 50px; }
   @media (max-width: 575px) { .account-main { padding: 25px; } }
@@ -67,32 +54,7 @@
       @endif
       <div class="account-card">
         
-        <aside class="account-sidebar">
-          <div class="profile_brief">
-            <div class="profile_avatar">
-              {{ substr(Auth::user()->name ?? 'G', 0, 1) }}
-            </div>
-            <h4 class="profile_name">{{ Auth::user()->name ?? 'Guest User' }}</h4>
-            <p class="profile_email">{{ Auth::user()->email ?? '' }}</p>
-          </div>
-
-          <nav class="account-nav">
-            <div class="nav-item active" data-tab="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div>
-            <a href="{{ route('my_orders') }}" style="text-decoration:none;">
-              <div class="nav-item"><i data-lucide="shopping-bag"></i> My Orders</div>
-            </a>
-            <a href="{{ route('my_addresses') }}" style="text-decoration:none;">
-              <div class="nav-item"><i data-lucide="map-pin"></i> Addresses</div>
-            </a>
-            <div class="nav-item" data-tab="settings"><i data-lucide="settings"></i> Profile Settings</div>
-            <form action="{{ route('logout') }}" method="POST" style="margin-top: 20px;">
-              @csrf
-              <button type="submit" style="background:none; border:none; width:100%; text-align:left; padding:0;">
-                <div class="nav-item" style="color: #ff5e5e;"><i data-lucide="log-out"></i> Logout</div>
-              </button>
-            </form>
-          </nav>
-        </aside>
+        @include('frontend.partials.account_sidebar')
 
         <main class="account-main">
           
@@ -137,6 +99,23 @@
                   <input type="text" name="phone" class="form-control" style="width:100%; padding:12px; border:1px solid #eee; border-radius:8px;" value="{{ Auth::user()->phone ?? '' }}" phoneIndia maxlength="10">
                 </div>
               </div>
+
+              <div style="margin-top: 40px; border-top: 1px dashed #eee; padding-top: 40px;">
+                <h4 style="font-family: var(--font-serif, serif); font-size: 20px; margin-bottom: 20px;">Change Password</h4>
+                <p style="color: #888; font-size: 13px; margin-bottom: 20px;">Leave these fields blank if you don't want to change your password.</p>
+                
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                  <div class="form-group">
+                    <label style="display:block; font-size:12px; font-weight:700; color:#999; margin-bottom:8px; text-transform:uppercase;">New Password</label>
+                    <input type="password" name="password" class="form-control" style="width:100%; padding:12px; border:1px solid #eee; border-radius:8px;" placeholder="Leave blank to keep current">
+                  </div>
+                  <div class="form-group">
+                    <label style="display:block; font-size:12px; font-weight:700; color:#999; margin-bottom:8px; text-transform:uppercase;">Confirm Password</label>
+                    <input type="password" name="password_confirmation" class="form-control" style="width:100%; padding:12px; border:1px solid #eee; border-radius:8px;" placeholder="Confirm your new password">
+                  </div>
+                </div>
+              </div>
+
               <button type="submit" class="btn" style="margin-top:30px; background:#ec407a; color:#fff; padding: 12px 40px; border-radius:50px; border:none; font-weight:700;">Save Changes</button>
             </form>
           </div>
@@ -153,19 +132,36 @@
     const navItems = document.querySelectorAll('.nav-item');
     const panels = document.querySelectorAll('.tab-panel');
 
+    function switchTab(tab) {
+        if(!tab) return;
+        
+        navItems.forEach(i => {
+            if(i.getAttribute('data-tab') === tab) {
+                i.classList.add('active');
+            } else if (i.getAttribute('data-tab')) {
+                i.classList.remove('active');
+            }
+        });
+
+        panels.forEach(p => {
+            p.style.display = 'none';
+            if(p.id === `${tab}-panel`) p.style.display = 'block';
+        });
+    }
+
     navItems.forEach(item => {
         item.addEventListener('click', () => {
             const tab = item.getAttribute('data-tab');
-            if(!tab) return;
-
-            navItems.forEach(i => i.classList.remove('active'));
-            item.classList.add('active');
-
-            panels.forEach(p => {
-                p.style.display = 'none';
-                if(p.id === `${tab}-panel`) p.style.display = 'block';
-            });
+            switchTab(tab);
         });
+    });
+
+    // Handle session storage for opening settings
+    window.addEventListener('load', () => {
+        if(sessionStorage.getItem('openSettingsTab')) {
+            sessionStorage.removeItem('openSettingsTab');
+            switchTab('settings');
+        }
     });
 </script>
 @endsection

@@ -93,21 +93,25 @@ document.addEventListener('DOMContentLoaded', () => {
             const productPrice = priceText.replace(/[^\d\.]/g, '');
             const productImg = document.getElementById('productDetailImage')?.src;
             const activeSize = document.querySelector('.product-size-list button.is-active')?.innerText;
+            const productId = addToCartBtn.getAttribute('data-product-id');
+            const variantId = addToCartBtn.getAttribute('data-variant-id');
             
             if (!productTitle) return;
             
             let cart = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) || '[]');
-            const existing = cart.find(item => item.name === productTitle && item.variant === activeSize);
+            const existing = cart.find(item => item.product_id === productId && item.variant_id === variantId);
             
             if (existing) {
-                existing.qty = (existing.qty || 1) + 1;
+                existing.qty = (existing.qty || 1) + 1 * (Number(document.querySelector('.qty-val')?.innerText) || 1);
             } else {
                 cart.push({
+                    product_id: productId,
+                    variant_id: variantId,
                     name: productTitle,
                     price: Number(productPrice),
                     image: productImg,
                     variant: activeSize || 'One Size',
-                    qty: 1
+                    qty: Number(document.querySelector('.qty-val')?.innerText) || 1
                 });
             }
             

@@ -1613,6 +1613,18 @@ public function importform()
            $productvariant->save();
         }
 
+        // Sync with Inventory table
+        $Productinventory = Inventory::where('prod_variant_id', $v_id)->first();
+        if ($Productinventory) {
+            $Productinventory->in_stock = $productvariant->in_stock;
+            // If it's a manual add, maybe increase total_stock? 
+            // Usually total_stock = in_stock + sold.
+            if ($opr == "add") {
+                $Productinventory->total_stock = $Productinventory->total_stock + $stockvalue;
+            }
+            $Productinventory->save();
+        }
+
         $overallStock=ProductVariant::where('product_id',$productId)->sum('in_stock');
         $Product=Product::find($productId);
         $Product->stock = $overallStock;
@@ -1635,12 +1647,12 @@ public function importform()
 
     }
 
-     public function viewstocklogs(Request $request,$id){
+      public function viewstocklogs(Request $request,$id){
+         $productvariant = ProductVariant::find($id);
+         $Product = Product::find($productvariant->product_id);
+         $data = DB::table('stock_log')->where('v_id',$id)->orderBy('id','DESC')->get();
 
-        $data = DB::table('stock_log')->where('v_id',$id)->orderBy('id','DESC')->get();
-
-          return view('backend.inventory.viewstockslog',compact(['data']));
-
-    }
+         return view('backend.inventory.viewstockslog',compact(['data', 'productvariant', 'Product']));
+      }
 
 }

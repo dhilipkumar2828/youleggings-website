@@ -55,7 +55,7 @@
 @endsection
 
 @section('content')
-<section class="addresses-wrapper">
+<section class="account-container">
   <div class="container">
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show mb-4 rounded-4 border-0 shadow-sm" style="background:#e8f5e9; color:#2e7d32; padding:15px 20px;">
@@ -63,60 +63,66 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+    <div class="account-card">
+      
+      @include('frontend.partials.account_sidebar')
 
-    <div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3">
-      <div>
-        <h1>My Addresses</h1>
-        <p>Manage your saved shipping addresses for faster checkout</p>
-      </div>
-      <button onclick="openAddModal()" class="btn-add">
-        <i class="fas fa-plus"></i> Add New Address
-      </button>
-    </div>
-
-    @if(count($addresses) > 0)
-      <div class="address-grid">
-        @foreach($addresses as $addr)
-          <div class="address-card">
-            @if($addr->is_default)
-              <span class="default-badge">DEFAULT</span>
-            @endif
-            <h4>{{ $addr->sfirst_name }} {{ $addr->slast_name }}</h4>
-            <p>
-              {{ $addr->saddress }}<br>
-              {{ $addr->scity }}, {{ $addr->sstate }} - {{ $addr->spincode }}<br>
-              India
-            </p>
-            <div class="meta">
-              <i class="fas fa-phone-alt" style="color:#ec407a;"></i> {{ $addr->sphone_number }}
-            </div>
-            
-            <div class="address-actions">
-              <button class="action-btn" onclick="openEditModal({{ json_encode($addr) }})">
-                <i class="fas fa-edit"></i> EDIT
-              </button>
-              @if(!$addr->is_default)
-                <a href="{{ route('address.set_default', $addr->id) }}" class="action-btn default-btn">
-                  <i class="fas fa-check-circle"></i> SET AS DEFAULT
-                </a>
-              @endif
-              <a href="{{ route('address.delete', $addr->id) }}" class="action-btn delete" onclick="return confirm('Are you sure you want to delete this address?')">
-                <i class="fas fa-trash"></i> DELETE
-              </a>
-            </div>
+      <main class="account-main">
+        <div class="page-header">
+          <div>
+            <h2 class="panel-title" style="margin-bottom: 5px; border-bottom: none; padding-bottom: 0;">My Addresses</h2>
+            <p style="color: #888; font-size: 14px;">Manage your saved shipping addresses for faster checkout</p>
           </div>
-        @endforeach
-      </div>
-    @else
-      <div class="empty-state">
-        <div style="font-size: 60px; margin-bottom: 20px;">🏠</div>
-        <h3 style="font-family: var(--font-serif, serif); font-size: 28px; margin-bottom: 10px;">No Addresses Saved</h3>
-        <p style="color: #888; margin-bottom: 30px;">You haven't saved any addresses yet. They will be saved automatically when you place an order.</p>
-        <button onclick="openAddModal()" style="background: #ec407a; color: #fff; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-block; border: none;">
-          Add New Address
-        </button>
-      </div>
-    @endif
+          <button onclick="openAddModal()" class="btn-add">
+            <i class="fas fa-plus"></i> Add New Address
+          </button>
+        </div>
+
+        @if(count($addresses) > 0)
+          <div class="address-grid">
+            @foreach($addresses as $addr)
+              <div class="address-card">
+                @if($addr->is_default)
+                  <span class="default-badge">DEFAULT</span>
+                @endif
+                <h4>{{ $addr->sfirst_name }} {{ $addr->slast_name }}</h4>
+                <p>
+                  {{ $addr->saddress }}<br>
+                  {{ $addr->scity }}, {{ $addr->sstate }} - {{ $addr->spincode }}<br>
+                  India
+                </p>
+                <div class="meta">
+                  <i class="fas fa-phone-alt" style="color:#ec407a;"></i> {{ $addr->sphone_number }}
+                </div>
+                
+                <div class="address-actions">
+                  <button class="action-btn" onclick="openEditModal({{ json_encode($addr) }})">
+                    <i class="fas fa-edit"></i> EDIT
+                  </button>
+                  @if(!$addr->is_default)
+                    <a href="{{ route('address.set_default', $addr->id) }}" class="action-btn default-btn">
+                      <i class="fas fa-check-circle"></i> SET AS DEFAULT
+                    </a>
+                  @endif
+                  <a href="{{ route('address.delete', $addr->id) }}" class="action-btn delete" onclick="return confirm('Are you sure you want to delete this address?')">
+                    <i class="fas fa-trash"></i> DELETE
+                  </a>
+                </div>
+              </div>
+            @endforeach
+          </div>
+        @else
+          <div class="empty-state">
+            <div style="font-size: 60px; margin-bottom: 20px;">🏠</div>
+            <h3 style="font-family: var(--font-serif, serif); font-size: 28px; margin-bottom: 10px;">No Addresses Saved</h3>
+            <p style="color: #888; margin-bottom: 30px;">You haven't saved any addresses yet. They will be saved automatically when you place an order.</p>
+            <button onclick="openAddModal()" style="background: #ec407a; color: #fff; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-block; border: none;">
+              Add New Address
+            </button>
+          </div>
+        @endif
+      </main>
+    </div>
   </div>
 </section>
 

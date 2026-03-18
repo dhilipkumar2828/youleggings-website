@@ -1,1490 +1,233 @@
 @extends('backend.layouts.master')
 
 @section('content')
-
     <style>
-        .border1 {
-
-            border: 1px solid #508aeb;
-
-            border-radius: 10px;
-
-            margin-bottom: 1%;
-
-            margin-left: 0%;
-
-            margin-right: 0%;
-
-        }
+        .premium-card { border: none; border-radius: 12px; box-shadow: 0 4px 25px rgba(0,0,0,0.06); background: #fff; overflow: hidden; margin-bottom: 25px; }
+        .card-header-premium { background: #f8f9fa; border-bottom: 1px solid #eee; padding: 20px 25px; }
+        .card-header-premium h4 { margin: 0; font-weight: 700; color: #333; font-size: 1.1rem; }
+        .variant-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .variant-table th { background: #fdfdfd; padding: 15px; font-weight: 600; color: #666; font-size: 13px; text-transform: uppercase; border-bottom: 2px solid #f1f1f1; }
+        .variant-table td { padding: 15px; vertical-align: middle; border-bottom: 1px solid #f8f8f8; }
+        .stock-badge { padding: 6px 12px; border-radius: 6px; font-weight: 700; display: inline-block; min-width: 45px; text-align: center; }
+        .stock-low { background: #fff5f5; color: #e53e3e; border: 1px solid #feb2b2; }
+        .stock-good { background: #f0fff4; color: #38a169; border: 1px solid #9ae6b4; }
+        .log-link { color: #508aeb; font-weight: 600; text-decoration: none; transition: 0.3s; }
+        .log-link:hover { color: #2b6cb0; text-decoration: underline; }
+        .form-section { background: #fcfcfc; border-radius: 12px; padding: 25px; border: 1px dashed #ddd; }
+        .control-label { font-weight: 600; color: #444; margin-bottom: 8px; display: block; }
+        .premium-input { border-radius: 8px; border: 1px solid #e2e8f0; padding: 12px 15px; height: auto !important; transition: 0.3s; }
+        .premium-input:focus { border-color: #508aeb; box-shadow: 0 0 0 3px rgba(80, 138, 235, 0.1); }
+        .btn-save { background: #ed0b80; color: white; padding: 12px 30px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(237, 11, 128, 0.3); }
+        .btn-save:hover { background: #c20968; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(237, 11, 128, 0.4); }
+        .product-strip { background: linear-gradient(135deg, #ed0b80 0%, #ff52af 100%); color: white; padding: 30px; border-radius: 12px; margin-bottom: 30px; position: relative; overflow: hidden; }
+        .product-strip::after { content: '\f0d1'; font-family: 'FontAwesome'; position: absolute; right: -20px; bottom: -20px; font-size: 150px; opacity: 0.1; }
+        .ripple { position: relative; overflow: hidden; }
     </style>
 
-    <div class="page-content-wrapper ">
-
+    <div class="page-content-wrapper">
         <div class="container-fluid">
-
-            <div class="row">
-
-                <div class="col-sm-12">
-
-                    <div class="float-right page-breadcrumb">
-
-                        <ol class="breadcrumb">
-
-                            <li class="breadcrumb-item"><a href="{{ route('product.index') }}"> Product</a></li>
-
-                            <li class="breadcrumb-item active">Update Product Stock</li>
-
-                        </ol>
-
-                    </div>
-
+            <!-- Breadcrumbs -->
+            <div class="row align-items-center mb-4">
+                <div class="col-sm-6">
+                    <h5 class="page-title m-0">Inventory Management</h5>
+                    <ol class="breadcrumb mt-1 bg-transparent p-0">
+                        <li class="breadcrumb-item"><a href="{{ route('product.index') }}">Products</a></li>
+                        <li class="breadcrumb-item active">Update Stock</li>
+                    </ol>
                 </div>
-
+                <div class="col-sm-6 text-right">
+                    <a href="{{ route('product.index') }}" class="btn btn-light px-4 border">
+                        <i class="fa fa-chevron-left mr-2"></i> Back to Catalog
+                    </a>
+                </div>
             </div>
 
-            <!-- end row -->
-
-            <div class="card m-b-30 card-body">
-
-                <h4 class="card-title font-20 mt-0">
-
-                    <strong> {{ $Product->name }}</strong>
-
-                </h4>
-
-                <a href="{{ route('product.index') }}" id="add-btn" style="color: #ffffff;"><i class="fa fa-angle-left"
-                        aria-hidden="true"></i> Back</a>
-
-            </div>
-
-            <div class="row">
-
-                <div class="col-lg-12">
-
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-
-                            <ul>
-
-                                @foreach ($errors->all() as $error)
-                                    <li>
-
-                                        {{ $error }}
-
-                                    </li>
-                                @endforeach
-
-                            </ul>
-
+            <!-- Product Header Strip -->
+            <div class="product-strip">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <span class="badge badge-light mb-2 px-3 py-2" style="color: #ed0b80; font-weight: 800;">PRODUCT SKU: {{ $productvariant[0]->sku ?? 'N/A' }}</span>
+                        <h2 class="m-0" style="font-weight: 800; color: white;">{{ $Product->name }}</h2>
+                        <p class="mb-0 mt-2 opacity-80" style="font-size: 1.1rem; color: white;">Manage warehouse levels and stock movement for all variants.</p>
+                    </div>
+                    <div class="col-md-4 text-md-right mt-3 mt-md-0">
+                        <div style="background: rgba(255,255,255,0.2); display: inline-block; padding: 15px 25px; border-radius: 10px; backdrop-filter: blur(5px);">
+                            <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: white;">Overall Stock</div>
+                            <div style="font-size: 32px; font-weight: 800; color: white;">{{ $Product->stock }}</div>
                         </div>
-                    @endif
-
-                    @include('backend.layouts.notification')
-
-                </div>
-
-                <div class="col-sm-12 col-md-6">
-
-                    <div id="datatable-buttons_filter" class="dataTables_filter">
-
                     </div>
-
                 </div>
-
             </div>
 
-            <!-- <div>
-
-                            <h4> Total Product Attribute : {{ \App\Models\ProductAttribute::count() }}</h4>
-
-                        </div> -->
-
             <div class="row">
-
-                <div class="col-12">
-
-                    <div class="card m-b-30">
-
-                        <form action="{{ route('updatestockstore') }}" method="POST">
-
-                            @csrf
-
-                            <input type="hidden" name="id" value="{{ $Product->id }}">
-
-                            <div id="product_attribute" class="content"
-                                data-mfield-options='{"section": ".group","btnAdd":"#btnAdd-1","btnRemove":".btnRemove"}'>
-
-                                <div class=" container-fluid ">
-
-                                    <div class="row">
-
-                                        <div class="col-md-12">
-
-                                            <div class="row">
-
-                                                <div class="col-md-3">
-
-                                                    Varient
-
-                                                </div>
-
-                                                <div class="col-md-2">
-
-                                                    Current Available Stocks
-
-                                                </div>
-
-                                                <div class="col-md-3">
-
-                                                    #
-
-                                                </div>
-
-                                            </div>
-
-                                            <div class="col-md-12">
-
-                                                <hr />
-
-                                            </div>
-
-                                            <?php
-
-                                   for($i=0;$i<count($productvariant);$i++){?>
-
-                                            <div class="row">
-
-                                                <div class="col-md-3">
-
-                                                    {{ $productvariant[$i]->variants }} - {{ $productvariant[$i]->sku }}
-
-                                                </div>
-
-                                                <div class="col-md-2 tac" style="text-align:center;">
-
-                                                    {{ $productvariant[$i]->in_stock }}
-
-                                                </div>
-
-                                                <div class="col-md-3"> <a
-                                                        href="{{ route('viewstocklogs', $productvariant[$i]->id) }}"
-                                                        target="_blank">View Stock Logs</a>
-
-                                                </div>
-
-                                            </div>
-
-                                            <?php }
-
-                                   ?>
-
-                                            <div class="col-md-12">
-
-                                                <hr />
-
-                                            </div>
-
-                                        </div>
-
-                                        <div class="col-md-12 tac">
-
-                                            <div class="row">
-
-                                                <div class="col-md-3">
-
-                                                    Select Varient
-
-                                                </div>
-
-                                                <div class="col-md-6 tac">
-
-                                                    <select class="form-control" name="v_id" id="v_id">
-
-                                                        <option value="">Select Varient</option>
-
-                                                        <?php
-
-                                   for($i=0;$i<count($productvariant);$i++){?>
-
-                                                        <option value="{{ $productvariant[$i]->id }}"
-                                                            data-stock="{{ $productvariant[$i]->in_stock }}">
-                                                            {{ $productvariant[$i]->variants }} -
-                                                            {{ $productvariant[$i]->sku }}</option>
-
-                                                        <?php }
-
-                                   ?>
-
-                                                    </select>
-
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-
-                                        <div class="col-md-12 tac">
-
-                                            <div class="row">
-
-                                                <div class="col-md-3">
-
-                                                    Select Add Stocks/ Reduce Stocks
-
-                                                </div>
-
-                                                <div class="col-md-6 tac">
-
-                                                    <select class="form-control" name="opr" id="opr">
-
-                                                        <option value="">Select Option</option>
-
-                                                        <option value="add">Add Stocks</option>
-
-                                                        <option value="minus">Reduce Stocks</option>
-
-                                                    </select>
-
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-
-                                        <div class="col-md-12">
-
-                                            <div class="row">
-
-                                                <div class="col-md-3">
-
-                                                    Select Varient
-
-                                                </div>
-
-                                                <div class="col-md-6">
-
-                                                    <input type="number" min="1" class="form-control"
-                                                        name="stockvalue" id="stockvalue"
-                                                        placeholder="Enter the Stock value which you want to add or reduce">
-
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-
-                                        <div class=" col-md-12 variant">
-
-                                        </div>
-
+                <!-- Variant List -->
+                <div class="col-lg-7">
+                    <div class="premium-card">
+                        <div class="card-header-premium d-flex justify-content-between align-items-center">
+                            <h4>Stock Levels per Variant</h4>
+                            <span class="text-muted small">Total Variants: {{ count($productvariant) }}</span>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="variant-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Variant Details</th>
+                                            <th class="text-center">Current Stock</th>
+                                            <th class="text-right">History</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($productvariant as $v)
+                                            <tr>
+                                                <td>
+                                                    <div style="font-weight: 700; color: #333;">{{ $v->variants }}</div>
+                                                    <div class="text-muted small">{{ $v->sku }}</div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="stock-badge {{ $v->in_stock < 10 ? 'stock-low' : 'stock-good' }}">
+                                                        {{ $v->in_stock }}
+                                                    </span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <a href="{{ route('viewstocklogs', $v->id) }}" target="_blank" class="log-link">
+                                                        <i class="fa fa-history mr-1"></i> Logs
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stock Action Form -->
+                <div class="col-lg-5">
+                    <div class="premium-card">
+                        <div class="card-header-premium">
+                            <h4>Adjust Stock Levels</h4>
+                        </div>
+                        <div class="card-body">
+                            @include('backend.layouts.notification')
+                            
+                            <form action="{{ route('updatestockstore') }}" method="POST" id="stockUpdateForm">
+                                @csrf
+                                <input type="hidden" name="id" value="{{ $Product->id }}">
+                                
+                                <div class="form-section">
+                                    <div class="form-group mb-4">
+                                        <label class="control-label">1. Select Target Variant</label>
+                                        <select class="form-control premium-input select2" name="v_id" id="v_id">
+                                            <option value="">Choose a variant...</option>
+                                            @foreach($productvariant as $v)
+                                                <option value="{{ $v->id }}" data-stock="{{ $v->in_stock }}">
+                                                    {{ $v->variants }} (Current: {{ $v->in_stock }})
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
 
+                                    <div class="form-group mb-4">
+                                        <label class="control-label">2. Select Operation Type</label>
+                                        <div class="row no-gutters">
+                                            <div class="col-6 pr-2">
+                                                <div class="custom-control custom-radio mb-2">
+                                                    <input type="radio" id="opr_add" name="opr" value="add" class="custom-control-input" checked onchange="document.getElementById('opr_value').value='add'">
+                                                    <label class="custom-control-label p-2 border rounded w-100 text-center" style="cursor:pointer;" for="opr_add">
+                                                        <i class="fa fa-plus-circle text-success mr-1"></i> Add Stock
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 pl-2">
+                                                <div class="custom-control custom-radio mb-2">
+                                                    <input type="radio" id="opr_minus" name="opr" value="minus" class="custom-control-input" onchange="document.getElementById('opr_value').value='minus'">
+                                                    <label class="custom-control-label p-2 border rounded w-100 text-center" style="cursor:pointer;" for="opr_minus">
+                                                        <i class="fa fa-minus-circle text-danger mr-1"></i> Reduce Stock
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="opr" value="add">
+                                    </div>
+
+                                    <div class="form-group mb-4">
+                                        <label class="control-label">3. Transaction Quantity</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text bg-white border-right-0" style="border-radius: 8px 0 0 8px;"><i class="fa fa-cubes text-muted"></i></span>
+                                            </div>
+                                            <input type="number" min="1" class="form-control premium-input" name="stockvalue" id="stockvalue" placeholder="Enter amount..." style="border-left:0;">
+                                        </div>
+                                    </div>
+
+                                    <button type="button" id="checkstockupdate" class="btn btn-save btn-block mt-2">
+                                        <i class="fa fa-save mr-2"></i> Update Inventory
+                                    </button>
                                 </div>
-
-                            </div>
-
-                            <div class="col-md-1">
-
-                                <div class="form-group pull-right">
-
-                                    <button type="button" id="checkstockupdate" class="btn btn btn-info "
-                                        style="margin-top:.8em;">Save</button>
-
-                                </div>
-
-                            </div>
-
-                        </form>
-
+                            </form>
+                        </div>
                     </div>
-
-                </div> <!-- end col -->
-
+                </div>
             </div>
-
-        </div> <!-- end row -->
-
-    @endsection
-
-    @section('scripts')
-        <script src="{{ asset('assets/js/jquery.multifield.min.js') }}"></script>
-
-        <script src="{{ asset('public/vendor/laravel-filemanager/js/stand-alone-button.js') }}"></script>
-
-        <script>
-            $('#product_attribute').multifield();
-
-            // $('#chil_cat_id1').select2({
-
-            //     placeholder:"Select Value"
-
-            // });
-        </script>
-
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-        <script>
-            $.ajaxSetup({
-
-                headers: {
-
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-
-                }
-
-            });
-
-            $('#checkstockupdate').click(function(e) {
-
-                e.preventDefault();
-
-                var form = $(this).closest('form');
-
-                var currentStock = +($('#v_id').find(":selected").attr('data-stock'));
-
-                var stockOpr = $('#opr').val();
-
-                var stockval = +$('#stockvalue').val();
-
-                if ($('#v_id').val() == "") {
-
-                    swal("Atleast one Varient should select");
-
-                    return false;
-
-                }
-
-                if (stockOpr == "") {
-
-                    swal("Should select atleast one option Add Stocks or Reduce Stocks");
-
-                    return false;
-
-                }
-
-                if (stockval < 1) {
-
-                    swal("Stock input value should be more than 0");
-
-                    return false;
-
-                }
-
-                if (stockOpr == "add") {
-
-                    var newstock = (+currentStock) + stockval;
-
-                } else {
-
-                    if (stockval > currentStock) {
-
-                        $('#stockvalue').val('0');
-
-                        swal("Current Stock is " + currentStock + ", but trying to reduce " + stockval +
-                            " is not possible.");
-
-                        return false;
-
-                    }
-
-                    var newstock = (+currentStock) - stockval;
-
-                }
-
-                swal({
-
-                        title: "Are you sure to want " + stockOpr + " " + stockval + " to this varient ?" +
-                            "New Stock will be " + newstock,
-
-                        text: 'Confirmation',
-
-                        icon: "warning",
-
-                        buttons: true,
-
-                        dangerMode: true,
-
-                    })
-
-                    .then((willDelete) => {
-
-                        if (willDelete) {
-
-                            form.submit();
-
-                            swal("Stock Updated!!", {
-
-                                icon: "success",
-
-                            });
-
-                        } else {
-
-                            swal("Please check once and update!");
-
-                        }
-
-                    });
-
-            });
-
-            $('.dltBtn').click(function(e) {
-
-                var form = $(this).closest('form');
-
-                var dataID = $(this).data('id');
-
-                e.preventDefault();
-
-                swal({
-
-                        title: "Are you sure?",
-
-                        text: "Once deleted, you will not be able to recover",
-
-                        icon: "warning",
-
-                        buttons: true,
-
-                        dangerMode: true,
-
-                    })
-
-                    .then((willDelete) => {
-
-                        if (willDelete) {
-
-                            form.submit();
-
-                            swal("Poof! Your imaginary file has been deleted!", {
-
-                                icon: "success",
-
-                            });
-
-                        } else {
-
-                            swal("Your imaginary file is safe!");
-
-                        }
-
-                    });
-
-            });
-        </script>
-
-        <script>
-            $('input[name=toogle]').change(function() {
-
-                var mode = $(this).prop('checked');
-
-                var id = $(this).val();
-
-                // alert(id);
-
-                $.ajax({
-
-                    url: "{{ route('product.status') }}",
-
-                    type: "POST",
-
-                    data: {
-
-                        _token: '{{ csrf_token() }}',
-
-                        mode: mode,
-
-                        id: id,
-
-                    },
-
-                    success: function(response) {
-
-                        //   console.log(response.status);
-
-                    }
-
-                })
-
-            });
-        </script>
-
-        <script>
-            function cat1(val, j) {
-
-                var cat_id = val;
-
-                if (cat_id != null) {
-
-                    $.ajax({
-
-                        url: "{{ route('product.attribute') }}",
-
-                        type: "POST",
-
-                        data: {
-
-                            _token: "{{ csrf_token() }}",
-
-                            id: cat_id,
-
-                        },
-
-                        success: function(response) {
-
-                            var html_option = [];
-
-                            $('#chil_cat_id' + j).select2().empty();
-
-                            if (response.data) {
-
-                                $('#child_cat_div' + j).removeClass('d-none');
-
-                                $.each(response.data, function(id, attribute_type) {
-
-                                    html_option.push(attribute_type);
-
-                                });
-
-                            } else {
-
-                                $('#child_cat_div' + j).addClass('d-none');
-
-                            }
-
-                            $('#chil_cat_id' + j).select2({
-
-                                placeholder: 'Select Value',
-
-                                data: html_option
-
-                            });
-
-                        }
-
-                    });
-
-                }
-
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
+    <script src="{{ asset('assets/js/jquery.multifield.min.js') }}"></script>
+    <script src="{{ asset('public/vendor/laravel-filemanager/js/stand-alone-button.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        // Sync radio with hidden opr for existing JS logic
+        $('input[name="opr"]').change(function() {
+            $('#opr').val($(this).val());
+        });
+
+        $('#checkstockupdate').click(function(e) {
+            e.preventDefault();
+            var form = $(this).closest('form');
+            var selectedOption = $('#v_id').find(":selected");
+            var currentStock = +(selectedOption.attr('data-stock'));
+            var stockOpr = $('#opr').val();
+            var stockval = +$('#stockvalue').val();
+
+            if ($('#v_id').val() == "") {
+                swal("Please select a variant first.");
+                return false;
             }
 
-            $('#btnAdd-1').click(function() {
+            if (stockval < 1) {
+                swal("Please enter a valid quantity greater than 0.");
+                return false;
+            }
 
+            if (stockOpr == "minus" && stockval > currentStock) {
+                swal("Insufficient Stock", "Current stock is " + currentStock + ", but you are trying to reduce " + stockval, "error");
+                return false;
+            }
+
+            var newstock = (stockOpr == "add") ? (currentStock + stockval) : (currentStock - stockval);
+
+            swal({
+                title: "Confirm " + (stockOpr == 'add' ? 'Increase' : 'Decrease'),
+                text: "Current: " + currentStock + " | Adjustment: " + (stockOpr == 'add' ? '+' : '-') + stockval + " | Result: " + newstock,
+                icon: "info",
+                buttons: ["Cancel", "Confirm Update"],
+                dangerMode: stockOpr == "minus",
+            }).then((confirmed) => {
+                if (confirmed) {
+                    form.submit();
+                }
             });
-        </script>
-
-        <script>
-            var i = 2;
-
-            var data = [];
-
-            var attr = [];
-
-            function variants(cat_id, option = "", attrid) {
-
-                $('.variant1').removeClass('d-none');
-
-                if (attr.indexOf(cat_id) == -1) {
-
-                    attr.push(cat_id);
-
-                    $.ajax({
-
-                        url: "{{ route('product.attribute') }}",
-
-                        type: "POST",
-
-                        data: {
-
-                            _token: "{{ csrf_token() }}",
-
-                            id: cat_id,
-
-                        },
-
-                        success: function(response) {
-
-                            let details = ' <div class="row border1" id="child' + i + '">' +
-
-                                '<div class="col-md-3">' +
-
-                                '<div class="form-group">' +
-
-                                '<label for="example-text-input" class="col-sm-12 col-form-label">Attribute Type :</label>' +
-
-                                '<label for="example-text-input" class="col-sm-12 col-form-label">' + cat_id +
-                                '</label>' +
-
-                                '<input type="hidden"  class="form-control" name="attribute_name[]" value="' +
-                                cat_id + '" style="width:100%;" >' +
-
-                                '<input type="hidden"  class="form-control" name="attribute_id[]" value="' +
-                                attrid + '" style="width:100%;" >' +
-
-                                '</div>' +
-
-                                '</div>' +
-
-                                '<div  id="child_cat_div' + i + '">' +
-
-                                '<div class="col-md-12">' +
-
-                                '<label for="example-text-input" class="col-sm-12 col-form-label">Attribute Value :</label>' +
-
-                                '<select class="chil_cat_id"  name="attribute_value_' + cat_id +
-                                '[]" id="chil_cat_id' + i +
-
-                                '" required placeholder="Add Attribute" style="width:100%;" multiple="multiple" ></select>' +
-
-                                '</div>' +
-
-                                '</div>' +
-
-                                '<div class="col-md-2">' +
-
-                                '<label for="example-text-input" class="col-sm-12 col-form-label"></label>' +
-
-                                '<button type="button" class="mt-3 btn btn-sm my-2 btn-danger" id="' + i + '|' +
-                                cat_id +
-
-                                '" onclick="removeproduct(this)">Remove</button>' +
-
-                                '</div>' +
-
-                                '</div>';
-
-                            $('.product').append(details);
-
-                            var html_option = [];
-
-                            $('#chil_cat_id' + (i)).select2().empty();
-
-                            if (response.data) {
-
-                                //$('#child_cat_div'+i).removeClass('d-none');
-
-                                $.each(response.data, function(id, attribute_type) {
-
-                                    html_option.push(attribute_type);
-
-                                });
-
-                            } else {
-
-                                //$('#child_cat_div'+i).addClass('d-none');
-
-                            }
-
-                            $('#chil_cat_id' + (i)).select2({
-
-                                placeholder: 'Select Value',
-
-                                data: html_option
-
-                            });
-
-                            if (option) {
-
-                                let opt = JSON.parse(option).split(',');
-
-                                $('#chil_cat_id' + (i)).val(opt).trigger("change");
-
-                            }
-
-                            i++;
-
-                        }
-
-                    });
-
-                }
-
-            }
-
-            $('.addproduct').click(function() {
-
-                let cat_id = $('.cat_id').val();
-
-                if (cat_id != '') {
-
-                    variants(cat_id);
-
-                }
-
-            });
-
-            var variant = [];
-
-            $('.addvariant').click(function() {
-
-                //  for(let k=2;k<=($('.chil_cat_id').length+1);k++){
-
-                if ($('.chil_cat_id').length > 1) {
-
-                    for (let k1 = 0; k1 < ($('#chil_cat_id2').val().length); k1++) {
-
-                        for (let k2 = 0; k2 < ($('#chil_cat_id3').val().length); k2++) {
-
-                            // if (variant[$('#chil_cat_id2').val()[k1]] == undefined) {
-
-                            //     variant[$('#chil_cat_id2').val()[k1]]=[];
-
-                            // }
-
-                            let rand = 1 + Math.floor(Math.random() * 10000);
-
-                            let vid = (k2.length == 1) ? '{{ $Product->id }}' + rand : '{{ $Product->id }}' +
-
-                                rand;
-
-                            if (variant.indexOf(vid) == -1) {
-
-                                //variant.push($('#chil_cat_id3').val()[k2]);
-
-                                variant.push(vid);
-
-                                let details = '<div class="card border1" id="vchild' + vid +
-
-                                    '" > <div class="row" >' +
-
-                                    '<div class="col-md-3">' +
-
-                                    '<div class="form-group">' +
-
-                                    '<label for="example-text-input" class="col-sm-12 col-form-label">#' + vid + ' ' +
-                                    $(
-
-                                        '#chil_cat_id2').val()[k1] + '</label>' +
-
-                                    '</div>' +
-
-                                    '</div>' +
-
-                                    '<div class="col-md-3">' +
-
-                                    '<div class="form-group">' +
-
-                                    '<label for="example-text-input" class="col-sm-12 col-form-label">' + $(
-
-                                        '#chil_cat_id3').val()[k2] + '</label>' +
-
-                                    '</div>' +
-
-                                    '</div>' +
-
-                                    '<div class="col-md-6">' +
-
-                                    '<label for="example-text-input" ></label>' +
-
-                                    '<button type="button" class="tn btn-sm my-2 btn-danger pull-right mr-1" id="' +
-
-                                    vid + '|' + $('#chil_cat_id3').val()[k2] +
-
-                                    '" onclick="removevariant(this)"><i class="fa fa-trash-o"></i></button>' +
-
-                                    '<button type="button" class="tn btn-sm my-2 btn-primary pull-right mr-1"  onclick=exvariant("vo' +
-
-                                    vid + '")><i class="fa fa-expand"></i></button>' +
-
-                                    '</div>' +
-
-                                    '<div class="col-md-12" style="display:none;" id="vo' + vid + '">' +
-
-                                    '<div class="row" >' +
-
-                                    '<div class="col-md-3 ml-3">' +
-
-                                    '<div class="form-group">' +
-
-                                    '<label for="example-text-input" class="col-form-label">SKU:</label>' +
-
-                                    '<input type="text"  class="form-control" name="sku[]" required placeholder="SKU" style="width:100%;" >' +
-
-                                    '<input type="hidden"  class="form-control" name="variant_id[]" value="' + vid +
-                                    '" style="width:100%;" >' +
-
-                                    '<input type="hidden"  class="form-control" name="attribute_value[]" value="' + $(
-
-                                        '#chil_cat_id2').val()[k1] + ',' + $(
-
-                                        '#chil_cat_id3').val()[k2] + '" style="width:100%;" >' +
-
-                                    '</div>' +
-
-                                    '</div>' +
-
-                                    '<div class="col-md-3">' +
-
-                                    '<label for="example-text-input" class="col-form-label">Image</label>' +
-
-                                    '<div class="input-group">' +
-
-                                    '<span class="input-group-btn">' +
-
-                                    '<a id="lfm" data-input="thumbnail' + vid + '" data-preview="holder' + vid +
-                                    '" class="btn btn-primary lfm">' +
-
-                                    '<i class="fa fa-picture-o"></i> Choose' +
-
-                                    '</a>' +
-
-                                    '</span>' +
-
-                                    '<input id="thumbnail' + vid +
-
-                                    '" required class="form-control" type="text" name="photo[]">' +
-
-                                    '</div>' +
-
-                                    '<div id="holder' + vid +
-
-                                    '" style="margin-top:15px;max-height:100px;"></div>' +
-
-                                    '</div>' +
-
-                                    '<div class="col-md-3 ml-3">' +
-
-                                    '<div class="form-group">' +
-
-                                    '<label for="example-text-input" class="col-form-label">Regular Price:</label>' +
-
-                                    '<input type="text"  class="form-control" name="regular_price[]" required placeholder="Regular Price" style="width:100%;" >' +
-
-                                    '</div>' +
-
-                                    '</div>' +
-
-                                    '<div class="col-md-3 ml-3">' +
-
-                                    '<div class="form-group">' +
-
-                                    '<label for="example-text-input" class="col-form-label">Sale Price:</label>' +
-
-                                    '<input type="text"  class="form-control" name="sale_price[]" required placeholder="Sale Price" style="width:100%;" >' +
-
-                                    '</div>' +
-
-                                    '</div>' +
-
-                                    '<div class="col-md-3">' +
-
-                                    '<div class="form-group">' +
-
-                                    '<label for="example-text-input" class="col-form-label">Stock:</label>' +
-
-                                    '<input type="text"  class="form-control" name="stock[]" placeholder="Stock" style="width:100%;" >' +
-
-                                    '</div>' +
-
-                                    '</div>' +
-
-                                    '</div>' +
-
-                                    '</div>' +
-
-                                    '</div></div>';
-
-                                $('.variant').append(details);
-
-                                $('.lfm').filemanager('image');
-
-                            }
-
-                        }
-
-                        //  console.log($('#chil_cat_id2').val());
-
-                    }
-
-                } else {
-
-                    for (let k1 = 0; k1 < ($('#chil_cat_id2').val().length); k1++) {
-
-                        let rand = 1 + Math.floor(Math.random() * 10000);
-
-                        let vid = (k1.length == 1) ? '{{ $Product->id }}' + rand : '{{ $Product->id }}' +
-
-                            rand;
-
-                        if (variant.indexOf(vid) == -1) {
-
-                            //variant.push($('#chil_cat_id3').val()[k2]);
-
-                            variant.push(vid);
-
-                            let details = '<div class="card border1"  id="vchild' + vid + '"><div class="row">' +
-
-                                '<div class="col-md-3">' +
-
-                                '<div class="form-group">' +
-
-                                '<label for="example-text-input" class="col-sm-12 col-form-label">#' + vid + ' ' + $(
-
-                                    '#chil_cat_id2').val()[k1] + '</label>' +
-
-                                '</div>' +
-
-                                '</div>' +
-
-                                '<div class="col-md-6">' +
-
-                                '<label for="example-text-input" ></label>' +
-
-                                '<button type="button" class="tn btn-sm my-2 btn-danger pull-right mr-1" id="' + vid +
-
-                                '|' + $('#chil_cat_id2').val()[k1] +
-
-                                '" onclick="removevariant(this)"><i class="fa fa-trash-o"></i></button>' +
-
-                                '<button type="button" class="tn btn-sm my-2 btn-primary pull-right mr-1"  onclick=exvariant("vo' +
-
-                                vid + '")><i class="fa fa-expand"></i></button>' +
-
-                                '</div>' +
-
-                                '<div class="col-md-12" style="display:none;" id="vo' + vid + '">' +
-
-                                '<div class="row" >' +
-
-                                '<div class="col-md-3 ml-3">' +
-
-                                '<div class="form-group">' +
-
-                                '<label for="example-text-input" class="col-form-label">SKU:</label>' +
-
-                                '<input type="text"  class="form-control" name="sku[]" required placeholder="SKU" style="width:100%;" >' +
-
-                                '<input type="hidden"  class="form-control" name="variant_id[]" value="' + vid +
-                                '" style="width:100%;" >' +
-
-                                '<input type="hidden"  class="form-control" name="attribute_value[]" value="' + $(
-
-                                    '#chil_cat_id2').val()[k1] + '" style="width:100%;" >' +
-
-                                '</div>' +
-
-                                '</div>' +
-
-                                '<div class="col-md-3">' +
-
-                                '<label for="example-text-input" class="col-form-label">Image</label>' +
-
-                                '<div class="input-group">' +
-
-                                '<span class="input-group-btn">' +
-
-                                '<a id="lfm" data-input="thumbnail' + vid + '" data-preview="holder' + vid +
-                                '" class="btn btn-primary lfm">' +
-
-                                '<i class="fa fa-picture-o"></i> Choose' +
-
-                                '</a>' +
-
-                                '</span>' +
-
-                                '<input id="thumbnail' + vid +
-
-                                '" required class="form-control" type="text" name="photo[]">' +
-
-                                '</div>' +
-
-                                '<div id="holder' + vid +
-
-                                '" style="margin-top:15px;max-height:100px;"></div>' +
-
-                                '</div>' +
-
-                                '<div class="col-md-3 ml-3">' +
-
-                                '<div class="form-group">' +
-
-                                '<label for="example-text-input" class="col-form-label">Regular Price:</label>' +
-
-                                '<input type="text"  class="form-control" name="regular_price[]" required placeholder="Regular Price" style="width:100%;" >' +
-
-                                '</div>' +
-
-                                '</div>' +
-
-                                '<div class="col-md-3 ml-3">' +
-
-                                '<div class="form-group">' +
-
-                                '<label for="example-text-input" class="col-form-label">Sale Price:</label>' +
-
-                                '<input type="text"  class="form-control" name="sale_price[]" required placeholder="Sale Price" style="width:100%;" >' +
-
-                                '</div>' +
-
-                                '</div>' +
-
-                                '<div class="col-md-3">' +
-
-                                '<div class="form-group">' +
-
-                                '<label for="example-text-input" class="col-form-label">Stock:</label>' +
-
-                                '<input type="text"  class="form-control" name="stock[]" placeholder="Stock" style="width:100%;" >' +
-
-                                '</div>' +
-
-                                '</div>' +
-
-                                '</div>' +
-
-                                '</div>' +
-
-                                '</div></div>';
-
-                            $('.variant').append(details);
-
-                            $('.lfm').filemanager('image');
-
-                            //  console.log($('#chil_cat_id2').val());
-
-                        }
-
-                    }
-
-                }
-
-                //   console.log($('#chil_cat_id'+k).val());
-
-            });
-
-            function removeproduct(d) {
-
-                var id = d.id.split('|')[0];
-
-                let dval = d.id.split('|')[1];
-
-                //   var pid=d.id.split('|')[1];
-
-                //   data=jQuery.grep(data, function(value) {
-
-                //   return value != pid;
-
-                // });
-
-                attr.splice(attr.indexOf(dval), 1);
-
-                $('#child' + id).remove();
-
-                if (id == 1) {
-
-                    $('.variant1').addClass('d-none');
-
-                }
-
-                i--;
-
-            }
-
-            function removevariant(d) {
-
-                //var id=d.id;
-
-                var id = d.id.split('|')[0];
-
-                let dval = d.id.split('|')[1];
-
-                //   data=jQuery.grep(data, function(value) {
-
-                //   return value != pid;
-
-                // });
-
-                //   attr.splice(attr.indexOf(dval),1);
-
-                variant.splice(variant.indexOf(id), 1);
-
-                $('#vchild' + id).remove();
-
-            }
-
-            function exvariant(d) {
-
-                // console.log(d);
-
-                //var id=d.id;
-
-                var id = d;
-
-                $('#' + id).toggle();
-
-            }
-
-            function product_attribute(id) {
-
-                $.ajax({
-
-                    url: "{{ route('product.variant') }}",
-
-                    type: "POST",
-
-                    data: {
-
-                        _token: "{{ csrf_token() }}",
-
-                        id: id,
-
-                    },
-
-                    success: function(response) {
-
-                        let productattribute = response.productattribute;
-
-                        let productvariant = response.productvariant;
-
-                        $.each(productattribute, function(key, data) {
-
-                            let arrtibute_value = JSON.stringify(data.arrtibute_value).split(',');
-
-                            variants(data.arrtibute_name, arrtibute_value, data.id);
-
-                        });
-
-                        $.each(productvariant, function(key, data) {
-
-                            let arrtibute_name = JSON.stringify(data.arrtibute_name).split(',');
-
-                            if (arrtibute_name.length > 1) {
-
-                                let arrtibute_name_len0 = arrtibute_name[0].replace('"', '');
-
-                                let arrtibute_name_len1 = arrtibute_name[1].replace('"', '');
-
-                                //     if (variant[arrtibute_name_len0] == undefined) {
-
-                                //     variant[arrtibute_name_len0]=[];
-
-                                // }
-
-                                if (variant.indexOf(data.variant_id) == -1) {
-
-                                    variant.push(data.variant_id);
-
-                                    let details = '<div class="card border1" id="vchild' + data.variant_id +
-
-                                        '" > <div class="row" >' +
-
-                                        '<div class="col-md-3">' +
-
-                                        '<div class="form-group">' +
-
-                                        '<label for="example-text-input" class="col-sm-12 col-form-label">#' +
-                                        data.variant_id + ' ' + arrtibute_name[0].replace('"', '') +
-                                        '</label>' +
-
-                                        '</div>' +
-
-                                        '</div>' +
-
-                                        '<div class="col-md-3">' +
-
-                                        '<div class="form-group">' +
-
-                                        '<label for="example-text-input" class="col-sm-12 col-form-label">' +
-                                        arrtibute_name[1].replace('"', '') + '</label>' +
-
-                                        '</div>' +
-
-                                        '</div>' +
-
-                                        '<div class="col-md-6">' +
-
-                                        '<label for="example-text-input" ></label>' +
-
-                                        '<button type="button" class="tn btn-sm my-2 btn-danger pull-right mr-1" id="' +
-
-                                        data.variant_id + '|' + arrtibute_name[1].replace('"', '') +
-
-                                        '" onclick="removevariant(this)"><i class="fa fa-trash-o"></i></button>' +
-
-                                        '<button type="button" class="tn btn-sm my-2 btn-primary pull-right mr-1"  onclick=exvariant("vo' +
-
-                                        data.variant_id + '")><i class="fa fa-expand"></i></button>' +
-
-                                        '</div>' +
-
-                                        '<div class="col-md-12" style="display:none;" id="vo' + data
-                                        .variant_id + '">' +
-
-                                        '<div class="row" >' +
-
-                                        '<div class="col-md-3 ml-3">' +
-
-                                        '<div class="form-group">' +
-
-                                        '<label for="example-text-input" class="col-form-label">SKU:</label>' +
-
-                                        '<input type="text"  class="form-control" name="sku[]" required placeholder="SKU" value="' +
-                                        data.sku + '" style="width:100%;" >' +
-
-                                        '<input type="hidden"  class="form-control" name="variant_id[]" value="' +
-                                        data.variant_id + '" style="width:100%;" >' +
-
-                                        '<input type="hidden"  class="form-control" name="attribute_value[]" value="' +
-                                        arrtibute_name[0].replace('"', '') + ',' + arrtibute_name[1]
-                                        .replace('"', '') + '" style="width:100%;" >' +
-
-                                        '</div>' +
-
-                                        '</div>' +
-
-                                        '<div class="col-md-3">' +
-
-                                        '<label for="example-text-input" class="col-form-label">Image</label>' +
-
-                                        '<div class="input-group">' +
-
-                                        '<span class="input-group-btn">' +
-
-                                        '<a id="lfm" data-input="thumbnail' + data.variant_id +
-                                        '" data-preview="holder' + data.variant_id +
-                                        '" class="btn btn-primary lfm">' +
-
-                                        '<i class="fa fa-picture-o"></i> Choose' +
-
-                                        '</a>' +
-
-                                        '</span>' +
-
-                                        '<input id="thumbnail' + data.variant_id +
-
-                                        '" required value="' + data.photo +
-                                        '" class="form-control" type="text" name="photo[]">' +
-
-                                        '</div>' +
-
-                                        '<div id="holder' + data.variant_id +
-
-                                        '" style="margin-top:15px;max-height:100px;"><img src="' + data
-                                        .photo +
-                                        '" alt="promo image"style="max-height: 90px;max-width:120px"></div>' +
-
-                                        '</div>' +
-
-                                        '<div class="col-md-3 ml-3">' +
-
-                                        '<div class="form-group">' +
-
-                                        '<label for="example-text-input" class="col-form-label">Regular Price:</label>' +
-
-                                        '<input type="text"  class="form-control" value="' + data
-                                        .regular_price +
-                                        '" name="regular_price[]" required placeholder="Regular Price" style="width:100%;" >' +
-
-                                        '</div>' +
-
-                                        '</div>' +
-
-                                        '<div class="col-md-3 ml-3">' +
-
-                                        '<div class="form-group">' +
-
-                                        '<label for="example-text-input" class="col-form-label">Sale Price:</label>' +
-
-                                        '<input type="text"  class="form-control" name="sale_price[]" value="' +
-                                        data.sale_price +
-                                        '" required placeholder="Sale Price" style="width:100%;" >' +
-
-                                        '</div>' +
-
-                                        '</div>' +
-
-                                        '<div class="col-md-3">' +
-
-                                        '<div class="form-group">' +
-
-                                        '<label for="example-text-input" class="col-form-label">Stock:</label>' +
-
-                                        '<input type="text"  class="form-control" name="stock[]" value="' +
-                                        data.stock + '" placeholder="Stock" style="width:100%;" >' +
-
-                                        '</div>' +
-
-                                        '</div>' +
-
-                                        '</div>' +
-
-                                        '</div>' +
-
-                                        '</div></div>';
-
-                                    $('.variant').append(details);
-
-                                    $('.lfm').filemanager('image');
-
-                                } else {
-
-                                    // variant.push(arrtibute_name_len0);
-
-                                    if (variant.indexOf(data.variant_id) == -1) {
-
-                                        variant.push(data.variant_id);
-
-                                        let details = '<div class="card border1"  id="vchild' + data
-                                            .variant_id + '"><div class="row">' +
-
-                                            '<div class="col-md-3">' +
-
-                                            '<div class="form-group">' +
-
-                                            '<label for="example-text-input" class="col-sm-12 col-form-label">#' +
-                                            data.variant_id + ' ' + arrtibute_name[0].replace('"', '') +
-                                            '</label>' +
-
-                                            '</div>' +
-
-                                            '</div>' +
-
-                                            '<div class="col-md-6">' +
-
-                                            '<label for="example-text-input" ></label>' +
-
-                                            '<button type="button" class="tn btn-sm my-2 btn-danger pull-right mr-1" id="' +
-                                            data.variant_id +
-
-                                            '|' + arrtibute_name[0].replace('"', '') +
-
-                                            '" onclick="removevariant(this)"><i class="fa fa-trash-o"></i></button>' +
-
-                                            '<button type="button" class="tn btn-sm my-2 btn-primary pull-right mr-1"  onclick=exvariant("vo' +
-
-                                            data.variant_id + '")><i class="fa fa-expand"></i></button>' +
-
-                                            '</div>' +
-
-                                            '<div class="col-md-12" style="display:none;" id="vo' + data
-                                            .variant_id + '">' +
-
-                                            '<div class="row" >' +
-
-                                            '<div class="col-md-3 ml-3">' +
-
-                                            '<div class="form-group">' +
-
-                                            '<label for="example-text-input" class="col-form-label">SKU:</label>' +
-
-                                            '<input type="text"  class="form-control" name="sku[]" required placeholder="SKU" value="' +
-                                            data.sku + '" style="width:100%;" >' +
-
-                                            '<input type="hidden" class="form-control" name="variant_id[]" value="' +
-                                            data.variant_id + '" style="width:100%;" >' +
-
-                                            '<input type="hidden" class="form-control" name="attribute_value[]" value="' +
-                                            arrtibute_name[0].replace('"', '') + ',' + arrtibute_name[1]
-                                            .replace('"', '') + '" style="width:100%;" >' +
-
-                                            '</div>' +
-
-                                            '</div>' +
-
-                                            '<div class="col-md-3">' +
-
-                                            '<label for="example-text-input" class="col-form-label">Image</label>' +
-
-                                            '<div class="input-group">' +
-
-                                            '<span class="input-group-btn">' +
-
-                                            '<a id="lfm" data-input="thumbnail' + data.variant_id +
-                                            '" data-preview="holder' + data.variant_id +
-                                            '" class="btn btn-primary lfm">' +
-
-                                            '<i class="fa fa-picture-o"></i> Choose' +
-
-                                            '</a>' +
-
-                                            '</span>' +
-
-                                            '<input id="thumbnail' + data.variant_id +
-
-                                            '" required value="' + data.photo +
-                                            '" class="form-control" type="text" name="photo[]">' +
-
-                                            '</div>' +
-
-                                            '<div id="holder' + data.variant_id +
-
-                                            '" style="margin-top:15px;max-height:100px;"><img src="' + data
-                                            .photo +
-                                            '" alt="promo image"style="max-height: 90px;max-width:120px"></div>' +
-
-                                            '</div>' +
-
-                                            '<div class="col-md-3 ml-3">' +
-
-                                            '<div class="form-group">' +
-
-                                            '<label for="example-text-input" class="col-form-label">Regular Price:</label>' +
-
-                                            '<input type="text"  class="form-control" value="' + data
-                                            .regular_price +
-                                            '" name="regular_price[]" required placeholder="Regular Price" style="width:100%;" >' +
-
-                                            '</div>' +
-
-                                            '</div>' +
-
-                                            '<div class="col-md-3 ml-3">' +
-
-                                            '<div class="form-group">' +
-
-                                            '<label for="example-text-input" class="col-form-label">Sale Price:</label>' +
-
-                                            '<input type="text"  class="form-control" name="sale_price[]" value="' +
-                                            data.sale_price +
-                                            '" required placeholder="Sale Price" style="width:100%;" >' +
-
-                                            '</div>' +
-
-                                            '</div>' +
-
-                                            '<div class="col-md-3">' +
-
-                                            '<div class="form-group">' +
-
-                                            '<label for="example-text-input" class="col-form-label">Stock:</label>' +
-
-                                            '<input type="text"  class="form-control" name="stock[]" value="' +
-                                            data.stock + '" placeholder="Stock" style="width:100%;" >' +
-
-                                            '</div>' +
-
-                                            '</div>' +
-
-                                            '</div>' +
-
-                                            '</div>' +
-
-                                            '</div></div>';
-
-                                        $('.variant').append(details);
-
-                                        $('.lfm').filemanager('image');
-
-                                        //  console.log($('#chil_cat_id2').val());
-
-                                    }
-
-                                    // console.log(variant);
-
-                                }
-
-                            }
-
-                        });
-
-                        //
-
-                    }
-
-                });
-
-            }
-
-            product_attribute('{{ $Product->id }}');
-        </script>
-    @endsection
+        });
+    </script>
+@endsection

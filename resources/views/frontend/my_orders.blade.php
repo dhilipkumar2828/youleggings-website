@@ -4,222 +4,242 @@
 
 @section('styles')
 <style>
-  .orders-wrapper {
-    padding: 160px 0 100px;
-    background: #fdfbfb;
-    min-height: 100vh;
-  }
-  .page-header {
-    margin-bottom: 40px;
-  }
-  .page-header h1 {
-    font-family: var(--font-serif, serif);
-    font-size: 36px;
-    color: #222;
-  }
-  .page-header p { color: #888; }
+  .account-main { flex: 1; padding: 40px; }
+  @media (max-width: 575px) { .account-main { padding: 20px; } }
+
+  .panel-title { font-family: var(--font-serif, serif); font-size: 28px; margin-bottom: 30px; border-bottom: 1px solid #f8f8f8; padding-bottom: 20px; }
 
   .order-card {
     background: #fff;
-    border-radius: 16px;
+    border-radius: 20px;
     border: 1px solid #f0f0f0;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.03);
-    transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    transition: all 0.3s ease;
   }
-  .order-card:hover { box-shadow: 0 10px 35px rgba(0,0,0,0.07); transform: translateY(-2px); }
+  .order-card:hover { 
+    box-shadow: 0 15px 40px rgba(0,0,0,0.06); 
+    transform: translateY(-4px);
+    border-color: #fce4ec;
+  }
 
   .order-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 25px;
-    border-bottom: 1px solid #f8f8f8;
-    flex-wrap: wrap;
-    gap: 10px;
-    background: #fafafa;
+    padding: 18px 25px;
+    border-bottom: 1px solid #f9f9f9;
+    background: #fdfdfd;
   }
-  .order-id {
-    font-size: 13px;
-    color: #888;
-  }
-  .order-id strong { color: #222; font-size: 16px; display: block; }
+  .order-id-group { display: flex; flex-direction: column; }
+  .order-id-label { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 2px; }
+  .order-id-value { font-family: var(--font-serif, serif); font-size: 16px; color: #333; font-weight: 700; }
   
   .status-badge {
-    padding: 6px 18px;
+    padding: 6px 14px;
     border-radius: 50px;
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
+  .status-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  
   .status-pending { background: #fff8e1; color: #f57f17; }
   .status-confirmed, .status-processing { background: #e3f2fd; color: #1565c0; }
   .status-shipped { background: #f3e5f5; color: #6a1b9a; }
   .status-delivered { background: #e8f5e9; color: #2e7d32; }
   .status-cancelled { background: #ffebee; color: #c62828; }
 
+  .order-body { padding: 25px; }
+  
   .order-meta {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 15px;
+    background: #fafafa;
+    padding: 20px;
+    border-radius: 12px;
     margin-bottom: 25px;
   }
   @media (max-width: 767px) {
-    .order-meta { grid-template-columns: 1fr 1fr; }
+    .order-meta { grid-template-columns: 1fr 1fr; gap: 20px; }
   }
-  .meta-value { font-size: 15px; font-weight: 700; color: #333; margin-bottom: 5px; }
-  .meta-label { font-size: 12px; color: #888; font-weight: 600; text-transform: capitalize; }
+  .meta-item { display: flex; flex-direction: column; }
+  .meta-label { font-size: 11px; color: #a18a91; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .meta-value { font-size: 14px; font-weight: 700; color: #444; }
 
-  .order-items {
+  .order-items-scroll {
     display: flex;
-    gap: 15px;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 10px;
+    overflow-x: auto;
+    margin-bottom: 20px;
+  }
+  .order-items-scroll::-webkit-scrollbar { height: 4px; }
+  .order-items-scroll::-webkit-scrollbar-thumb { background: #eee; border-radius: 10px; }
+
+  .item-thumb-wrapper {
+    position: relative;
+    flex: 0 0 65px;
   }
   .order-item-img {
-    width: 60px;
-    height: 75px;
-    border-radius: 8px;
+    width: 65px;
+    height: 80px;
+    border-radius: 10px;
     object-fit: cover;
     background: #f5f5f5;
     border: 1px solid #eee;
+    transition: 0.2s;
   }
+  .order-item-img:hover { border-color: #ec407a; }
 
-  .order-total-row {
+  .order-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
-    padding-top: 15px;
+    padding-top: 20px;
     border-top: 1px dashed #eee;
   }
-  .order-total-amount {
-    font-size: 20px;
-    font-weight: 800;
-    color: #ec407a;
-  }
+  .delivery-info { font-size: 13px; color: #777; display: flex; align-items: center; gap: 8px; }
+  .order-total-group { text-align: right; }
+  .total-label { font-size: 12px; color: #999; display: block; }
+  .total-amount { font-size: 22px; font-weight: 900; color: #ec407a; line-height: 1; }
 
   .empty-orders {
     text-align: center;
-    padding: 80px 20px;
+    padding: 100px 40px;
     background: #fff;
-    border-radius: 16px;
+    border-radius: 20px;
     border: 1px solid #f0f0f0;
   }
+  .empty-icon { font-size: 70px; margin-bottom: 25px; filter: grayscale(1); opacity: 0.3; }
 </style>
 @endsection
 
 @section('content')
-<section class="orders-wrapper">
+<section class="account-container">
   <div class="container">
-    <div class="page-header">
-      <h1>My Orders</h1>
-      <p>Track and manage your orders from You Leggings</p>
-    </div>
+    <div class="account-card">
+      
+      @include('frontend.partials.account_sidebar')
 
-    @if(count($orders) > 0)
-      @foreach($orders as $order)
-        @php
-          $statusClass = match(strtolower($order->status)) {
-            'pending'   => 'status-pending',
-            'confirmed', 'processing' => 'status-confirmed',
-            'shipped'   => 'status-shipped',
-            'delivered' => 'status-delivered',
-            'cancelled' => 'status-cancelled',
-            default     => 'status-pending',
-          };
-          // Parse order_products for this order
-          $orderProducts = \App\Models\OrderProduct::where('order_id', $order->id)->get();
-        @endphp
+      <main class="account-main">
+        <h2 class="panel-title">My Orders</h2>
 
-        <div class="order-card">
-          <div class="order-header">
-            <div class="order-id">
-              <strong>{{ $order->order_id }}</strong>
-              Placed on {{ $order->created_at->format('d M Y, h:i A') }}
-            </div>
-            <div style="display:flex; gap:12px; align-items:center;">
-              <a href="{{ route('order_invoice', $order->id) }}" target="_blank" style="font-size: 11px; font-weight: 700; color: #ec407a; border: 1px solid #fdeef2; padding: 5px 15px; border-radius: 5px; text-decoration: none; background: #fffafb;">
-                <i class="fas fa-file-invoice" style="margin-right:5px;"></i> INVOICE
-              </a>
-              {{-- <span class="status-badge {{ $statusClass }}">{{ $order->status }}</span> --}}
-            </div>
-          </div>
+        @if(count($orders) > 0)
+          @foreach($orders as $order)
+            @php
+              $statusClass = match(strtolower($order->status)) {
+                'pending'   => 'status-pending',
+                'confirmed', 'processing' => 'status-confirmed',
+                'shipped'   => 'status-shipped',
+                'delivered' => 'status-delivered',
+                'cancelled' => 'status-cancelled',
+                default     => 'status-pending',
+              };
+              // Parse order_products for this order
+              $orderProducts = \App\Models\OrderProduct::where('order_id', $order->id)->get();
+            @endphp
 
-          <div class="order-body" style="padding: 25px;">
-            <div class="order-meta">
-              <div class="order-meta-item">
-                <div class="meta-value">₹{{ number_format($order->total, 2) }}</div>
-                <div class="meta-label">Total Amount</div>
-              </div>
-              <div class="order-meta-item">
-                <div class="meta-value">{{ !empty($order->payment_type) ? strtoupper($order->payment_type) : 'COD' }}</div>
-                <div class="meta-label">Payment Method</div>
-              </div>
-              <div class="order-meta-item">
-                @php
-                  $pStatus = trim($order->payment_status);
-                  if(empty($pStatus)) $pStatus = 'Pending';
-                  $pStatusClass = strtolower($pStatus) == 'completed' || strtolower($pStatus) == 'paid' ? 'status-delivered' : 'status-pending';
-                @endphp
-                <div class="meta-value">
-                  <span class="status-badge {{ $pStatusClass }}" style="padding: 2px 10px; font-size: 10px;">{{ ucfirst($pStatus) }}</span>
+            <div class="order-card">
+              <div class="order-header">
+                <div class="order-id-group">
+                  <span class="order-id-label">Order Reference</span>
+                  <span class="order-id-value">{{ $order->order_id }}</span>
                 </div>
-                <div class="meta-label">Payment Status</div>
+                <div style="display:flex; gap:12px; align-items:center;">
+                  <span class="status-badge {{ $statusClass }}">{{ $order->status ?: 'Pending' }}</span>
+                  <a href="{{ route('order_invoice', $order->id) }}" target="_blank" style="font-size: 11px; font-weight: 700; color: #ec407a; border: 1px solid #fdeef2; padding: 7px 18px; border-radius: 50px; text-decoration: none; background: #fffafb; transition: 0.3s;">
+                    <i class="fas fa-file-invoice" style="margin-right:5px;"></i> INVOICE
+                  </a>
+                </div>
               </div>
-              <div class="order-meta-item">
-                <div class="meta-value">{{ count($orderProducts) }}</div>
-                <div class="meta-label">Item(S)</div>
-              </div>
-            </div>
 
-            {{-- Show order item thumbnails --}}
-            <div class="order-items">
-              @foreach($orderProducts as $item)
-                @php
-                  $option = json_decode($item->option, true);
-                  $imgSrc = $option['image'] ?? '';
-                  $itemName = $option['name'] ?? 'Product';
-                  $variant = $option['variant'] ?? '';
-                  
-                  // Clean image URL if it's absolute but on local/demo domain
-                  $displayImg = image_url($imgSrc);
-                @endphp
-                @if($imgSrc)
-                  <img src="{{ $displayImg }}" class="order-item-img" alt="{{ $itemName }}" title="{{ $itemName }} - {{ $variant }}" onerror="this.src='{{ asset('frontend/images/logo-new.png') }}'; this.style.opacity='0.5';">
-                @else
-                  <div class="order-item-img" style="display:flex; align-items:center; justify-content:center; font-size:10px; color:#999; text-align:center; padding:5px; background:#f9f9f9;">
-                    <i class="fas fa-box-open" style="font-size: 20px; color: #eee;"></i>
+              <div class="order-body">
+                <div class="order-meta">
+                  {{-- Product Thumbnails as first item --}}
+                  <div class="meta-item" style="grid-row: span 1;">
+                    <span class="meta-label">Products</span>
+                    <div class="order-items-scroll" style="margin-bottom: 0; padding-bottom: 0; margin-top: 5px;">
+                      @foreach($orderProducts as $item)
+                        @php
+                          $option = json_decode($item->option, true);
+                          $imgSrc = $option['image'] ?? '';
+                          $itemName = $option['name'] ?? 'Product';
+                          $variant = $option['variant'] ?? '';
+                          $displayImg = image_url($imgSrc);
+                        @endphp
+                        <div class="item-thumb-wrapper" style="flex: 0 0 50px;">
+                          @if($imgSrc)
+                            <img src="{{ $displayImg }}" class="order-item-img" style="width: 50px; height: 60px;" alt="{{ $itemName }}" title="{{ $itemName }} - {{ $variant }}" onerror="this.src='{{ asset('frontend/images/logo-new.png') }}'; this.style.opacity='0.5';">
+                          @else
+                            <div class="order-item-img" style="width: 50px; height: 60px; display:flex; align-items:center; justify-content:center; font-size:10px; color:#999; text-align:center; padding:5px; background:#f9f9f9;">
+                              <i class="fas fa-box-open" style="font-size: 14px; color: #eee;"></i>
+                            </div>
+                          @endif
+                        </div>
+                      @endforeach
+                    </div>
                   </div>
-                @endif
-              @endforeach
-            </div>
 
-            <div class="order-total-row">
-              <div style="font-size: 13px; color: #888;">
-                @if($order->deliver_charge == 0)
-                  🚚 Delivery: Free
-                @else
-                  🚚 Delivery: ₹{{ $order->deliver_charge }}
-                @endif
+                  <div class="meta-item">
+                    <span class="meta-label">Placed On</span>
+                    <span class="meta-value" style="font-size: 13px;">{{ $order->created_at->format('d M Y, h:i A') }}</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">Payment Method</span>
+                    <span class="meta-value">{{ !empty($order->payment_type) ? strtoupper($order->payment_type) : 'COD' }}</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">Payment Status</span>
+                    @php
+                      $pStatus = trim($order->payment_status);
+                      if(empty($pStatus)) $pStatus = 'Pending';
+                      $pStatusClass = strtolower($pStatus) == 'completed' || strtolower($pStatus) == 'paid' ? 'status-delivered' : 'status-pending';
+                    @endphp
+                    <span class="status-badge {{ $pStatusClass }}" style="padding: 4px 12px; font-size: 10px; margin-top:4px;">{{ ucfirst($pStatus) }}</span>
+                  </div>
+                </div>
+
+                <div class="order-footer">
+                  <div class="delivery-info">
+                    @if($order->deliver_charge == 0)
+                      <i class="fas fa-shipping-fast" style="color:#4caf50;"></i> Free Delivery
+                    @else
+                      <i class="fas fa-truck" style="color:#ec407a;"></i> Delivery: ₹{{ $order->deliver_charge }}
+                    @endif
+                  </div>
+                  <div class="order-total-group">
+                    <span class="total-label">Total Amount Paid</span>
+                    <span class="total-amount">₹{{ number_format($order->total, 2) }}</span>
+                  </div>
+                </div>
               </div>
-              <div class="order-total-amount">₹{{ number_format($order->total, 2) }}</div>
             </div>
+          @endforeach
+        @else
+          <div class="empty-orders">
+            <div style="font-size: 60px; margin-bottom: 20px;">📦</div>
+            <h3 style="font-family: var(--font-serif, serif); font-size: 28px; margin-bottom: 10px;">No Orders Yet</h3>
+            <p style="color: #888; margin-bottom: 30px;">You haven't placed any orders yet. Start shopping!</p>
+            <a href="{{ route('shop') }}" style="background: #ec407a; color: #fff; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-block;">
+              Start Shopping
+            </a>
           </div>
-        </div>
-      @endforeach
-    @else
-      <div class="empty-orders">
-        <div style="font-size: 60px; margin-bottom: 20px;">📦</div>
-        <h3 style="font-family: var(--font-serif, serif); font-size: 28px; margin-bottom: 10px;">No Orders Yet</h3>
-        <p style="color: #888; margin-bottom: 30px;">You haven't placed any orders yet. Start shopping!</p>
-        <a href="{{ route('shop') }}" style="background: #ec407a; color: #fff; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-block;">
-          Start Shopping
-        </a>
-      </div>
-    @endif
+        @endif
+      </main>
+    </div>
   </div>
 </section>
 @endsection

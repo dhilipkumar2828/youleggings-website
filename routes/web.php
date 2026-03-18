@@ -135,6 +135,7 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function(
     Route::get('export-file', [ProductController::class, 'export'])->name('export_file');
     Route::get('/updatestockmanually/{id}', [ProductController::class, 'updatestockmanually'])->name('updatestockmanually');
     Route::post('/updatestockstore', [ProductController::class, 'updatestockstore'])->name('updatestockstore');
+    Route::get('/viewstocklogs/{id}', [ProductController::class, 'viewstocklogs'])->name('viewstocklogs');
     
     Route::resource('/attribute', AttributeController::class);
     Route::resource('/brand', BrandController::class);
