@@ -74,10 +74,18 @@ if (!function_exists('image_url')) {
         if ($isInternal) {
             // Check if it already has a common prefix
             if (preg_match('#^(photos|uploads|storage)/#', $path)) {
-                return asset($path);
+                $localAsset = asset($path);
+                if (file_exists(public_path($path))) return $localAsset;
             }
-            // Default to uploads/photos for variant images
-            return asset('uploads/photos/' . $path);
+            
+            $potentialLocal = 'uploads/photos/' . $path;
+            if (file_exists(public_path($potentialLocal))) return asset($potentialLocal);
+
+            // ULTIMATE FALLBACK: If not found locally but looks like an internal domain, 
+            // and original was a URL, return original to load from live site.
+            if (filter_var($originalPath, FILTER_VALIDATE_URL)) {
+                return $originalPath;
+            }
         }
 
         return asset($path);
