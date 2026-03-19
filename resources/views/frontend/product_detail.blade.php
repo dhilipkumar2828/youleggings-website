@@ -309,20 +309,31 @@
         img.onload = function() {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            canvas.width = 10; // Small sample
-            canvas.height = 10;
-            ctx.drawImage(img, 0, 0, 10, 10);
-            const data = ctx.getImageData(0, 0, 10, 10).data;
-            let r=0, g=0, b=0;
+            // Sample a 50x50 region from the vertical center of the image
+            // This is where the legging fabric is most visible (not top which may be waistband/background)
+            const sW = 50, sH = 50;
+            canvas.width = sW;
+            canvas.height = sH;
+            const srcX = Math.max(0, (img.width - sW) / 2);   // horizontal center
+            const srcY = Math.max(0, img.height * 0.35);       // ~35% from top (fabric area)
+            ctx.drawImage(img, srcX, srcY, sW, sH, 0, 0, sW, sH);
+            const data = ctx.getImageData(0, 0, sW, sH).data;
+            let r=0, g=0, b=0, count=0;
             for(let i=0; i<data.length; i+=4) {
-                r += data[i]; g += data[i+1]; b += data[i+2];
+                const pr=data[i], pg=data[i+1], pb=data[i+2], pa=data[i+3];
+                // Skip near-white/transparent pixels (background)
+                if (pa < 30) continue;              // transparent
+                if (pr > 232 && pg > 232 && pb > 232) continue;  // near-white
+                r += pr; g += pg; b += pb; count++;
             }
-            r = Math.floor(r/(data.length/4));
-            g = Math.floor(g/(data.length/4));
-            b = Math.floor(b/(data.length/4));
+            if (count === 0) return; // all background, skip
+            r = Math.floor(r/count);
+            g = Math.floor(g/count);
+            b = Math.floor(b/count);
             const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
             element.style.setProperty('--swatch', hex);
-            if (isLight(hex)) element.style.border = '1px solid #ddd';
+            if (isLight(hex)) element.style.border = '1px solid #ccc';
+            else element.style.border = 'none';
         };
         img.src = imgUrl;
     }
@@ -343,17 +354,15 @@
             colors.forEach(color => {
                 const variantData = groupedVariants[size][color];
                 const colorDiv = document.createElement('div');
-                const swatchColor = colorHexMap[color] || '#f3f3f3';
                 const isActive = (color === currentColor);
                 colorDiv.className = 'product-color' + (isActive ? ' is-active' : '');
-                colorDiv.style.cssText = `--swatch: ${swatchColor}; ${isLight(swatchColor) ? 'border: 1px solid #ddd;' : ''}`;
+                colorDiv.style.cssText = '--swatch: #f3f3f3;';
                 colorDiv.title = color;
                 colorDiv.setAttribute('data-color', color);
-                
-                // If swatch is high-probability generic or missing mapping, try extracting from image
-                if (!colorHexMap[color] || colorHexMap[color] === '#f3f3f3') {
-                   extractDominantColor(variantData.first_photo, colorDiv);
-                }
+                colorDiv.setAttribute('data-image', variantData.first_photo || '');
+
+                // Always extract actual color from product image for accurate swatch
+                extractDominantColor(variantData.first_photo, colorDiv);
 
                 colorDiv.onclick = () => selectColor(color);
                 colorList.appendChild(colorDiv);
@@ -368,18 +377,32 @@
         }
     }
 
-    // Initialize dominant colors on page load
-    window.addEventListener('load', () => {
-        document.querySelectorAll('.product-color').forEach(div => {
-            const color = div.getAttribute('data-color');
-            if (!colorHexMap[color] || colorHexMap[color] === '#f3f3f3') {
-                extractDominantColor(div.getAttribute('data-image'), div);
-            }
+    function selectColor(color) {
+        currentColor = color;
+
+        // Update Color UI
+        document.querySelectorAll('#productColorList .product-color').forEach(div => {
+            div.classList.toggle('is-active', div.getAttribute('data-color') === color);
         });
-    });
+
+        // Get variant data
+        const variant = groupedVariants[currentSize] && groupedVariants[currentSize][color];
+        if (!variant) return;
+
+        // Update Price
+        const priceEl = document.getElementById('productDetailPrice');
+        if (priceEl) {
+            const price = variant.price || 0;
+            const salePrice = variant.sale_price || price;
+            if (salePrice < price) {
+                priceEl.innerHTML = `<span class="original-price" style="text-decoration:line-through;color:#888;font-size:0.8em;margin-right:10px;">₹${price.toLocaleString('en-IN')}</span><span class="discounted-price">₹${salePrice.toLocaleString('en-IN')}</span>`;
+            } else {
+                priceEl.innerHTML = `₹${price.toLocaleString('en-IN')}`;
+            }
+        }
 
         // Update Gallery
-        updateGallery(variant.photos);
+        updateGallery(variant.photos || []);
 
         // Update Add to Cart Button with variant ID
         const cartBtn = document.getElementById('productAddToCartBtn');
@@ -387,6 +410,13 @@
             cartBtn.setAttribute('data-variant-id', variant.id);
         }
     }
+
+    // Initialize dominant colors on page load — always extract from actual product image
+    window.addEventListener('load', () => {
+        document.querySelectorAll('.product-color').forEach(div => {
+            extractDominantColor(div.getAttribute('data-image'), div);
+        });
+    });
 
     function updateGallery(photos) {
         const thumbRow = document.getElementById('productThumbRow');
