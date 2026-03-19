@@ -1072,7 +1072,7 @@
                                                                             <?php
 
                                                                 if(!empty($productattributes) && count($productattributes)){
-                                                                foreach (\App\Models\Attribute::distinct()->get('attribute_type') as
+                                                                foreach (\App\Models\Attribute::where('attribute_type','!=','Color')->distinct()->get('attribute_type') as
                                                                 $cate) { ?>
                                                                             <option value="{{ $cate->attribute_type }}"
                                                                                 {{ $cate->attribute_type == $product_attributename ? 'selected' : '' }}
@@ -1080,7 +1080,7 @@
                                                                             </option>
 
                                                                             <?php } }else{
-                                                                    foreach (\App\Models\Attribute::distinct()->get('attribute_type') as
+                                                                    foreach (\App\Models\Attribute::where('attribute_type','!=','Color')->distinct()->get('attribute_type') as
                                                                     $cate) { ?>
                                                                             <option value="{{ $cate->attribute_type }}">
                                                                                 {{ $cate->attribute_type }}
@@ -1341,6 +1341,84 @@
             $('.next1').off('click').on('click', selectvalidation);
             $('.next2').off('click').on('click', selectvalidation1);
         });
+
+        // ============================================================
+        // Product Attribute Logic (Injected)
+        // ============================================================
+        var attr = [];
+        var variant = [];
+        var i = 1;
+        var lfm_route = "{{ url('laravel-filemanager') }}";
+
+        $('.attribute_type_select').change(function() {
+            var token = $('meta[name="csrf-token"]').attr('content');
+            var path = $('meta[name="base_url"]').attr('content') + '/get_attribute';
+            $.ajax({
+                url: path,
+                type: "GET",
+                data: {
+                    _token: token,
+                    id: $(this).val(),
+                },
+                success: function(response) {
+                    $(".product").empty();
+                    var appenddata1 = "";
+                    var productattribute = response.productattribute;
+                    if (response.productattribute != "") {
+                        appenddata1 += '<div class="row group"><div class="col-md-3"><div class="form-group"><label for="example-text-input" class="col-form-label">Attribute Type :</label><input type="text" class="form-control box-dd form-control-sm" value="' + productattribute.attribute_type + '" readonly name="attribute_name[]" id="chil_cat_id2"></div></div>';
+                        appenddata1 += '<div class="col-md-4"><div class="form-group"><label for="example-text-input" class="col-form-label">Attribute Value :</label><select class="form-control box-dd form-control-sm select2 attribute_val required2" multiple name="attribute_value_' + productattribute.attribute_type + '[]" id="chil_cat_id3">';
+                        var attribute_value = JSON.parse(productattribute.value);
+                        for (var j = 0; j < attribute_value.length; j++) {
+                            appenddata1 += '<option value="' + attribute_value[j] + '">' + attribute_value[j] + '</option>';
+                        }
+                        appenddata1 += '</select><span class="err_emptyval" style="color:red;display:none;">This field is required.</span></div></div>';
+                        appenddata1 += '<div class="col-md-2 mt-4"><div class="form-group"><button type="button" class="btn btn-sm my-2 btn-danger btnRemove" id="' + i + '|' + productattribute.attribute_type + '" onclick="removeproduct(this)">Remove</button></div></div></div>';
+                        $(".product").append(appenddata1);
+                        $('.select2').select2({ placeholder: "Select Value" });
+                        $('.variant1').removeClass('d-none');
+                    }
+                }
+            });
+        });
+
+        $('.addvariant').click(function() {
+            if ($('#chil_cat_id2').val() != undefined && $('#chil_cat_id3').val() != "") {
+                for (let k1 = 0; k1 < ($('#chil_cat_id2').val().length); k1++) {
+                    for (let k2 = 0; k2 < ($('#chil_cat_id3').val().length); k2++) {
+                        let rand = 1 + Math.floor(Math.random() * 10000);
+                        let vid = rand;
+                        if (variant.indexOf(vid) == -1) {
+                            variant.push(vid);
+                            var tempsku = Math.floor(100000 + Math.random() * 900000);
+                            let details = '<div class="card border1" id="vchild' + vid + '"><div class="row"><div class="col-md-3"><div class="form-group"><label class="col-sm-12 col-form-label">#' + vid + ' ' + $('#chil_cat_id3').val()[k1] + '</label></div></div>';
+                            details += '<div class="col-md-9"><button type="button" class="btn btn-sm btn-danger pull-right mr-1" onclick="removevariant(this)" id="' + vid + '"><i class="fa fa-trash-o"></i></button></div>';
+                            details += '<div class="col-md-12" id="vo' + vid + '"><div class="row">';
+                            details += '<div class="col-md-3 ml-3"><div class="form-group"><label class="col-form-label">SKU:</label><input type="text" class="form-control" name="sku[]" required placeholder="SKU" value="' + tempsku + '"></div></div>';
+                            
+                            // Color Mapping Field
+                            details += '<div class="col-md-3 ml-3"><div class="form-group"><label class="col-form-label">Color Mapping (Hex Code):</label><div class="input-group">';
+                            details += '<input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px;" oninput="this.nextElementSibling.value = this.value" value="#000000">';
+                            details += '<input type="text" class="form-control" name="colors_' + vid + '[]" placeholder="eg. #0000FF" oninput="this.previousElementSibling.value = this.value">';
+                            details += '</div></div></div>';
+
+                            details += '<div class="col-md-3"><label class="col-form-label">Image</label><div class="input-group"><span class="input-group-btn"><a data-input="thumbnail' + vid + '" data-preview="holder' + vid + '" class="btn btn-primary lfm"><i class="fa fa-picture-o"></i> Choose</a></span><input id="thumbnail' + vid + '" required class="form-control" type="text" name="photo[]"></div><div id="holder' + vid + '" style="margin-top:15px;max-height:100px;"></div></div>';
+                            details += '<div class="col-md-3 ml-3"><div class="form-group"><label class="col-form-label">Regular Price:</label><input type="text" class="form-control" name="regular_price[]" required placeholder="Regular Price"></div></div>';
+                            details += '<div class="col-md-3 ml-3"><div class="form-group"><label class="col-form-label">Stock:</label><input type="text" class="form-control" name="stock[]" placeholder="Stock"></div></div>';
+                            details += '</div></div></div></div>';
+                            $('.variant').append(details);
+                            $('.lfm').filemanager('image', {prefix: lfm_route});
+                        }
+                    }
+                }
+            }
+        });
+
+        function removevariant(d) {
+            let id = d.id;
+            variant.splice(variant.indexOf(id), 1);
+            $('#vchild' + id).remove();
+        }
+
 
         $('#submit_btn').click(function(e) {
             let isValid = true;

@@ -106,7 +106,12 @@
         <div class="product-detail-content">
           <p class="product-detail-category">{{ $product->categories->title ?? 'Legging' }}</p>
           <h2 class="product-detail-title">{{ $product->name }}</h2>
-          <p class="product-detail-meta" style="color: #6b5a63;">Sizes {{ !empty($allSizes) ? $allSizes[0] . ' - ' . end($allSizes) : '' }}</p>
+          <p class="product-detail-meta" style="color: #6b5a63;">Sizes 
+            @php 
+                $filteredSizes = array_values(array_filter($allSizes, function($s) { return strtolower($s) !== 'standard'; }));
+            @endphp
+            {{ !empty($filteredSizes) ? $filteredSizes[0] . ' - ' . end($filteredSizes) : '' }}
+          </p>
           <div class="product-detail-price" id="productDetailPrice" style="color: var(--primary-color);">
               @if($salePrice < $price)
                   <span class="original-price" style="text-decoration: line-through; color: #888; font-size: 0.8em; margin-right: 10px;">₹{{ number_format($price) }}</span>
@@ -121,9 +126,11 @@
             <h3 style="font-weight: 700; letter-spacing: 1.5px; margin-bottom: 12px;">Select Size</h3>
             <div class="product-size-list compact-size-list" id="productSizeList">
                 @foreach($allSizes as $size)
+                    @if(strtolower($size) !== 'standard')
                     <button type="button" class="{{ $size == $defaultSize ? 'is-active' : '' }}" data-size="{{ $size }}" onclick="selectSize('{{ $size }}')">
                         {{ $size }}
                     </button>
+                    @endif
                 @endforeach
             </div>
           </div>
@@ -135,12 +142,15 @@
                     @php
                         $vData = $grouped_variants[$defaultSize][$color] ?? [];
                         $imgUrl = $vData['first_photo'] ?? '';
+                        // Priority: Admin hex > colorHexMap > fallback grey
+                        $swatchHex = $vData['color_hex'] ?? $colorHexMap[$color] ?? null;
                     @endphp
                     <div class="product-color {{ $color == $defaultColor ? 'is-active' : '' }}"
-                         style="--swatch: {{ $colorHexMap[$color] ?? '#f3f3f3' }}; {{ $isLightColor($color) ? 'border: 1px solid #ddd;' : '' }}"
+                         style="--swatch: {{ $swatchHex ?? '#f3f3f3' }};"
                          title="{{ $color }}"
                          data-color="{{ $color }}"
                          data-image="{{ $imgUrl }}"
+                         data-color-hex="{{ $swatchHex ?? '' }}"
                          onclick="selectColor('{{ $color }}')">
                     </div>
                 @endforeach
@@ -315,7 +325,7 @@
             canvas.width = sW;
             canvas.height = sH;
             const srcX = Math.max(0, (img.width - sW) / 2);   // horizontal center
-            const srcY = Math.max(0, img.height * 0.35);       // ~35% from top (fabric area)
+            const srcY = Math.max(0, img.height * 0.75);       // ~75% from top (legs/leggings area)
             ctx.drawImage(img, srcX, srcY, sW, sH, 0, 0, sW, sH);
             const data = ctx.getImageData(0, 0, sW, sH).data;
             let r=0, g=0, b=0, count=0;
@@ -356,13 +366,25 @@
                 const colorDiv = document.createElement('div');
                 const isActive = (color === currentColor);
                 colorDiv.className = 'product-color' + (isActive ? ' is-active' : '');
-                colorDiv.style.cssText = '--swatch: #f3f3f3;';
+
+                // Priority 1: Admin-saved hex code
+                const adminHex = variantData.color_hex || null;
+                // Priority 2: colorHexMap predefined
+                const mapHex = colorHexMap[color] || null;
+                // Final swatch color
+                const swatchHex = adminHex || mapHex || '#f3f3f3';
+
+                colorDiv.style.cssText = `--swatch: ${swatchHex};`;
+                if (isLight(swatchHex)) colorDiv.style.border = '1px solid #ccc';
                 colorDiv.title = color;
                 colorDiv.setAttribute('data-color', color);
                 colorDiv.setAttribute('data-image', variantData.first_photo || '');
+                colorDiv.setAttribute('data-color-hex', swatchHex);
 
-                // Always extract actual color from product image for accurate swatch
-                extractDominantColor(variantData.first_photo, colorDiv);
+                // Only extract from image if NO admin color and NO map color
+                if (!adminHex && !mapHex) {
+                    extractDominantColor(variantData.first_photo, colorDiv);
+                }
 
                 colorDiv.onclick = () => selectColor(color);
                 colorList.appendChild(colorDiv);
@@ -411,10 +433,16 @@
         }
     }
 
-    // Initialize dominant colors on page load — always extract from actual product image
+    // Initialize swatch colors on page load
+    // Priority: admin hex > image extraction fallback
     window.addEventListener('load', () => {
         document.querySelectorAll('.product-color').forEach(div => {
-            extractDominantColor(div.getAttribute('data-image'), div);
+            const adminHex = div.getAttribute('data-color-hex');
+            if (!adminHex || adminHex === '#f3f3f3' || adminHex === '') {
+                // No admin color set — try extracting from image
+                extractDominantColor(div.getAttribute('data-image'), div);
+            }
+            // else: admin hex already set via style in PHP — no action needed
         });
     });
 

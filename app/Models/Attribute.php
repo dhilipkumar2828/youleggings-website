@@ -33,17 +33,28 @@ class Attribute extends Model
         if (is_string($value) && preg_match('/^a:\\d+:/', $value)) {
             $un = @unserialize($value);
             if ($un !== false) {
-                return $un;
+                return (array)$un;
             }
         }
 
-        $decoded = json_decode($value, true);
+        // Potential double encoding check: decode recursively if it looks like a JSON string even after one decode
+        $decoded = $value;
+        while (is_string($decoded) && (strpos($decoded, '[') === 0 || strpos($decoded, '{') === 0 || strpos($decoded, '"') === 0)) {
+            $prev = $decoded;
+            $decoded = json_decode($decoded, true);
+            if (json_last_error() !== JSON_ERROR_NONE || $decoded === $prev) {
+                $decoded = $prev; // restore if decode failed or stalled
+                break;
+            }
+        }
+
+        // If after decoding we have an array, return it. 
+        // If it's still a string (and not a JSON string), wrap it in an array if it was meant to be one.
         if (is_array($decoded)) {
             return $decoded;
         }
 
-        // Fallback: return value as single-item array
-        return [$value];
+        return [$decoded]; // Wrap single string values in array for consistency
     }
 
     public function setValueAttribute($value)

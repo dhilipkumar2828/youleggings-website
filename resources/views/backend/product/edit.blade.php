@@ -1238,7 +1238,20 @@
                             <span class="err_emptyval text-danger" style="display:none">Required</span>
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Color (Hex Code)</label>
+                            <div class="input-group">
+                                <input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" 
+                                    oninput="this.nextElementSibling.value = this.value; this.nextElementSibling.dispatchEvent(new Event('change'))" 
+                                    value="${existingData && existingData.colors ? (existingData.colors.startsWith('#') ? existingData.colors : '#' + existingData.colors) : '#000000'}">
+                                <input type="text" class="form-control" name="colors_${vid}[]" value="${existingData ? (existingData.colors || '') : ''}" 
+                                    placeholder="#0000FF" oninput="this.previousElementSibling.value = this.value">
+                            </div>
+                            <small class="text-muted">eg: #0000FF</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
                         <label>Images <span style="color:red">*</span></label>
                         <div class="input-group">
                             <span class="input-group-btn">
@@ -1420,7 +1433,7 @@
             }
 
             // Mark invalid fields but don't block navigation
-            $('.required2:visible').each(function() {
+            $('.required2:visible').not('.add_varianterrphoto').each(function() {
                 if ($(this).val() === '' || $(this).val() === null) {
                     $(this).addClass('is-invalid');
                     $(this).next('.err_emptyval').show();

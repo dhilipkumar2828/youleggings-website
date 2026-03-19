@@ -64,13 +64,17 @@
                                                 <td> {{ $item->attribute_type }}</td>
                                                 <td>
                                                     @php
-                                                        $vals = is_array($item->value)
-                                                            ? $item->value
-                                                            : (is_string($item->value)
-                                                                ? json_decode($item->value, true)
-                                                                : []);
+                                                        $displayValues = $item->value;
+                                                        if (is_array($displayValues)) {
+                                                            // Clean internal quotes if double encoded strings persist
+                                                            $displayValues = array_map(function($v) {
+                                                                return is_string($v) ? trim($v, '"') : $v;
+                                                            }, $displayValues);
+                                                            echo implode(', ', $displayValues);
+                                                        } else {
+                                                            echo trim($displayValues, '"');
+                                                        }
                                                     @endphp
-                                                    {{ is_array($vals) ? implode(', ', $vals) : $vals }}
                                                 </td>
                                                 <td>
                                                     <div class="d-flex align-items-center">

@@ -35,6 +35,56 @@
     .shop-page .shop-products .products-grid { grid-template-columns: 1fr !important; }
   }
   @endif
+
+  /* Aggressive Pagination Fix - Force Horizontal and Button Style */
+  .shop-products nav,
+  .shop-products nav [role="navigation"],
+  .shop-products .pagination,
+  .shop-products nav > div:last-child {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 10px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .shop-products nav a, 
+  .shop-products nav span {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 40px !important;
+    height: 40px !important;
+    padding: 0 15px !important;
+    border-radius: 4px !important;
+    border: 1px solid #fdeef2 !important;
+    background: #fff !important;
+    color: #555 !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    margin: 5px !important;
+  }
+
+  /* Hide the 'Showing X to Y of Z results' text for a cleaner button look */
+  .shop-products nav p,
+  .shop-products nav div:first-child span:not([aria-current="page"]):not(a) {
+    display: none !important;
+  }
+
+  .shop-products nav [aria-current="page"] span,
+  .shop-products nav .active span {
+    background: #ec407a !important;
+    color: #fff !important;
+    border-color: #ec407a !important;
+  }
+
+  .shop-products nav a:hover {
+    background: #fdf0f4 !important;
+    border-color: #ec407a !important;
+    color: #ec407a !important;
+  }
 </style>
 @endsection
 
@@ -129,8 +179,10 @@
                   @endforeach
                 </ul>
               </div>
-              <a href="{{ route('shop') }}" class="shop-clear-filters text-center" style="display:block; text-decoration:none;">Clear Filters</a>
           </form>
+          <div style="position: sticky; bottom: 0; background: #fff; z-index: 100; padding: 15px 0; border-top: 1px solid #eee; margin-top: 20px;">
+              <button type="button" onclick="clearAllShopFilters()" class="shop-clear-filters text-center" style="width:100%; display:block; text-decoration:none; color: #ec407a; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; border: 1px solid #fdeef2; padding: 12px; border-radius: 4px; background: #fff; cursor: pointer; box-shadow: 0 -4px 10px rgba(0,0,0,0.02);">Clear Filters</button>
+          </div>
         </aside>
         @endif
 
@@ -228,6 +280,25 @@
       const isActive = filters.classList.contains('active');
       overlay.style.display = isActive ? 'block' : 'none';
       document.body.classList.toggle('filter-open', isActive);
+  }
+
+  function clearAllShopFilters() {
+      // Find the filter form
+      const form = document.getElementById('shopFilterForm');
+      if (form) {
+          // Uncheck all checkboxes and radios
+          const inputs = form.querySelectorAll('input[type="checkbox"], input[type="radio"]');
+          inputs.forEach(input => input.checked = false);
+          
+          // Reset range
+          const range = form.querySelector('input[type="range"]');
+          if (range) range.value = 2500;
+          
+          // Redirect to clean shop URL
+          window.location.href = "{{ route('shop') }}";
+      } else {
+          window.location.href = "{{ route('shop') }}";
+      }
   }
 </script>
 @endsection

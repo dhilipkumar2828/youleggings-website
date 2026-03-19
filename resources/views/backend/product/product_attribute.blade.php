@@ -727,6 +727,19 @@
                                     '<label for="example-text-input" class="col-sm-12 col-form-label">' + $(
 
                                         '#chil_cat_id3').val()[k2] + '</label>' +
+                                    '</div>' +
+                                    '</div>' +
+
+                                    '<div class="col-md-3 ml-3">' +
+                                    '<div class="form-group">' +
+                                    '<label for="example-text-input" class="col-form-label">Color Mapping (Hex Code):</label>' +
+                                    '<div class="input-group">' +
+                                    '<input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" oninput="this.nextElementSibling.value = this.value; this.nextElementSibling.dispatchEvent(new Event(\'change\'))" value="#000000">' +
+                                    '<input type="text" class="form-control" name="colors_' + vid + '[]" placeholder="eg. #0000FF" oninput="this.previousElementSibling.value = this.value">' +
+                                    '</div>' +
+                                    '<small class="text-muted">Enter exact color code for frontend swatch.</small>' +
+                                    '</div>' +
+                                    '</div>' +
 
                                     '</div>' +
 
@@ -748,7 +761,7 @@
 
                                     '</div>' +
 
-                                    '<div class="col-md-12" style="display:none;" id="vo' + vid + '">' +
+                                    '<div class="col-md-12" style="display:block;" id="vo' + vid + '">' +
 
                                     '<div class="row" >' +
 
@@ -758,7 +771,7 @@
 
                                     '<label for="example-text-input" class="col-form-label">SKU:</label>' +
 
-                                    '<input type="text"  class="form-control" name="sku[]" required placeholder="SKU" value="' +
+                                    '<input type="text"  class="form-control" name="sku[]" required placeholder="SKUrrrr" value="' +
                                     tempsku + '" style="width:100%;" >' +
 
                                     '<input type="hidden"  class="form-control" name="variant_id[]" value="' + vid +
@@ -769,6 +782,23 @@
                                         '#chil_cat_id2').val()[k1] + ',' + $(
 
                                         '#chil_cat_id3').val()[k2] + '" style="width:100%;" >' +
+
+                                    '</div>' +
+
+                                    '</div>' +
+
+                                    '<div class="col-md-3 ml-3">' +
+
+                                    '<div class="form-group">' +
+
+                                    '<label for="example-text-input" class="col-form-label">Color Mapping (Hex Code):</label>' +
+
+                                    '<div class="input-group">' +
+                                    '<input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" oninput="this.nextElementSibling.value = this.value; this.nextElementSibling.dispatchEvent(new Event(\'change\'))" value="#000000">' +
+                                    '<input type="text" class="form-control" name="colors_' + vid + '[]" placeholder="eg. #0000FF" oninput="this.previousElementSibling.value = this.value">' +
+                                    '</div>' +
+
+                                    '<small class="text-muted">Enter exact color code for frontend swatch.</small>' +
 
                                     '</div>' +
 
@@ -905,7 +935,7 @@
 
                                 '</div>' +
 
-                                '<div class="col-md-12" style="display:none;" id="vo' + vid + '">' +
+                                '<div class="col-md-12" style="display:block;" id="vo' + vid + '">' +
 
                                 '<div class="row" >' +
 
@@ -917,6 +947,19 @@
 
                                 '<input type="text"  class="form-control" name="sku[]" required placeholder="SKU" value="' +
                                 tempsku + '" style="width:100%;" >' +
+                                '</div>' +
+                                '</div>' +
+
+                                '<div class="col-md-3 ml-3">' +
+                                '<div class="form-group">' +
+                                '<label for="example-text-input" class="col-form-label">Color Mapping (Hex Code):</label>' +
+                                '<div class="input-group">' +
+                                '<input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" oninput="this.nextElementSibling.value = this.value; this.nextElementSibling.dispatchEvent(new Event(\'change\'))" value="#000000">' +
+                                '<input type="text" class="form-control" name="colors_' + vid + '[]" placeholder="eg. #0000FF" oninput="this.previousElementSibling.value = this.value">' +
+                                '</div>' +
+                                '<small class="text-muted">Enter exact color code for frontend swatch.</small>' +
+                                '</div>' +
+                                '</div>' +
 
                                 '<input type="hidden"  class="form-control" name="variant_id[]" value="' + vid +
                                 '" style="width:100%;" >' +
@@ -956,6 +999,17 @@
 
                                 '" style="margin-top:15px;max-height:100px;"></div>' +
 
+                                '</div>' +
+
+                                '<div class="col-md-3 ml-3">' +
+                                '<div class="form-group">' +
+                                '<label for="example-text-input" class="col-form-label">Color Mapping (Hex Code):</label>' +
+                                '<div class="input-group">' +
+                                '<input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" oninput="this.nextElementSibling.value = this.value; this.nextElementSibling.dispatchEvent(new Event(\'change\'))" value="#000000">' +
+                                '<input type="text" class="form-control" name="colors_' + vid + '[]" placeholder="eg. #0000FF" oninput="this.previousElementSibling.value = this.value">' +
+                                '</div>' +
+                                '<small class="text-muted">Enter exact color code for frontend swatch.</small>' +
+                                '</div>' +
                                 '</div>' +
 
                                 '<div class="col-md-3 ml-3">' +
@@ -1178,7 +1232,7 @@
 
                                         '</div>' +
 
-                                        '<div class="col-md-12" style="display:none;" id="vo' + data
+                                        '<div class="col-md-12" style="display:block;" id="vo' + data
                                         .variant_id + '">' +
 
                                         '<div class="row" >' +
@@ -1191,6 +1245,19 @@
 
                                         '<input type="text"  class="form-control" name="sku[]" required placeholder="SKU" value="' +
                                         data.sku + '" style="width:100%;" >' +
+                                        '</div>' +
+                                        '</div>' +
+
+                                        '<div class="col-md-3 ml-3">' +
+                                        '<div class="form-group">' +
+                                        '<label for="example-text-input" class="col-form-label">Color Mapping (Hex Code):</label>' +
+                                        '<div class="input-group">' +
+                                        '<input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" oninput="this.nextElementSibling.value = this.value; this.nextElementSibling.dispatchEvent(new Event(\'change\'))" value="#000000">' +
+                                        '<input type="text" class="form-control" name="colors_' + data.variant_id + '[]" placeholder="eg. #0000FF" oninput="this.previousElementSibling.value = this.value">' +
+                                        '</div>' +
+                                        '<small class="text-muted">Enter exact color code for frontend swatch.</small>' +
+                                        '</div>' +
+                                        '</div>' +
 
                                         '<input type="hidden"  class="form-control" name="variant_id[]" value="' +
                                         data.variant_id + '" style="width:100%;" >' +

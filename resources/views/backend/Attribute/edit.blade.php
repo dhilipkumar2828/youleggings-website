@@ -46,63 +46,12 @@
 
                     @include('backend.layouts.notification')
                 </div>
-                {{-- <div class="col-12">
-                    <div class="card m-b-30">
-                        <div class="card-body">
-                            <form action="{{route('attribute.store')}}" method="post">
-                                @csrf
-                                <div class="form-group row">
-                                    <label for="status" class="col-sm-2 col-form-label">Category Name <span style="color:red">*</span></label>
-                                    <div class="col-sm-10">
-                                        <select class="form-control" name='cat_id' id="cat_id">
-                                            <option>--Category Name--</option>
-                                            @foreach (\App\Models\Category::where('is_parent', 1)->get() as $cate)
-                                                <option value="{{$cate->id}}">{{$cate->title}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row d-none" id="child_cat_div">
-                                    <label for="status" class="col-sm-2 col-form-label">  Child Category Name</label>
-                                    <div class="col-sm-10">
-                                        <select class="form-control" name='chil_cat_id' id="chil_cat_id">
-
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="example-text-input" class="col-sm-2 col-form-label">Name</label>
-                                    <div class="col-sm-10">
-                                        <input class="form-control" type="text" placeholder="Enter Name"
-                                            id="example-text-input" name="name" value="{{ old('name') }}">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="example-text-input" class="col-sm-2 col-form-label">Value</label>
-                                    <div class="col-sm-10">
-                                        <input class="form-control" type="text" placeholder="Enter Name"
-                                            id="example-text-input" name="size" value="{{ old('size') }}">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                <div class="d-flex">
-                                    <button class="btn btn-primary" type="submit">Submit</button>&nbsp;
-                                    <!-- <button class="btn btn-secondary" type="submit">Cancel</button> -->
-                                </div>
-                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div> <!-- end col --> --}}
             </div> <!-- end row -->
         </div><!-- container fluid -->
 
     </div> <!-- Page content Wrapper -->
 
-    <div class="row">
+    <div class="row px-4">
         <div class="col-12">
             <div class="card m-b-30">
                 <div class="card-body">
@@ -121,17 +70,30 @@
                             <div class="col-md-5">
                                 <div class="form-group pb-0">
                                     <label class="font-weight-bold">Attribute Values <span style="color:red">*</span></label>
-                                    <select class="js-example-basic-single addproduct" name="value[]" required style="width:100%;" multiple="multiple">
-                                        @foreach ($attribute->value as $v)
-                                            <option selected value="{{ $v }}">{{ $v }}</option>
-                                        @endforeach
+                                    <select class="js-example-basic-single" name="value[]" required style="width:100%;" multiple="multiple">
+                                        @php
+                                            $rawValues = $attribute->value;
+                                            if (is_array($rawValues)) {
+                                                foreach ($rawValues as $v) {
+                                                    $cleanVal = is_string($v) ? trim($v, '"') : $v;
+                                                    if (!empty($cleanVal)) {
+                                                        echo '<option selected value="' . $cleanVal . '">' . $cleanVal . '</option>';
+                                                    }
+                                                }
+                                            } else {
+                                                $cleanVal = is_string($rawValues) ? trim($rawValues, '"') : $rawValues;
+                                                if (!empty($cleanVal)) {
+                                                    echo '<option selected value="' . $cleanVal . '">' . $cleanVal . '</option>';
+                                                }
+                                            }
+                                        @endphp
                                     </select>
                                     <span class="error"></span>
                                 </div>
                             </div>
                             <div class="col-md-2 d-flex align-items-end">
                                 <div class="form-group mb-0">
-                                    <button type="submit" class="btn btn-indigo ripple px-4 py-2 font-weight-bold">Update Attribute</button>
+                                    <button type="submit" class="btn btn btn-info ripple px-4 py-2 font-weight-bold">Update Attribute</button>
                                 </div>
                             </div>
                         </div>
@@ -148,41 +110,9 @@
             $('.js-example-basic-single').select2({
                 tags: true,
                 placeholder: "Add Attribute",
-                width: '100%'
+                width: '100%',
+                tokenSeparators: [',']
             });
-        });
-    </script>
-
-    <script>
-        $('#cat_id').change(function() {
-
-            var cat_id = $(this).val();
-            if (cat_id != null) {
-                $.ajax({
-                    url: "/admin/category/" + cat_id + "/child",
-                    type: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        cat_id: cat_id,
-
-                    },
-                    success: function(response) {
-                        var html_option = "<option value=''>---Child Category---</option>";
-                        // console.log(response);
-                        if (response.status) {
-                            $('#child_cat_div').removeClass('d-none');
-                            $.each(response.data, function(id, title) {
-                                html_option += "<option value='" + id + "'>" + title +
-                                    "</option>"
-                            });
-                        } else {
-                            $('#.child_cat_div').addClass('d-none');
-                        }
-                        $('#chil_cat_id').html(html_option);
-                    }
-                });
-            }
-
         });
     </script>
 @endsection

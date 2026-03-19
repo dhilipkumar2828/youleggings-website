@@ -23,8 +23,8 @@ $('#reset').click(function(){
 
             var current_fs = $(this).parent();
 
-            var inputs = current_fs.find(".required2"); // Select all elements with class 'required2'
-             var inputs1 = current_fs.find(".add_varianterrphoto.required2"); // Select all elements with class 'add_varianterrphoto' and 'required2'
+             var inputs = current_fs.find(".required2").not(".add_varianterrphoto"); // Select all elements with class 'required2'
+             var inputs1 = current_fs.find(".add_varianterrphoto"); // Select all elements with class 'add_varianterrphoto'
 
             inputs1.removeClass('required'); // Remove 'required' class
             inputs1.removeClass('required2'); // Remove 'required2' class
@@ -436,7 +436,7 @@ $('.addvariant').click(function() {
             '<button type="button" class="btn btn-sm my-2 btn-primary pull-right mr-1"  onclick="exvariant(\'vo' +
             vid + '\')"><i class="fa fa-expand"></i></button>' +
             '</div>' +
-            '<div class="col-md-12" id="vo' + vid + '">' +
+            '<div class="col-md-12" style="display:block;" id="vo' + vid + '">' +
             '<div class="row" style="padding: 10px 15px;">' +
             // SKU
             '<div class="col-md-3" style="padding: 0 8px;">' +
@@ -448,17 +448,28 @@ $('.addvariant').click(function() {
             '<input type="hidden" name="attribute_value[]" value="' + comboKey + '">' +
             '</div>' +
             '</div>' +
+            // Color Mapping Field
+            '<div class="col-md-3" style="padding: 0 8px;">' +
+            '<div class="form-group">' +
+            '<label class="col-form-label">Color (Hex Code)</label>' +
+            '<div class="input-group">' +
+            '<input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" oninput="this.nextElementSibling.value = this.value; this.nextElementSibling.dispatchEvent(new Event(\'change\'))" value="#000000">' +
+            '<input type="text" class="form-control" name="colors_' + vid + '[]" placeholder="eg. #0000FF" oninput="this.previousElementSibling.value = this.value">' +
+            '</div>' +
+            '<small class="text-muted">Pick color or enter hex.</small>' +
+            '</div>' +
+            '</div>' +
             // Image
             '<div class="col-md-3" style="padding: 0 8px;">' +
             '<div class="form-group">' +
-            '<label class="col-form-label">Image <span style="color:red">*</span></label>' +
+            '<label class="col-form-label">Image</label>' +
             '<div class="input-group d-flex align-items-center" style="border: 1px dashed #ced4da; border-radius: 8px; padding: 0 5px; background: #fff; height: 38px;">' +
             '<span class="input-group-btn" style="margin-right:0;">' +
             '<a id="lfm' + vid + '" data-input="thumbnail' + vid + '" data-preview="holder' + vid + '" class="btn btn-primary ripple lfm-variant" style="border-radius: 6px; padding: 4px 10px; font-size: 13px;">' +
             '<i class="fa fa-picture-o"></i> Choose' +
             '</a>' +
             '</span>' +
-            '<input id="thumbnail' + vid + '" class="form-control required2 add_varianterrphoto" type="text" name="photo[]" style="border: none !important; box-shadow: none !important; background: transparent !important; margin-left: 10px; height: 100% !important; padding: 0; font-size: 13px;" placeholder="Select an image...">' +
+            '<input id="thumbnail' + vid + '" class="form-control add_varianterrphoto" type="text" name="photo[]" style="border: none !important; box-shadow: none !important; background: transparent !important; margin-left: 10px; height: 100% !important; padding: 0; font-size: 13px;" placeholder="Select an image...">' +
             '</div>' +
             '<div class="err_emptyval" style="color:red;display:none">This field is required</div>' +
             '<div id="holder' + vid + '" style="margin-top:10px;max-height:80px;"></div>' +

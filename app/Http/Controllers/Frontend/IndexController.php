@@ -127,7 +127,7 @@ class IndexController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        $products = $query->paginate(12);
+        $products = $query->paginate(12)->withQueryString();
         $categories = Category::where('status', 'active')->whereNull('parent_id')->get();
         $all_sizes = \App\Models\Attribute::where('attribute_type', 'Size')->first()->value ?? [];
 
@@ -237,13 +237,36 @@ class IndexController extends Controller
             $photos = !empty($variant->photo) ? array_filter(array_map('trim', preg_split('/[,;]+/', $variant->photo))) : [];
             $firstPhoto = !empty($photos) ? image_url($photos[0]) : null;
 
+            // Parse admin-saved color hex code from $variant->colors field
+            // Admin stores colors as comma-separated hex codes e.g. "#FF0000,#00FF00"
+            $adminColorHex = null;
+            if (!empty($variant->colors)) {
+                $colorParts = array_filter(array_map('trim', explode(',', $variant->colors)));
+                // Take first color that looks like a hex code
+                foreach ($colorParts as $cp) {
+                    if (preg_match('/^#[0-9a-fA-F]{3,6}$/', $cp)) {
+                        $adminColorHex = $cp;
+                        break;
+                    }
+                    // Also handle "ColorName:HexCode" format
+                    if (strpos($cp, ':') !== false) {
+                        $hex = trim(explode(':', $cp)[1]);
+                        if (preg_match('/^#[0-9a-fA-F]{3,6}$/', $hex)) {
+                            $adminColorHex = $hex;
+                            break;
+                        }
+                    }
+                }
+            }
+
             $grouped_variants[$foundSize][$foundColor] = [
                 'id' => $variant->id,
                 'price' => $regularPrice,
                 'sale_price' => $salePrice,
                 'sku' => $variant->sku,
                 'photos' => $photos,
-                'first_photo' => $firstPhoto
+                'first_photo' => $firstPhoto,
+                'color_hex' => $adminColorHex,  // Direct hex from admin panel
             ];
         }
 
