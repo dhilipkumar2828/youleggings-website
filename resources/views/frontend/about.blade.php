@@ -6,14 +6,21 @@
   <!-- About Page -->
   <style>
     .about-page .about-main {
+      background-color: #f0f0f0 !important;
+      position: relative !important;
+      overflow: hidden !important;
+    }
+    .about-page .about-main::before {
+      content: '' !important;
+      display: block !important;
+      position: absolute !important;
+      inset: 0 !important;
       background-image: url('{{ asset('frontend/images/bg-less/_DSC8175-Photoroom.png') }}') !important;
       background-size: auto 110% !important;
       background-repeat: no-repeat !important;
-      background-position: right center !important;
-      background-color: #f0f0f0 !important;
-    }
-    .about-page .about-main::before {
-      display: none !important;
+      background-position: left center !important;
+      transform: scaleX(-1) !important;
+      z-index: 0 !important;
     }
     .about-page .about-main-overlay {
       background: linear-gradient(90deg, rgba(235, 235, 235, 0.45) 0%, rgba(255, 255, 255, 0) 100%) !important;
