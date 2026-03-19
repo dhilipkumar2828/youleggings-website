@@ -4,8 +4,29 @@
 
 @section('content')
   <!-- About Page -->
+  <style>
+    .about-page .about-main {
+      background-image: url('{{ asset('frontend/images/bg-less/_DSC8175-Photoroom.png') }}') !important;
+      background-size: auto 110% !important;
+      background-repeat: no-repeat !important;
+      background-position: right center !important;
+      background-color: #f0f0f0 !important;
+    }
+    .about-page .about-main::before {
+      display: none !important;
+    }
+    .about-page .about-main-overlay {
+      background: linear-gradient(90deg, rgba(235, 235, 235, 0.45) 0%, rgba(255, 255, 255, 0) 100%) !important;
+      z-index: 1 !important;
+    }
+    .about-page .about-main-content {
+      padding-left: 10% !important;
+      z-index: 2 !important;
+    }
+  </style>
+
   <section class="section about-page" id="about-page" style="display: block;">
-    <div class="about-main" @if($about && $about->photo) style="background-image: url('{{ image_url($about->photo) }}');" @endif>
+    <div class="about-main">
       <div class="about-main-overlay"></div>
       <div class="container about-main-content">
         <span class="hero-subtitle">{{ $about->sub_title ?? 'About You Leggings' }}</span>

@@ -64,10 +64,7 @@
                              $imgUrl = asset('frontend/images/logo-new.png'); // Default fallback
                         }
                     }
-                @php
-                    $photo = explode(',', $productvariant->photo)[0] ?? '';
-                    $imgUrl = image_url($photo);
-                    
+
                     // Robust stats calculation
                     $totalIn = $data->filter(function($q){ 
                         $op = strtoupper(trim($q->opr));

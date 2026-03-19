@@ -189,7 +189,7 @@
                                         $subcatstr = [];
                                         $soldStock = DB::table('order_products')
                                             ->join('orders', 'orders.id', 'order_products.order_id')
-                                            ->where('orders.payment_status', 'paid')
+                                            ->where('orders.payment_status', '!=', 'cancelled')
                                             ->where('product_id', $pro->id)
                                             ->sum('order_products.quantity');
                                     @endphp
