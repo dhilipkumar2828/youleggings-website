@@ -237,37 +237,58 @@ class IndexController extends Controller
             $photos = !empty($variant->photo) ? array_filter(array_map('trim', preg_split('/[,;]+/', $variant->photo))) : [];
             $firstPhoto = !empty($photos) ? image_url($photos[0]) : null;
 
-            // Parse admin-saved color hex code from $variant->colors field
+            // Parse ALL admin-saved color hex codes from $variant->colors field
             // Admin stores colors as comma-separated hex codes e.g. "#FF0000,#00FF00"
-            $adminColorHex = null;
+            // Each color becomes a SEPARATE swatch on the frontend
+            $adminColors = [];
             if (!empty($variant->colors)) {
                 $colorParts = array_filter(array_map('trim', explode(',', $variant->colors)));
-                // Take first color that looks like a hex code
                 foreach ($colorParts as $cp) {
                     if (preg_match('/^#[0-9a-fA-F]{3,6}$/', $cp)) {
-                        $adminColorHex = $cp;
-                        break;
+                        $adminColors[] = $cp;
                     }
                     // Also handle "ColorName:HexCode" format
-                    if (strpos($cp, ':') !== false) {
+                    elseif (strpos($cp, ':') !== false) {
                         $hex = trim(explode(':', $cp)[1]);
                         if (preg_match('/^#[0-9a-fA-F]{3,6}$/', $hex)) {
-                            $adminColorHex = $hex;
-                            break;
+                            $adminColors[] = $hex;
                         }
                     }
                 }
             }
 
-            $grouped_variants[$foundSize][$foundColor] = [
-                'id' => $variant->id,
-                'price' => $regularPrice,
-                'sale_price' => $salePrice,
-                'sku' => $variant->sku,
-                'photos' => $photos,
-                'first_photo' => $firstPhoto,
-                'color_hex' => $adminColorHex,  // Direct hex from admin panel
-            ];
+            // If no admin colors found, use the foundColor with null hex (original behaviour)
+            if (empty($adminColors)) {
+                $adminColors = [null]; // placeholder so we still create one entry
+            }
+
+            // Create one grouped_variants entry per color swatch
+            foreach ($adminColors as $colorIndex => $adminColorHex) {
+                // Build a unique color key
+                if (count($adminColors) > 1 && $adminColorHex) {
+                    // Multiple colors: use "Size#index" or hex as key so each is unique
+                    // If foundColor is basically the same as foundSize (size-only variant), use hex directly
+                    $baseColor = (strtolower(trim($foundColor)) === strtolower(trim($foundSize)) || empty(trim($foundColor)))
+                        ? ''
+                        : $foundColor;
+                    $colorKey = $foundSize . '||' . $adminColorHex;
+                } else {
+                    $colorKey = !empty($foundColor) && strtolower($foundColor) !== strtolower($foundSize)
+                        ? $foundColor
+                        : $foundSize;
+                }
+
+                $grouped_variants[$foundSize][$colorKey] = [
+                    'id' => $variant->id,
+                    'price' => $regularPrice,
+                    'sale_price' => $salePrice,
+                    'sku' => $variant->sku,
+                    'photos' => array_values($photos), // normalized paths
+                    'first_photo' => $firstPhoto,
+                    'color_hex' => $adminColorHex,  // Direct hex from admin panel
+                    'color_images' => $variant->color_images ?? '',
+                ];
+            }
         }
 
         return view('frontend.product_detail', compact('product', 'related_products', 'grouped_variants', 'colorHexMap'));

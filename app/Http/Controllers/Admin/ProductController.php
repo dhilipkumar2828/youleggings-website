@@ -48,10 +48,19 @@ use App\Models\Clientfeedback;
 class ProductController extends Controller
 
 {
+    protected $userid;
+    protected $username;
 
       function __construct()
 
     {
+        $this->middleware(function ($request, $next) {
+            $this->userid = Auth::id();
+            $this->username = Auth::user() ? Auth::user()->name : '';
+            return $next($request);
+        });
+
+
         //  $this->middleware('permission:products-view|products-add|products-edit|products-delete', ['only' => ['index','store']]);
         //  $this->middleware('permission:products-add', ['only' => ['create','store']]);
         //  $this->middleware('permission:products-edit', ['only' => ['edit','update']]);
@@ -474,6 +483,14 @@ if ($searchTerm) {
             $attribute['sku']=$data['sku'][$i];
 
             $attribute['colors']= $new_colors;
+            // Save color_images mapping for new product
+            $new_color_images_store = '';
+            if(!empty($data['color_images']) && isset($data['color_images'][$i])){
+                $new_color_images_store = $data['color_images'][$i];
+            }
+            $attribute['color_images']= $new_color_images_store;
+
+
             if(!empty($data['photo'][$i])){
 
                 $attribute['photo']=$data['photo'][$i];
@@ -990,13 +1007,18 @@ $attribute_delete->delete();
 
     $variant_id = $data['variant_id'][$i];
     $new_colors = '';
+    $new_color_images = '';
     if(!empty($variant_id)){
         if(!empty($data['colors_'.$variant_id])){
             $colors = $data['colors_'.$variant_id];
             $new_colors = implode(',',$colors);
         }
-
+        // Save color_images mapping
+        if(!empty($data['color_images']) && isset($data['color_images'][$i])){
+            $new_color_images = $data['color_images'][$i];
+        }
     }
+
 
 $tempVarientSku[]=$data['sku'][$i];
 
@@ -1012,6 +1034,8 @@ $tempVarientSku[]=$data['sku'][$i];
         if($variantAvail!=''){
 
             $variantAvail->colors = $new_colors;
+            $variantAvail->color_images = $new_color_images;
+
 
             $variantAvail->photo = $data['photo'][$i];
 

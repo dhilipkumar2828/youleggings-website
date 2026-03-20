@@ -420,6 +420,7 @@ $('.addvariant').click(function() {
         var vid = rand;
         variant.push(vid);
 
+        var tempsku = Math.floor(100000 + Math.random() * 900000);
         var labelText = '#' + vid + ' ' + combo.join(' / ');
 
         var details = '<div class="card border1" id="vchild' + vid + '"><div class="row">' +
@@ -442,21 +443,17 @@ $('.addvariant').click(function() {
             '<div class="col-md-3" style="padding: 0 8px;">' +
             '<div class="form-group">' +
             '<label class="col-form-label">SKU</label>' +
-            '<input type="text" class="form-control required2 add_varianterrsku add_varianterrsku' + vid + '" name="sku[]" placeholder="SKU" required>' +
+            '<input type="text" class="form-control required2 add_varianterrsku add_varianterrsku' + vid + '" name="sku[]" placeholder="SKU" value="' + tempsku + '" required>' +
             '<div class="err_emptyval" style="color:red;display:none">This field is required</div>' +
             '<input type="hidden" name="variant_id[]" value="' + vid + '">' +
             '<input type="hidden" name="attribute_value[]" value="' + comboKey + '">' +
             '</div>' +
             '</div>' +
-            // Color Mapping Field
+            // Colors Field
             '<div class="col-md-3" style="padding: 0 8px;">' +
             '<div class="form-group">' +
-            '<label class="col-form-label">Color (Hex Code)</label>' +
-            '<div class="input-group">' +
-            '<input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" oninput="this.nextElementSibling.value = this.value; this.nextElementSibling.dispatchEvent(new Event(\'change\'))" value="#000000">' +
-            '<input type="text" class="form-control" name="colors_' + vid + '[]" placeholder="eg. #0000FF" oninput="this.previousElementSibling.value = this.value">' +
-            '</div>' +
-            '<small class="text-muted">Pick color or enter hex.</small>' +
+            '<label class="col-form-label">Colors</label>' +
+            buildColorSection(vid, "") +
             '</div>' +
             '</div>' +
             // Image
@@ -619,3 +616,59 @@ $(document).on("click","#user_save",function(){
         $('.status_err').html("This field is required");
     }
 })
+function addColorEntry(containerId, fieldName) {
+    let entryId = Math.floor(Math.random() * 1000000);
+    let html = `
+        <div class="color-entry d-flex align-items-center mb-2" id="color_entry_${entryId}">
+            <div class="input-group">
+                <input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" 
+                    oninput="this.nextElementSibling.value = this.value; this.nextElementSibling.dispatchEvent(new Event('change'))" 
+                    value="#000000">
+                <input type="text" class="form-control" name="${fieldName}" value="" 
+                    placeholder="#0000FF" oninput="this.previousElementSibling.value = this.value">
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-outline-danger" onclick="$('#color_entry_${entryId}').remove()">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>`;
+    $(`#${containerId}`).append(html);
+}
+
+function buildColorSection(vid, colors = "") {
+    let containerId = `color_container_${vid}`;
+    let fieldName = `colors_${vid}[]`;
+    let html = `<div id="${containerId}" class="color-multi-container">`;
+    
+    if (colors) {
+        let colorList = colors.split(',');
+        colorList.forEach(color => {
+            let c = color.trim();
+            if (!c) return;
+            let hex = c.startsWith('#') ? c : '#' + c;
+            let entryId = Math.floor(Math.random() * 1000000);
+            html += `
+                <div class="color-entry d-flex align-items-center mb-2" id="color_entry_${entryId}">
+                    <div class="input-group">
+                        <input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" 
+                            oninput="this.nextElementSibling.value = this.value; this.nextElementSibling.dispatchEvent(new Event('change'))" 
+                            value="${hex}">
+                        <input type="text" class="form-control" name="${fieldName}" value="${c}" 
+                            placeholder="#0000FF" oninput="this.previousElementSibling.value = this.value">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-danger" onclick="$('#color_entry_${entryId}').remove()">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+        });
+    }
+    
+    html += `</div>
+        <button type="button" class="btn btn-sm btn-outline-success mt-1" onclick="addColorEntry('${containerId}', '${fieldName}')">
+            <i class="fa fa-plus"></i> Add Color
+        </button>`;
+    return html;
+}

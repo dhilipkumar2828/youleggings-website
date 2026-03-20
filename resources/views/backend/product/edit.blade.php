@@ -682,7 +682,7 @@
                                                                 class="form-control box-dd form-control-sm attribute_type_select attribute_val required2"
                                                                 id="attr_type_select" name="attr_type_select">
                                                                 <option value="">Attribute Type</option>
-                                                                @foreach (\App\Models\Attribute::distinct()->get('attribute_type') as $attr)
+                                                                @foreach (\App\Models\Attribute::where('attribute_type', '!=', 'Color')->distinct()->get('attribute_type') as $attr)
                                                                     <option value="{{ $attr->attribute_type }}">
                                                                         {{ $attr->attribute_type }}</option>
                                                                 @endforeach
@@ -1240,19 +1240,12 @@
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label>Color (Hex Code)</label>
-                            <div class="input-group">
-                                <input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" 
-                                    oninput="this.nextElementSibling.value = this.value; this.nextElementSibling.dispatchEvent(new Event('change'))" 
-                                    value="${existingData && existingData.colors ? (existingData.colors.startsWith('#') ? existingData.colors : '#' + existingData.colors) : '#000000'}">
-                                <input type="text" class="form-control" name="colors_${vid}[]" value="${existingData ? (existingData.colors || '') : ''}" 
-                                    placeholder="#0000FF" oninput="this.previousElementSibling.value = this.value">
-                            </div>
-                            <small class="text-muted">eg: #0000FF</small>
+                            <label>Colors</label>
+                            ${buildColorSection(vid, (existingData ? existingData.colors : ''), (existingData ? existingData.color_images : ''))}
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <label>Images <span style="color:red">*</span></label>
+                        <label>Images <span style="color:red">*</span> <small class="text-muted">(Upload 4 images; 3rd image auto-changes per color)</small></label>
                         <div class="input-group">
                             <span class="input-group-btn">
                                 <a id="lfm${vid}" data-input="thumbnail${vid}" data-preview="holder${vid}" data-multiple="true" class="btn btn-primary lfm-v">
@@ -1263,6 +1256,7 @@
                             <span class="err_emptyval text-danger" style="display:none">Required</span>
                         </div>
                         <div id="holder${vid}" class="mt-2 d-flex flex-wrap">${imagesHtml}</div>
+                        <input type="hidden" id="color_images_${vid}" name="color_images[]" value="${existingData ? (existingData.color_images || '') : ''}">
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
@@ -1458,14 +1452,87 @@
             var holder = $('#holder' + vid);
             holder.empty();
             if (val) {
-                val.split(',').forEach(function(p) {
-                    var imgPath = p.trim();
-                    if (imgPath) {
-                        holder.append(`<img src="${adminImageUrl(imgPath)}" style="max-height: 80px; margin: 10px 10px 0 0; border-radius: 8px; border: 2px solid #eee; padding: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">`);
+                var imgList = val.split(',').map(function(p) { return p.trim(); }).filter(Boolean);
+                imgList.forEach(function(imgPath, idx) {
+                    var borderColor = '#eee';
+                    var label = '';
+                    if (vid && idx === 2) {
+                        borderColor = '#E91E63';
+                        label = '<div style="font-size:10px;color:#E91E63;text-align:center;margin-bottom:2px;">🎨 Color Image</div>';
                     }
+                    holder.append(`${label}<img src="${adminImageUrl(imgPath)}" data-index="${idx}" data-vid="${vid}" style="max-height: 80px; margin: 0 10px 10px 0; border-radius: 8px; border: 2px solid ${borderColor}; padding: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">`);
                 });
             }
         });
+
+        // When a color hex value changes in a variant, update the color_images mapping
+        $(document).on('change input', '.color-hex-input', function() {
+            var vid = $(this).data('vid');
+            if (!vid) return;
+            updateColorImagesField(vid);
+        });
+
+        // When a color image picker button is clicked
+        $(document).on('click', '.btn-pick-color-image', function() {
+            var vid = $(this).data('vid');
+            var entryId = $(this).data('entry');
+            var colorHex = $(this).closest('.color-entry').find('.color-hex-input').val();
+
+            // Store which color entry we are picking for
+            window._pickingColorImageFor = { vid: vid, entryId: entryId };
+
+            // Get current 3rd image from photo input
+            var photoVal = $('#thumbnail' + vid).val();
+            if (photoVal) {
+                var imgs = photoVal.split(',').map(function(p){ return p.trim(); }).filter(Boolean);
+                var img3 = imgs[2] || imgs[0] || '';
+                if (img3) {
+                    // Store the 3rd image as this color's image
+                    $('#color_images_' + vid).val(function(i, oldVal) {
+                        var mapping = parseColorImages(oldVal);
+                        mapping[colorHex] = img3;
+                        return serializeColorImages(mapping);
+                    });
+                    $(this).closest('.color-entry').find('.color-img-preview').html(
+                        `<img src="${adminImageUrl(img3)}" style="max-height:30px;border-radius:4px;">`
+                    ).show();
+                }
+            }
+        });
+
+        function parseColorImages(str) {
+            var map = {};
+            if (!str) return map;
+            str.split(';').forEach(function(pair) {
+                var parts = pair.split('=');
+                if (parts.length === 2 && parts[0] && parts[1]) {
+                    map[parts[0].trim()] = parts[1].trim();
+                }
+            });
+            return map;
+        }
+
+        function serializeColorImages(map) {
+            return Object.keys(map).map(function(k) { return k + '=' + map[k]; }).join(';');
+        }
+
+        function updateColorImagesField(vid) {
+            // Auto-assign 3rd image to each color if not already set
+            var photoVal = $('#thumbnail' + vid).val();
+            if (!photoVal) return;
+            var imgs = photoVal.split(',').map(function(p){ return p.trim(); }).filter(Boolean);
+            var img3 = imgs[2] || '';
+            if (!img3) return;
+
+            var mapping = parseColorImages($('#color_images_' + vid).val());
+            $('#color_container_' + vid + ' .color-hex-input').each(function() {
+                var hex = $(this).val();
+                if (hex && !mapping[hex]) {
+                    mapping[hex] = img3;
+                }
+            });
+            $('#color_images_' + vid).val(serializeColorImages(mapping));
+        }
 
         // Trigger change on all image inputs to show thumbnails on load
         $(document).ready(function() {
@@ -1543,6 +1610,77 @@
                 }
             }
         });
+
+        function addColorEntry(containerId, fieldName, vid) {
+            let entryId = Math.floor(Math.random() * 1000000);
+            let html = `
+                <div class="color-entry d-flex align-items-center mb-2" id="color_entry_${entryId}">
+                    <div class="input-group">
+                        <input type="color" class="form-control" style="width: 38px; padding: 2px; height: 36px; flex: 0 0 38px; border-radius: 4px 0 0 4px;" 
+                            oninput="this.nextElementSibling.value = this.value; $(this.nextElementSibling).trigger('change')" 
+                            value="#000000">
+                        <input type="text" class="form-control color-hex-input" name="${fieldName}" value="" 
+                            data-vid="${vid}" placeholder="#0000FF" oninput="this.previousElementSibling.value = this.value" style="max-width:90px;">
+                        <div class="input-group-append" style="display:flex;align-items:center;gap:3px;padding:0 4px;">
+                            <span class="color-img-preview" style="display:none;"></span>
+                            <button type="button" class="btn btn-sm btn-outline-info btn-pick-color-image" title="Use 3rd uploaded image for this color" data-vid="${vid}" data-entry="${entryId}" style="padding:2px 5px;font-size:11px;">
+                                <i class="fa fa-image"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="$('#color_entry_${entryId}').remove()" style="padding:2px 6px;">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            $(`#${containerId}`).append(html);
+        }
+
+        function buildColorSection(vid, colors = "", colorImages = "") {
+            let containerId = `color_container_${vid}`;
+            let fieldName = `colors_${vid}[]`;
+            let html = `<div id="${containerId}" class="color-multi-container">`;
+            let mapping = parseColorImages(colorImages);
+            
+            if (colors) {
+                let colorList = colors.split(',');
+                colorList.forEach(color => {
+                    let c = color.trim();
+                    if (!c) return;
+                    let hex = c.startsWith('#') ? c : '#' + c;
+                    let entryId = Math.floor(Math.random() * 1000000);
+                    let assignedImg = mapping[hex] || mapping[c] || '';
+                    let previewHtml = assignedImg 
+                        ? `<img src="${adminImageUrl(assignedImg)}" style="max-height:28px;border-radius:3px;vertical-align:middle;">` 
+                        : '';
+                    html += `
+                        <div class="color-entry d-flex align-items-center mb-2" id="color_entry_${entryId}">
+                            <div class="input-group">
+                                <input type="color" class="form-control" style="width: 38px; padding: 2px; height: 36px; flex: 0 0 38px; border-radius: 4px 0 0 4px;" 
+                                    oninput="this.nextElementSibling.value = this.value; $(this.nextElementSibling).trigger('change')" 
+                                    value="${hex}">
+                                <input type="text" class="form-control color-hex-input" name="${fieldName}" value="${c}" 
+                                    data-vid="${vid}" placeholder="#0000FF" oninput="this.previousElementSibling.value = this.value" style="max-width:90px;">
+                                <div class="input-group-append" style="display:flex;align-items:center;gap:3px;padding:0 4px;">
+                                    <span class="color-img-preview" style="${assignedImg ? '' : 'display:none;'}">${previewHtml}</span>
+                                    <button type="button" class="btn btn-sm btn-outline-info btn-pick-color-image" title="Use 3rd uploaded image for this color" data-vid="${vid}" data-entry="${entryId}" style="padding:2px 5px;font-size:11px;">
+                                        <i class="fa fa-image"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="$('#color_entry_${entryId}').remove()" style="padding:2px 6px;">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+            }
+            
+            html += `</div>
+                <button type="button" class="btn btn-sm btn-outline-success mt-1" onclick="addColorEntry('${containerId}', '${fieldName}', '${vid}')">
+                    <i class="fa fa-plus"></i> Add Color
+                </button>
+                <div class="mt-1" style="font-size:11px;color:#888;"><i class="fa fa-info-circle"></i> Upload images first, then click <i class="fa fa-image"></i> next to each color to assign the 3rd image to it.</div>`;
+            return html;
+        }
     </script>
     <script>
         var lfm_route = (typeof route_prefix !== 'undefined') ? route_prefix : ($('meta[name="route_prefix"]').attr('content') || '/laravel-filemanager');

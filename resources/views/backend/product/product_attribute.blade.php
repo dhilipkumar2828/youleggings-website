@@ -151,15 +151,8 @@
                                                 <option value="">Attribute Type</option>
 
                                                 <?php
-
-                    foreach (\App\Models\Attribute::distinct()->get('attribute_type') as
-
-                    $cate) { ?>
-
-                                                <option value="{{ $cate->attribute_type }}">{{ $cate->attribute_type }}
-
-                                                </option>
-
+                                                    foreach (\App\Models\Attribute::where('attribute_type', '!=', 'Color')->distinct()->get('attribute_type') as $cate) { ?>
+                                                        <option value="{{ $cate->attribute_type }}">{{ $cate->attribute_type }}</option>
                                                 <?php } ?>
 
                                             </select>
@@ -733,11 +726,14 @@
                                     '<div class="col-md-3 ml-3">' +
                                     '<div class="form-group">' +
                                     '<label for="example-text-input" class="col-form-label">Color Mapping (Hex Code):</label>' +
-                                    '<div class="input-group">' +
-                                    '<input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" oninput="this.nextElementSibling.value = this.value; this.nextElementSibling.dispatchEvent(new Event(\'change\'))" value="#000000">' +
+                                    '<div id="color-rows-header-' + vid + '">' +
+                                    '<div class="input-group mb-1">' +
+                                    '<input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" oninput="this.nextElementSibling.value = this.value" value="#000000">' +
                                     '<input type="text" class="form-control" name="colors_' + vid + '[]" placeholder="eg. #0000FF" oninput="this.previousElementSibling.value = this.value">' +
                                     '</div>' +
-                                    '<small class="text-muted">Enter exact color code for frontend swatch.</small>' +
+                                    '</div>' +
+                                    '<button type="button" class="btn btn-sm btn-success mt-1" onclick="addColorEntry(\'color-rows-header-' + vid + '\', \'colors_' + vid + '\')"><i class="fa fa-plus"></i> Add Color</button>' +
+                                    '<small class="text-muted d-block">Enter exact color code for frontend swatch.</small>' +
                                     '</div>' +
                                     '</div>' +
 
@@ -788,20 +784,17 @@
                                     '</div>' +
 
                                     '<div class="col-md-3 ml-3">' +
-
                                     '<div class="form-group">' +
-
                                     '<label for="example-text-input" class="col-form-label">Color Mapping (Hex Code):</label>' +
-
-                                    '<div class="input-group">' +
-                                    '<input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" oninput="this.nextElementSibling.value = this.value; this.nextElementSibling.dispatchEvent(new Event(\'change\'))" value="#000000">' +
+                                    '<div id="color-rows-vo-' + vid + '">' +
+                                    '<div class="input-group mb-1">' +
+                                    '<input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" oninput="this.nextElementSibling.value = this.value" value="#000000">' +
                                     '<input type="text" class="form-control" name="colors_' + vid + '[]" placeholder="eg. #0000FF" oninput="this.previousElementSibling.value = this.value">' +
                                     '</div>' +
-
-                                    '<small class="text-muted">Enter exact color code for frontend swatch.</small>' +
-
                                     '</div>' +
-
+                                    '<button type="button" class="btn btn-sm btn-success mt-1" onclick="addColorEntry(\'color-rows-vo-' + vid + '\', \'colors_' + vid + '\')"><i class="fa fa-plus"></i> Add Color</button>' +
+                                    '<small class="text-muted d-block">Enter exact color code for frontend swatch.</small>' +
+                                    '</div>' +
                                     '</div>' +
 
                                     '<div class="col-md-3">' +
@@ -953,11 +946,14 @@
                                 '<div class="col-md-3 ml-3">' +
                                 '<div class="form-group">' +
                                 '<label for="example-text-input" class="col-form-label">Color Mapping (Hex Code):</label>' +
-                                '<div class="input-group">' +
-                                '<input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" oninput="this.nextElementSibling.value = this.value; this.nextElementSibling.dispatchEvent(new Event(\'change\'))" value="#000000">' +
+                                '<div id="color-rows-vo-' + vid + '">' +
+                                '<div class="input-group mb-1">' +
+                                '<input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" oninput="this.nextElementSibling.value = this.value" value="#000000">' +
                                 '<input type="text" class="form-control" name="colors_' + vid + '[]" placeholder="eg. #0000FF" oninput="this.previousElementSibling.value = this.value">' +
                                 '</div>' +
-                                '<small class="text-muted">Enter exact color code for frontend swatch.</small>' +
+                                '</div>' +
+                                '<button type="button" class="btn btn-sm btn-success mt-1" onclick="addColorEntry(\'color-rows-vo-' + vid + '\', \'colors_' + vid + '\')"><i class="fa fa-plus"></i> Add Color</button>' +
+                                '<small class="text-muted d-block">Enter exact color code for frontend swatch.</small>' +
                                 '</div>' +
                                 '</div>' +
 
@@ -1004,11 +1000,14 @@
                                 '<div class="col-md-3 ml-3">' +
                                 '<div class="form-group">' +
                                 '<label for="example-text-input" class="col-form-label">Color Mapping (Hex Code):</label>' +
-                                '<div class="input-group">' +
-                                '<input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" oninput="this.nextElementSibling.value = this.value; this.nextElementSibling.dispatchEvent(new Event(\'change\'))" value="#000000">' +
+                                '<div id="color-rows-header-' + vid + '">' +
+                                '<div class="input-group mb-1">' +
+                                '<input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" oninput="this.nextElementSibling.value = this.value" value="#000000">' +
                                 '<input type="text" class="form-control" name="colors_' + vid + '[]" placeholder="eg. #0000FF" oninput="this.previousElementSibling.value = this.value">' +
                                 '</div>' +
-                                '<small class="text-muted">Enter exact color code for frontend swatch.</small>' +
+                                '</div>' +
+                                '<button type="button" class="btn btn-sm btn-success mt-1" onclick="addColorEntry(\'color-rows-header-' + vid + '\', \'colors_' + vid + '\')"><i class="fa fa-plus"></i> Add Color</button>' +
+                                '<small class="text-muted d-block">Enter exact color code for frontend swatch.</small>' +
                                 '</div>' +
                                 '</div>' +
 
@@ -1251,11 +1250,7 @@
                                         '<div class="col-md-3 ml-3">' +
                                         '<div class="form-group">' +
                                         '<label for="example-text-input" class="col-form-label">Color Mapping (Hex Code):</label>' +
-                                        '<div class="input-group">' +
-                                        '<input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" oninput="this.nextElementSibling.value = this.value; this.nextElementSibling.dispatchEvent(new Event(\'change\'))" value="#000000">' +
-                                        '<input type="text" class="form-control" name="colors_' + data.variant_id + '[]" placeholder="eg. #0000FF" oninput="this.previousElementSibling.value = this.value">' +
-                                        '</div>' +
-                                        '<small class="text-muted">Enter exact color code for frontend swatch.</small>' +
+                                        buildColorSection(data.variant_id, data.colors) +
                                         '</div>' +
                                         '</div>' +
 
@@ -1519,5 +1514,37 @@
             }
 
             product_attribute('{{ $Product->id }}');
+
+            // ---- Multi-color helpers ----
+            function addColorEntry(containerId, fieldName) {
+                var row = document.createElement('div');
+                row.className = 'input-group mb-1';
+                row.innerHTML =
+                    '<input type="color" class="form-control" style="width: 40px; padding: 2px; height: 38px; flex: 0 0 40px; border-radius: 4px 0 0 4px;" oninput="this.nextElementSibling.value = this.value" value="#000000">' +
+                    '<input type="text" class="form-control" name="' + fieldName + '[]" placeholder="eg. #0000FF" oninput="this.previousElementSibling.value = this.value">' +
+                    '<div class="input-group-append"><button type="button" class="btn btn-danger btn-sm" onclick="this.closest(\'.input-group\').remove()" title="Remove"><i class="fa fa-times"></i></button></div>';
+                document.getElementById(containerId).appendChild(row);
+            }
+
+            function buildColorSection(vid, colorsArr) {
+                var rows = '';
+                if (colorsArr && colorsArr.length > 0) {
+                    colorsArr.forEach(function(c) {
+                        rows += '<div class="input-group mb-1">' +
+                            '<input type="color" class="form-control" style="width:40px;padding:2px;height:38px;flex:0 0 40px;border-radius:4px 0 0 4px;" value="' + c + '" oninput="this.nextElementSibling.value=this.value">' +
+                            '<input type="text" class="form-control" name="colors_' + vid + '[]" value="' + c + '" oninput="this.previousElementSibling.value=this.value">' +
+                            '<div class="input-group-append"><button type="button" class="btn btn-danger btn-sm" onclick="this.closest(\'.input-group\').remove()" title="Remove"><i class="fa fa-times"></i></button></div>' +
+                            '</div>';
+                    });
+                } else {
+                    rows = '<div class="input-group mb-1">' +
+                        '<input type="color" class="form-control" style="width:40px;padding:2px;height:38px;flex:0 0 40px;border-radius:4px 0 0 4px;" value="#000000" oninput="this.nextElementSibling.value=this.value">' +
+                        '<input type="text" class="form-control" name="colors_' + vid + '[]" placeholder="eg. #0000FF" oninput="this.previousElementSibling.value=this.value">' +
+                        '</div>';
+                }
+                return '<div id="color-rows-edit-' + vid + '">' + rows + '</div>' +
+                    '<button type="button" class="btn btn-sm btn-success mt-1" onclick="addColorEntry(\'color-rows-edit-' + vid + '\', \'colors_' + vid + '\')"><i class="fa fa-plus"></i> Add Color</button>' +
+                    '<small class="text-muted d-block">Enter exact color code for frontend swatch.</small>';
+            }
         </script>
     @endsection

@@ -143,11 +143,26 @@
                         $vData = $grouped_variants[$defaultSize][$color] ?? [];
                         $imgUrl = $vData['first_photo'] ?? '';
                         // Priority: Admin hex > colorHexMap > fallback grey
-                        $swatchHex = $vData['color_hex'] ?? $colorHexMap[$color] ?? null;
+                        $swatchHex = $vData['color_hex'] ?? null;
+
+                        // Extract display name from key (strip "||#hex" suffix if present)
+                        $rawDisplay = strpos($color, '||') !== false ? explode('||', $color)[0] : $color;
+
+                        // If the extracted part looks like a size label (S, M, L, XL, XXL, Standard etc.)
+                        // use the hex code as title instead, since the key is "Size||#hex"
+                        $knownSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', '2XL', '3XL', 'Standard', 'standard'];
+                        $isSizeLabel = in_array(trim($rawDisplay), $knownSizes);
+
+                        if ($swatchHex) {
+                            $displayColor = $isSizeLabel ? $swatchHex : $rawDisplay;
+                        } else {
+                            $displayColor = $isSizeLabel ? '' : $rawDisplay;
+                            $swatchHex = $colorHexMap[$rawDisplay] ?? null;
+                        }
                     @endphp
                     <div class="product-color {{ $color == $defaultColor ? 'is-active' : '' }}"
                          style="--swatch: {{ $swatchHex ?? '#f3f3f3' }};"
-                         title="{{ $color }}"
+                         title="{{ $displayColor }}"
                          data-color="{{ $color }}"
                          data-image="{{ $imgUrl }}"
                          data-color-hex="{{ $swatchHex ?? '' }}"
@@ -312,6 +327,20 @@
         return brightness > 220;
     }
 
+    function parseColorImages(str) {
+        var map = {};
+        if (!str) return map;
+        str.split(';').forEach(function(pair) {
+            var parts = pair.split('=');
+            if (parts.length === 2 && parts[0] && parts[1]) {
+                // Normalize key to lowercase and remove spaces
+                var key = parts[0].trim().toLowerCase();
+                map[key] = parts[1].trim();
+            }
+        });
+        return map;
+    }
+
     function extractDominantColor(imgUrl, element) {
         if (!imgUrl) return;
         const img = new Image();
@@ -367,16 +396,24 @@
                 const isActive = (color === currentColor);
                 colorDiv.className = 'product-color' + (isActive ? ' is-active' : '');
 
+                // Display name: strip "||#hex" suffix if present
+                const rawDisplay = color.includes('||') ? color.split('||')[0] : color;
+                // If rawDisplay is a size label (like 'S', 'M', 'L'), use hex as the display name
+                const knownSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', '2XL', '3XL', 'Standard', 'standard'];
+                const isSizeLabel = knownSizes.includes(rawDisplay.trim());
+
                 // Priority 1: Admin-saved hex code
                 const adminHex = variantData.color_hex || null;
-                // Priority 2: colorHexMap predefined
-                const mapHex = colorHexMap[color] || null;
+                // Priority 2: colorHexMap predefined (use clean display name as key)
+                const mapHex = colorHexMap[rawDisplay] || null;
                 // Final swatch color
                 const swatchHex = adminHex || mapHex || '#f3f3f3';
+                // Display title: use hex if the rawDisplay is a size label
+                const displayName = isSizeLabel ? (swatchHex || rawDisplay) : rawDisplay;
 
                 colorDiv.style.cssText = `--swatch: ${swatchHex};`;
                 if (isLight(swatchHex)) colorDiv.style.border = '1px solid #ccc';
-                colorDiv.title = color;
+                colorDiv.title = displayName;
                 colorDiv.setAttribute('data-color', color);
                 colorDiv.setAttribute('data-image', variantData.first_photo || '');
                 colorDiv.setAttribute('data-color-hex', swatchHex);
@@ -399,6 +436,254 @@
         }
     }
 
+    // --- Color-to-Image Smart Matching ---
+    // Cache: photoUrl -> { r, g, b } dominant color (sampled from the leggings area)
+    const photoColorCache = {};
+
+    /**
+     * Extract dominant RGB from an image URL (canvas, leggings area ~75% down).
+     * Returns a Promise resolving to {r, g, b} or null on failure.
+     */
+    function getDominantRGB(imgUrl) {
+        return new Promise((resolve) => {
+            if (!imgUrl) return resolve(null);
+            const normalized = getImageUrl(imgUrl);
+            if (photoColorCache[normalized]) return resolve(photoColorCache[normalized]);
+
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = function () {
+                try {
+                    const canvas = document.createElement('canvas');
+                    const sW = 60, sH = 60;
+                    canvas.width = sW; canvas.height = sH;
+                    const ctx = canvas.getContext('2d');
+                    const srcX = Math.max(0, (img.width - sW) / 2);
+                    const srcY = Math.max(0, img.height * 0.55); // mid-lower body — legging color area
+                    ctx.drawImage(img, srcX, srcY, sW, sH, 0, 0, sW, sH);
+                    const data = ctx.getImageData(0, 0, sW, sH).data;
+                    let r = 0, g = 0, b = 0, count = 0;
+                    for (let i = 0; i < data.length; i += 4) {
+                        const pr = data[i], pg = data[i+1], pb = data[i+2], pa = data[i+3];
+                        if (pa < 30) continue;                         // transparent
+                        if (pr > 235 && pg > 235 && pb > 235) continue; // near-white (bg)
+                        if (pr < 20  && pg < 20  && pb < 20)  continue; // near-black (shadow)
+                        r += pr; g += pg; b += pb; count++;
+                    }
+                    if (count === 0) return resolve(null);
+                    const rgb = { r: Math.round(r/count), g: Math.round(g/count), b: Math.round(b/count) };
+                    photoColorCache[normalized] = rgb;
+                    resolve(rgb);
+                } catch(e) { resolve(null); }
+            };
+            img.onerror = () => resolve(null);
+            img.src = normalized;
+        });
+    }
+
+    /** Euclidean RGB distance between two {r,g,b} objects */
+    function colorDistance(c1, c2) {
+        return Math.sqrt(
+            Math.pow(c1.r - c2.r, 2) +
+            Math.pow(c1.g - c2.g, 2) +
+            Math.pow(c1.b - c2.b, 2)
+        );
+    }
+
+    /** Convert hex string like "#e60000" to {r,g,b} */
+    function hexToRGB(hex) {
+        if (!hex || !hex.startsWith('#')) return null;
+        hex = hex.replace('#', '');
+        if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+        if (hex.length !== 6) return null;
+        return {
+            r: parseInt(hex.substring(0,2), 16),
+            g: parseInt(hex.substring(2,4), 16),
+            b: parseInt(hex.substring(4,6), 16)
+        };
+    }
+
+    /** Convert RGB to HSL for color shifting */
+    function rgbToHsl(r, g, b) {
+        r /= 255; g /= 255; b /= 255;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h, s, l = (max + min) / 2;
+        if (max === min) { h = s = 0; }
+        else {
+            const d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            switch (max) {
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+            }
+            h /= 6;
+        }
+        return { h: h * 360, s: s * 100, l: l * 100 };
+    }
+
+    /** Calculate the CSS filter string to shift from baseRGB to targetRGB */
+    function calculateColorShiftFilter(baseRGB, targetRGB) {
+        if (!baseRGB || !targetRGB) return '';
+        const baseHsl = rgbToHsl(baseRGB.r, baseRGB.g, baseRGB.b);
+        const targetHsl = rgbToHsl(targetRGB.r, targetRGB.g, targetRGB.b);
+
+        const hueShift = Math.round(targetHsl.h - baseHsl.h);
+        const satRatio = (targetHsl.s + 10) / (baseHsl.s + 10);
+        const brightnessRatio = targetHsl.l / baseHsl.l;
+        const s = Math.min(Math.max(satRatio, 0.4), 2.5);
+        const b = Math.min(Math.max(brightnessRatio, 0.5), 1.5);
+        return `hue-rotate(${hueShift}deg) saturate(${s}) brightness(${b})`;
+    }
+
+    /**
+     * Canvas pixel recoloring — HSL Hue-based with EXPLICIT SKIN DETECTION.
+     *
+     * Steps per pixel:
+     *  1. Skip transparent, near-white, near-black.
+     *  2. Get pixel HSL.
+     *  3. Skip very low saturation (greys/neutrals).
+     *  4. ** Skip skin-tone pixels explicitly (warm hue 5–40°, mid sat, mid lightness).
+     *  5. Check hue proximity to base legging color.
+     *  6. Recolor matching pixels to target hue+sat, preserving lightness.
+     *
+     * @param {string} imgUrl    - Source image URL
+     * @param {object} baseRGB   - {r,g,b} dominant legging color of the photo
+     * @param {object} targetRGB - {r,g,b} desired output color
+     * @param {number} [hueRange=40] - Max hue angle diff to match (degrees)
+     */
+    function canvasRecolorImage(imgUrl, baseRGB, targetRGB, hueRange = 28) {
+        return new Promise((resolve) => {
+            if (!imgUrl || !baseRGB || !targetRGB) return resolve(null);
+
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = function () {
+                try {
+                    const W = img.width, H = img.height;
+                    const canvas = document.createElement('canvas');
+                    canvas.width = W; canvas.height = H;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+
+                    const imageData = ctx.getImageData(0, 0, W, H);
+                    const data      = imageData.data;
+
+                    const bHsl = rgbToHsl(baseRGB.r, baseRGB.g, baseRGB.b);
+                    const tHsl = rgbToHsl(targetRGB.r, targetRGB.g, targetRGB.b);
+
+                    /**
+                     * Refined Skin tone detector.
+                     * Indian/Fair skin hue: 10-35 deg.
+                     * We also check saturation to avoid hitting grey backgrounds.
+                     */
+                    function isSkin(h, s, l) {
+                        return (h >= 5 && h <= 34) && (s >= 10 && s <= 65) && (l >= 15 && l <= 90);
+                    }
+
+                    for (let i = 0; i < data.length; i += 4) {
+                        const pr = data[i], pg = data[i+1], pb = data[i+2], pa = data[i+3];
+                        if (pa < 30) continue;
+                        if (pr > 245 && pg > 245 && pb > 245) continue; 
+                        if (pr < 20  && pg < 20  && pb < 20)  continue; 
+
+                        const pHsl = rgbToHsl(pr, pg, pb);
+
+                        // Skip skin and neutrals
+                        if (pHsl.s < 12) continue;
+                        if (isSkin(pHsl.h, pHsl.s, pHsl.l)) continue;
+
+                        let hDiff = Math.abs(pHsl.h - bHsl.h);
+                        if (hDiff > 180) hDiff = 360 - hDiff;
+                        if (hDiff > hueRange) continue;
+
+                        // Deep Red Logic: If targeting red, keep it deep and saturated
+                        let finalS = tHsl.s;
+                        let finalL = pHsl.l * (tHsl.l / (bHsl.l || 1));
+                        
+                        if (tHsl.h < 20 || tHsl.h > 340) {
+                            finalS = Math.min(100, tHsl.s * 1.2); 
+                            finalL = Math.min(finalL, 48); // Cap Red lightness to prevent Orange
+                        }
+
+                        const rgb = hslToRgb(tHsl.h, finalS, finalL);
+                        data[i]   = rgb.r;
+                        data[i+1] = rgb.g;
+                        data[i+2] = rgb.b;
+                    }
+
+                    ctx.putImageData(imageData, 0, 0);
+                    resolve(canvas.toDataURL('image/png'));
+                } catch (e) {
+                    resolve(null);
+                }
+            };
+            img.onerror = () => resolve(null);
+            img.src = getImageUrl(imgUrl);
+        });
+    }
+
+
+
+
+    /** HSL to RGB conversion (h: 0-360, s: 0-100, l: 0-100) */
+    function hslToRgb(h, s, l) {
+        h /= 360; s /= 100; l /= 100;
+        let r, g, b;
+        if (s === 0) { r = g = b = l; }
+        else {
+            const hue2rgb = (p, q, t) => {
+                if (t < 0) t += 1; if (t > 1) t -= 1;
+                if (t < 1/6) return p + (q - p) * 6 * t;
+                if (t < 1/2) return q;
+                if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                return p;
+            };
+            const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            const p = 2 * l - q;
+            r = hue2rgb(p, q, h + 1/3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1/3);
+        }
+        return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
+    }
+
+    /**
+     * Given a list of photo URLs and a target hex color,
+     * find the photo whose dominant color is closest to the target.
+     * Returns { url, distance, sourceRGB } so the caller can decide
+     * whether to apply a CSS color-shift filter.
+     */
+    async function findBestPhotoForColor(photos, targetHex) {
+        const fallback = { url: photos.length ? getImageUrl(photos[0]) : null, distance: Infinity, sourceRGB: null };
+        if (!photos || photos.length === 0) return fallback;
+        const targetRGB = hexToRGB(targetHex);
+        if (!targetRGB) return fallback;
+
+        // Extract dominant colors for all photos in parallel
+        const rgbList = await Promise.all(photos.map(p => getDominantRGB(p)));
+
+        let bestIdx = 0;
+        let bestDist = Infinity;
+        rgbList.forEach((rgb, idx) => {
+            if (!rgb) return;
+            const dist = colorDistance(rgb, targetRGB);
+            if (dist < bestDist) {
+                bestDist = dist;
+                bestIdx = idx;
+            }
+        });
+
+        return {
+            url: getImageUrl(photos[bestIdx]),
+            distance: bestDist,
+            sourceRGB: rgbList[bestIdx] || null,
+        };
+    }
+
+    let currentHueShift = '';
+    let currentColorData = null; // { sourceRGB, targetRGB, targetHex, needsRecolor }
+
     function selectColor(color) {
         currentColor = color;
 
@@ -407,8 +692,7 @@
             div.classList.toggle('is-active', div.getAttribute('data-color') === color);
         });
 
-        // Get variant data
-        const variant = groupedVariants[currentSize] && groupedVariants[currentSize][color];
+        const variant = (groupedVariants[currentSize] || {})[color];
         if (!variant) return;
 
         // Update Price
@@ -423,14 +707,127 @@
             }
         }
 
-        // Update Gallery
-        updateGallery(variant.photos || []);
+        let currentPhotos = variant.photos ? [...variant.photos] : [];
+        const selectedHex = (variant.color_hex || "").toUpperCase();
 
-        // Update Add to Cart Button with variant ID
-        const cartBtn = document.getElementById('productAddToCartBtn');
-        if (cartBtn) {
-            cartBtn.setAttribute('data-variant-id', variant.id);
+        if (variant.color_images && currentPhotos.length >= 3) {
+            const mapping = parseColorImages(variant.color_images);
+            const matchedImg = mapping[selectedHex.toLowerCase()] || mapping[selectedHex.replace('#','').toLowerCase()] || "";
+            if (matchedImg) currentPhotos[2] = matchedImg;
         }
+        
+        // Update gallery thumbnails
+        updateGallery(currentPhotos);
+
+        if (selectedHex && currentPhotos.length > 0) {
+            const targetRGB = hexToRGB(selectedHex);
+            
+            findBestPhotoForColor(currentPhotos, selectedHex).then(({ url: bestPhotoUrl, distance, sourceRGB }) => {
+                if (!targetRGB || !sourceRGB || !bestPhotoUrl) {
+                    currentColorData = null;
+                    return;
+                }
+
+                const tHsl = rgbToHsl(targetRGB.r, targetRGB.g, targetRGB.b);
+                const sHsl = rgbToHsl(sourceRGB.r, sourceRGB.g, sourceRGB.b);
+                let hueDiff = Math.abs(tHsl.h - sHsl.h);
+                if (hueDiff > 180) hueDiff = 360 - hueDiff;
+
+                const needsRecolor = hueDiff > 20; 
+                const mainImg = document.getElementById('productDetailImage');
+                currentColorData = { sourceRGB, targetRGB, targetHex: selectedHex, needsRecolor };
+
+                if (needsRecolor) {
+                    console.log(`🖌️ [Skin-Safe Recoloring] Targeting ${selectedHex}`);
+
+                    // Use a temporary CSS filter ONLY FOR THUMBNAILS initially (faster)
+                    const tempFilter = calculateColorShiftFilter(sourceRGB, targetRGB);
+                    document.querySelectorAll('.product-thumb img').forEach(img => {
+                        img.style.filter = tempFilter;
+                    });
+
+                    // For MAIN image, DO NOT use CSS filter (prevents pink skin)
+                    // Instead, show a subtle loading hint if it takes time
+                    if (mainImg) {
+                        mainImg.style.filter = 'none'; 
+                        mainImg.src = bestPhotoUrl;
+                    }
+
+                    // Perform High-Quality Canvas Recolor (Skin-safe)
+                    canvasRecolorImage(bestPhotoUrl, sourceRGB, targetRGB).then(dataUrl => {
+                        if (mainImg && dataUrl && currentColor === color) {
+                            mainImg.src = dataUrl;
+                        }
+                    });
+
+                    // Also update thumbnails with skin-safe canvas (background)
+                    document.querySelectorAll('.product-thumb img').forEach(img => {
+                        canvasRecolorImage(img.src, sourceRGB, targetRGB).then(dataUrl => {
+                            if (img && dataUrl && currentColor === color) {
+                                img.src = dataUrl;
+                                img.style.filter = '';
+                            }
+                        });
+                    });
+
+                } else {
+                    currentColorData.needsRecolor = false;
+                    if (mainImg) {
+                        mainImg.src = bestPhotoUrl;
+                        mainImg.style.filter = '';
+                    }
+                    document.querySelectorAll('.product-thumb img').forEach(img => {
+                        img.style.filter = '';
+                    });
+                }
+
+                document.querySelectorAll('.product-thumb').forEach(btn => {
+                    const img = btn.querySelector('img');
+                    const isMatch = img && img.src.includes(bestPhotoUrl.split('/').pop());
+                    btn.classList.toggle('is-active', isMatch);
+                });
+            });
+        } else {
+            currentColorData = null;
+        }
+
+        const cartBtn = document.getElementById('productAddToCartBtn');
+        if (cartBtn) cartBtn.setAttribute('data-variant-id', variant.id);
+    }
+
+    /** Color Conversion & Filter Math Helpers */
+    function rgbToHsl(r, g, b) {
+        r /= 255; g /= 255; b /= 255;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h, s, l = (max + min) / 2;
+        if (max === min) { h = s = 0; } else {
+            const d = max - min;
+            // Adjust saturation calculation for better red handling
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            switch (max) {
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+            }
+            h /= 6;
+        }
+        return { h: h * 360, s: s * 100, l: l * 100 };
+    }
+
+    function calculateColorShiftFilter(sourceRGB, targetRGB) {
+        const s = rgbToHsl(sourceRGB.r, sourceRGB.g, sourceRGB.b);
+        const t = rgbToHsl(targetRGB.r, targetRGB.g, targetRGB.b);
+        const hShift = Math.round((t.h - s.h + 360) % 360);
+        
+        // Boost saturation, especially for Reds (Red is hue ~0 or ~360)
+        let sBoost = 1.0;
+        if (t.h < 20 || t.h > 340) sBoost = 1.4; // Strong boost for Red
+        else if (t.h < 50 || t.h > 310) sBoost = 1.2; // Moderate boost for Pink/Orange/Purple
+        
+        const sShift = Math.max(0, Math.min(250, (t.s / (s.s + 1)) * 100 * sBoost));
+        const lShift = Math.max(0, Math.min(200, (t.l / (s.l + 1)) * 100));
+        
+        return `hue-rotate(${hShift}deg) saturate(${Math.round(sShift)}%) brightness(${Math.round(lShift)}%)`;
     }
 
     // Initialize swatch colors on page load
@@ -469,7 +866,28 @@
     }
 
     function changeMainImage(url, thumb) {
-        document.getElementById('productDetailImage').src = url;
+        const mainImg = document.getElementById('productDetailImage');
+        if (!mainImg) return;
+
+        mainImg.src = url;
+        
+        // If a color is active and needs recolor, AND the url is not already recolored (data:...)
+        if (currentColorData && currentColorData.needsRecolor && !url.startsWith('data:')) {
+            const filter = calculateColorShiftFilter(currentColorData.sourceRGB, currentColorData.targetRGB);
+            mainImg.style.filter = filter;
+            
+            // Refine with canvas
+            canvasRecolorImage(url, currentColorData.sourceRGB, currentColorData.targetRGB).then(dataUrl => {
+                if (mainImg && dataUrl && mainImg.src === url) {
+                    mainImg.src = dataUrl;
+                    mainImg.style.filter = '';
+                }
+            });
+        } else {
+            // Already colored OR no recolor needed
+            mainImg.style.filter = '';
+        }
+
         document.querySelectorAll('.product-thumb').forEach(btn => btn.classList.remove('is-active'));
         thumb.classList.add('is-active');
     }
