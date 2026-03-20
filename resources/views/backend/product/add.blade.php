@@ -1485,6 +1485,38 @@
         });
 
         // When a color image picker button is clicked
+        $(document).on('click', '.btn-pick-color-images', function() {
+            var btn = $(this);
+            var vid = btn.data('vid');
+            var entryId = btn.data('entryId');
+            var colorHex = btn.closest('.color-entry').find('.color-hex-input').val();
+            var previewSpan = btn.closest('.color-entry').find('.color-img-preview');
+            
+            var lfm_route = (typeof route_prefix !== 'undefined') ? route_prefix : ($('meta[name="route_prefix"]').attr('content') || '/laravel-filemanager');
+            
+            window.open(lfm_route + '?type=image&multiple=true', 'FileManager', 'width=900,height=600');
+            
+            window.SetUrl = function (items) {
+                if (!Array.isArray(items)) items = [items];
+                var file_paths = items.map(function (item) {
+                    return item.url.replace(window.location.origin, '');
+                }).join(',');
+
+                $('#color_images_' + vid).val(function(i, oldVal) {
+                    var mapping = parseColorImages(oldVal);
+                    mapping[colorHex] = file_paths;
+                    return serializeColorImages(mapping);
+                });
+
+                var previewHtml = '';
+                items.forEach(function(item) {
+                     previewHtml += `<img src="${adminImageUrl(item.url)}" style="max-height:30px; border-radius:3px; margin-right:4px; margin-bottom:4px; border: 1px solid #ddd;">`;
+                });
+                previewSpan.html(previewHtml).show();
+            };
+        });
+
+        // Deprecated single-image picker
         $(document).on('click', '.btn-pick-color-image', function() {
             var vid = $(this).data('vid');
             var entryId = $(this).data('entry');
@@ -1549,22 +1581,26 @@
         function addColorEntry(containerId, fieldName, vid) {
             let entryId = Math.floor(Math.random() * 1000000);
             let html = `
-                <div class="color-entry d-flex align-items-center mb-2" id="color_entry_${entryId}">
-                    <div class="input-group">
-                        <input type="color" class="form-control" style="width: 38px; padding: 2px; height: 36px; flex: 0 0 38px; border-radius: 4px 0 0 4px;" 
-                            oninput="this.nextElementSibling.value = this.value; $(this.nextElementSibling).trigger('change')" 
-                            value="#000000">
-                        <input type="text" class="form-control color-hex-input" name="${fieldName}" value="" 
-                            data-vid="${vid}" placeholder="#0000FF" oninput="this.previousElementSibling.value = this.value" style="max-width:90px;">
-                        <div class="input-group-append" style="display:flex;align-items:center;gap:3px;padding:0 4px;">
-                            <span class="color-img-preview" style="display:none;"></span>
-                            <button type="button" class="btn btn-sm btn-outline-info btn-pick-color-image" title="Use 3rd uploaded image for this color" data-vid="${vid}" data-entry="${entryId}" style="padding:2px 5px;font-size:11px;">
-                                <i class="fa fa-image"></i>
-                            </button>
-                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="$('#color_entry_${entryId}').remove()" style="padding:2px 6px;">
-                                <i class="fa fa-times"></i>
-                            </button>
+                <div class="color-entry d-flex flex-column mb-3" id="color_entry_${entryId}" style="background: #fdfdfd; padding: 10px; border-radius: 8px; border: 1px solid #eee;">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="input-group" style="flex: 1;">
+                            <input type="color" class="form-control" style="width: 38px; padding: 2px; height: 36px; flex: 0 0 38px; border-radius: 4px 0 0 4px;" 
+                                oninput="this.nextElementSibling.value = this.value; $(this.nextElementSibling).trigger('change')" 
+                                value="#000000">
+                            <input type="text" class="form-control color-hex-input" name="${fieldName}" value="" 
+                                data-vid="${vid}" placeholder="#0000FF" oninput="this.previousElementSibling.value = this.value" style="max-width:90px;">
+                            <div class="input-group-append" style="display:flex;align-items:center;gap:3px;padding:0 4px;">
+                                <button type="button" class="btn btn-sm btn-outline-info btn-pick-color-images" title="Choose multiple images for this color" data-vid="${vid}" data-entry="${entryId}" style="padding:2px 8px;font-size:12px;">
+                                    <i class="fa fa-picture-o"></i> Choose Images
+                                </button>
+                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="$('#color_entry_${entryId}').remove()" style="padding:2px 6px;">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
                         </div>
+                    </div>
+                    <div class="color-img-preview-container d-flex flex-wrap gap-1" style="min-height: 20px;">
+                        <span class="color-img-preview" style="display:none;"></span>
                     </div>
                 </div>`;
             $(`#${containerId}`).append(html);
@@ -1583,27 +1619,36 @@
                     if (!c) return;
                     let hex = c.startsWith('#') ? c : '#' + c;
                     let entryId = Math.floor(Math.random() * 1000000);
-                    let assignedImg = mapping[hex] || mapping[c] || '';
-                    let previewHtml = assignedImg 
-                        ? `<img src="${adminImageUrl(assignedImg)}" style="max-height:28px;border-radius:3px;vertical-align:middle;">` 
-                        : '';
+                    let assignedImgs = mapping[hex] || mapping[c] || '';
+                    let previewHtml = '';
+                    if (assignedImgs) {
+                        assignedImgs.split(',').forEach(img => {
+                            if (img.trim()) {
+                                previewHtml += `<img src="${adminImageUrl(img.trim())}" style="max-height:30px; border-radius:3px; margin-right:4px; margin-bottom:4px; border: 1px solid #ddd;">`;
+                            }
+                        });
+                    }
                     html += `
-                        <div class="color-entry d-flex align-items-center mb-2" id="color_entry_${entryId}">
-                            <div class="input-group">
-                                <input type="color" class="form-control" style="width: 38px; padding: 2px; height: 36px; flex: 0 0 38px; border-radius: 4px 0 0 4px;" 
-                                    oninput="this.nextElementSibling.value = this.value; $(this.nextElementSibling).trigger('change')" 
-                                    value="${hex}">
-                                <input type="text" class="form-control color-hex-input" name="${fieldName}" value="${c}" 
-                                    data-vid="${vid}" placeholder="#0000FF" oninput="this.previousElementSibling.value = this.value" style="max-width:90px;">
-                                <div class="input-group-append" style="display:flex;align-items:center;gap:3px;padding:0 4px;">
-                                    <span class="color-img-preview" style="${assignedImg ? '' : 'display:none;'}">${previewHtml}</span>
-                                    <button type="button" class="btn btn-sm btn-outline-info btn-pick-color-image" title="Use 3rd uploaded image for this color" data-vid="${vid}" data-entry="${entryId}" style="padding:2px 5px;font-size:11px;">
-                                        <i class="fa fa-image"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="$('#color_entry_${entryId}').remove()" style="padding:2px 6px;">
-                                        <i class="fa fa-times"></i>
-                                    </button>
+                        <div class="color-entry d-flex flex-column mb-3" id="color_entry_${entryId}" style="background: #fdfdfd; padding: 10px; border-radius: 8px; border: 1px solid #eee;">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="input-group" style="flex: 1;">
+                                    <input type="color" class="form-control" style="width: 38px; padding: 2px; height: 36px; flex: 0 0 38px; border-radius: 4px 0 0 4px;" 
+                                        oninput="this.nextElementSibling.value = this.value; $(this.nextElementSibling).trigger('change')" 
+                                        value="${hex}">
+                                    <input type="text" class="form-control color-hex-input" name="${fieldName}" value="${c}" 
+                                        data-vid="${vid}" placeholder="#0000FF" oninput="this.previousElementSibling.value = this.value" style="max-width:90px;">
+                                    <div class="input-group-append" style="display:flex;align-items:center;gap:3px;padding:0 4px;">
+                                        <button type="button" class="btn btn-sm btn-outline-info btn-pick-color-images" title="Choose multiple images for this color" data-vid="${vid}" data-entry="${entryId}" style="padding:2px 8px;font-size:12px;">
+                                            <i class="fa fa-picture-o"></i> Choose Images
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="$('#color_entry_${entryId}').remove()" style="padding:2px 6px;">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="color-img-preview-container d-flex flex-wrap gap-1">
+                                <span class="color-img-preview" style="${assignedImgs ? '' : 'display:none;'}">${previewHtml}</span>
                             </div>
                         </div>`;
                 });
@@ -1613,7 +1658,7 @@
                 <button type="button" class="btn btn-sm btn-outline-success mt-1" onclick="addColorEntry('${containerId}', '${fieldName}', '${vid}')">
                     <i class="fa fa-plus"></i> Add Color
                 </button>
-                <div class="mt-1" style="font-size:11px;color:#888;"><i class="fa fa-info-circle"></i> Upload images first, then click <i class="fa fa-image"></i> next to each color to assign the 3rd image to it.</div>`;
+                <div class="mt-2" style="font-size:11px;color:#cf2e6d;font-weight:600;"><i class="fa fa-info-circle"></i> Tip: You can now upload multiple images for each color! These will replace the main variant gallery when this color is selected.</div>`;
             return html;
         }
     </script>

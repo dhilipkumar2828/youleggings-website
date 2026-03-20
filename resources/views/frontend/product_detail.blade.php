@@ -797,93 +797,20 @@
 
         let currentPhotos = variant.photos ? [...variant.photos] : [];
 
-        if (variant.color_images && currentPhotos.length >= 3) {
+        if (variant.color_images) {
             const mapping = parseColorImages(variant.color_images);
-            const matchedImg = mapping[selectedHex.toLowerCase()] || mapping[selectedHex.replace('#','').toLowerCase()] || "";
-            if (matchedImg) currentPhotos[2] = matchedImg;
+            const matchedImgs = mapping[selectedHex.toLowerCase()] || mapping[selectedHex.replace('#','').toLowerCase()] || "";
+            if (matchedImgs) {
+                // Split multi-images (the user can now upload many for one color)
+                const specificPhotos = matchedImgs.split(',').map(img => img.trim()).filter(Boolean);
+                if (specificPhotos.length > 0) {
+                    currentPhotos = specificPhotos;
+                }
+            }
         }
         
         // Update gallery thumbnails
         updateGallery(currentPhotos);
-
-        if (selectedHex && currentPhotos.length > 0) {
-            const targetRGB = hexToRGB(selectedHex);
-            
-            findBestPhotoForColor(currentPhotos, selectedHex).then(({ url: bestPhotoUrl, distance, sourceRGB }) => {
-                if (!targetRGB || !sourceRGB || !bestPhotoUrl) {
-                    currentColorData = null;
-                    return;
-                }
-
-                const tHsl = rgbToHsl(targetRGB.r, targetRGB.g, targetRGB.b);
-                const sHsl = rgbToHsl(sourceRGB.r, sourceRGB.g, sourceRGB.b);
-                let hueDiff = Math.abs(tHsl.h - sHsl.h);
-                if (hueDiff > 180) hueDiff = 360 - hueDiff;
-
-                const needsRecolor = hueDiff > 18; 
-                const mainImg = document.getElementById('productDetailImage');
-                currentColorData = { sourceRGB, targetRGB, targetHex: selectedHex, needsRecolor };
-
-                if (needsRecolor) {
-                    const cacheKey = bestPhotoUrl + '_' + selectedHex;
-                    if (recolorCache[cacheKey]) {
-                        if (mainImg) {
-                            mainImg.src = recolorCache[cacheKey];
-                            mainImg.style.filter = 'none';
-                        }
-                    } else {
-                        // ** INSTANT PREVIEW PATH **
-                        // Process a low-resolution version (15%) which is nearly instant (< 50ms)
-                        canvasRecolorImage(bestPhotoUrl, selectedHex, sourceRGB, targetRGB, 40, 0.15).then(lowDataUrl => {
-                            if (mainImg && lowDataUrl && !recolorCache[cacheKey] && currentColor === color) {
-                                mainImg.src = lowDataUrl; // Blurry but correct color
-                                mainImg.style.opacity = '0.75'; // Soften the transition
-                            }
-                        });
-                    }
-
-                    // Perform High-Quality Canvas Recolor
-                    canvasRecolorImage(bestPhotoUrl, selectedHex, sourceRGB, targetRGB).then(dataUrl => {
-                        if (mainImg && dataUrl && currentColor === color) {
-                            mainImg.src = dataUrl;
-                            mainImg.style.filter = 'none';
-                            mainImg.style.opacity = '1';
-                        }
-                    });
-
-                    // 5. Update thumbnails
-                    document.querySelectorAll('.product-thumb img').forEach(img => {
-                        if (!img.src.startsWith('data:')) {
-                            canvasRecolorImage(img.src, selectedHex, sourceRGB, targetRGB).then(dataUrl => {
-                                if (img && dataUrl && currentColor === color) {
-                                    img.src = dataUrl;
-                                    img.style.filter = '';
-                                }
-                            });
-                        }
-                    });
-
-                } else {
-                    currentColorData.needsRecolor = false;
-                    if (mainImg) {
-                        mainImg.src = bestPhotoUrl;
-                        mainImg.style.filter = '';
-                    }
-                    document.querySelectorAll('.product-thumb img').forEach(img => {
-                        img.style.filter = '';
-                    });
-                }
-
-                // Highlight the best matching thumbnail
-                document.querySelectorAll('.product-thumb').forEach(btn => {
-                    const img = btn.querySelector('img');
-                    const isMatch = img && (img.src === bestPhotoUrl || img.src.includes(bestPhotoUrl.split('/').pop()));
-                    btn.classList.toggle('is-active', isMatch);
-                });
-            });
-        } else {
-            currentColorData = null;
-        }
 
         const cartBtn = document.getElementById('productAddToCartBtn');
         if (cartBtn) cartBtn.setAttribute('data-variant-id', variant.id);
@@ -957,16 +884,12 @@
         const mainImage = document.getElementById('productDetailImage');
         if (!row) return;
 
-        // Build list but preserve already-recolored dataUrl versions if applicable
-        const currentData = currentColorData; 
-        const filterStr = currentData && currentData.needsRecolor ? calculateColorShiftFilter(currentData.sourceRGB, currentData.targetRGB) : '';
-
         row.innerHTML = '';
         if (photos.length > 0) {
-            // Set main image to first photo temporarily (selectColor will override with high-res/low-res soon)
             const firstPhotoUrl = getImageUrl(photos[0]);
             mainImage.src = firstPhotoUrl;
-            if (filterStr) mainImage.style.filter = filterStr;
+            mainImage.style.filter = '';
+            mainImage.style.opacity = '1';
 
             photos.forEach((p, idx) => {
                 const btn = document.createElement('button');
@@ -978,20 +901,10 @@
                 const img = document.createElement('img');
                 img.src = url;
                 img.alt = 'Thumbnail';
-                if (filterStr) img.style.filter = filterStr; // Immediate preview to stop the "orange flash"
+                img.style.filter = ''; 
                 
                 btn.appendChild(img);
                 row.appendChild(btn);
-
-                // Background upgrade with high-quality canvas
-                if (currentData && currentData.needsRecolor) {
-                    canvasRecolorImage(url, currentData.targetHex, currentData.sourceRGB, currentData.targetRGB).then(dataUrl => {
-                        if (dataUrl && img.src === url) {
-                            img.src = dataUrl;
-                            img.style.filter = '';
-                        }
-                    });
-                }
             });
         }
     }
@@ -1000,29 +913,9 @@
         const mainImg = document.getElementById('productDetailImage');
         if (!mainImg) return;
 
-        // Use the ALREADY RECOLORED image from the thumbnail if available
-        // This prevents the "flash of original color" (orange then red)
-        const thumbImg = thumb.querySelector('img');
-        if (thumbImg && thumbImg.src.startsWith('data:')) {
-            mainImg.src = thumbImg.src;
-            mainImg.style.filter = '';
-        } else {
-            // Fallback: Use the URL but start recoloring immediately
-            mainImg.src = url;
-            
-            if (currentColorData && currentColorData.needsRecolor) {
-                // DO NOT apply CSS filter to mainImg here to prevent pink skin!
-                // Instead, wait for the canvas recoloring which is skin-safe.
-                canvasRecolorImage(url, currentColorData.sourceRGB, currentColorData.targetRGB).then(dataUrl => {
-                    if (mainImg && dataUrl && (mainImg.src === url || mainImg.src.includes(url.split('/').pop()))) {
-                        mainImg.src = dataUrl;
-                        mainImg.style.filter = '';
-                    }
-                });
-            } else {
-                mainImg.style.filter = '';
-            }
-        }
+        mainImg.src = url;
+        mainImg.style.filter = '';
+        mainImg.style.opacity = '1';
 
         document.querySelectorAll('.product-thumb').forEach(btn => btn.classList.remove('is-active'));
         thumb.classList.add('is-active');
