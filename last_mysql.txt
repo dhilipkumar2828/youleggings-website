@@ -1,0 +1,10 @@
+﻿2026-03-20 12:57:12 0 [Note] InnoDB: 128 out of 128 rollback segments are active.
+2026-03-20 12:57:12 0 [Note] InnoDB: Creating shared tablespace for temporary tables
+2026-03-20 12:57:12 0 [Note] InnoDB: Setting file 'C:\xampp\mysql\data\ibtmp1' size to 12 MB. Physically writing the file full; Please wait ...
+2026-03-20 12:57:12 0 [Note] InnoDB: File 'C:\xampp\mysql\data\ibtmp1' size is now 12 MB.
+2026-03-20 12:57:12 0 [Note] InnoDB: Waiting for purge to start
+2026-03-20 12:57:12 0 [Note] InnoDB: 10.4.32 started; log sequence number 1743832597; transaction id 288436
+2026-03-20 12:57:12 0 [Note] InnoDB: Loading buffer pool(s) from C:\xampp\mysql\data\ib_buffer_pool
+2026-03-20 12:57:12 0 [Note] Plugin 'FEEDBACK' is disabled.
+2026-03-20 12:57:12 0 [Note] InnoDB: Buffer pool(s) load completed at 260320 12:57:12
+2026-03-20 12:57:12 0 [Note] Server socket created on IP: '::'.

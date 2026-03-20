@@ -1,0 +1,20 @@
+﻿#54 C:\\xampp\\htdocs\\youleggings\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(134): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#55 C:\\xampp\\htdocs\\youleggings\\public\\index.php(101): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#56 C:\\xampp\\htdocs\\youleggings\\server.php(21): require_once('C:\\\\xampp\\\\htdocs...')
+#57 {main}"} 
+[2026-03-20 05:57:58] local.ERROR: syntax error, unexpected token "-", expecting "{" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected token \"-\", expecting \"{\" at C:\\xampp\\htdocs\\youleggings\\app\\Models\\PermissionGroup-mc.php:9)
+[stacktrace]
+#0 {main}
+"} 
+[2026-03-20 05:58:02] local.ERROR: syntax error, unexpected token "-", expecting "{" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected token \"-\", expecting \"{\" at C:\\xampp\\htdocs\\youleggings\\app\\Models\\PermissionGroup-mc.php:9)
+[stacktrace]
+#0 {main}
+"} 
+[2026-03-20 06:38:48] local.ERROR: syntax error, unexpected token "-", expecting "{" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected token \"-\", expecting \"{\" at C:\\xampp\\htdocs\\youleggings\\app\\Models\\PermissionGroup-mc.php:9)
+[stacktrace]
+#0 {main}
+"} 
+[2026-03-20 06:38:48] local.ERROR: syntax error, unexpected token "-", expecting "{" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected token \"-\", expecting \"{\" at C:\\xampp\\htdocs\\youleggings\\app\\Models\\PermissionGroup-mc.php:9)
+[stacktrace]
+#0 {main}
+"} 

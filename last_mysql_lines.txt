@@ -1,0 +1,5 @@
+﻿2026-03-20 12:08:21 0 [Note] InnoDB: Buffer pool(s) load completed at 260320 12:08:21
+2026-03-20 12:08:21 0 [Note] Plugin 'FEEDBACK' is disabled.
+2026-03-20 12:08:21 0 [Note] Zerofilling moved table:  '.\mysql\plugin'
+2026-03-20 12:08:21 0 [Note] Zerofilling moved table:  '.\mysql\servers'
+2026-03-20 12:08:21 0 [Note] Server socket created on IP: '::'.
